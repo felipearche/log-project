@@ -1,0 +1,5 @@
+* text=auto eol=lf
+data/synth_tokens.json -text
+data/mini_tokens.json  -text
+data/synth_labels.json -text
+data/raw/mini.log     -text

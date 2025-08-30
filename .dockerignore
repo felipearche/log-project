@@ -1,0 +1,11 @@
+# .dockerignore (normalized)
+.venv
+__pycache__/
+*.pyc
+.experiments_cache/
+experiments/logs/
+.env
+.git
+.gitignore
+.pytest_cache/
+.venv/

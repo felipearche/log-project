@@ -1,0 +1,5 @@
+2025-08-19 10:01:22 serviceA INFO user 42 connected from 0xDEAD
+2025-08-19 10:01:25 serviceB WARN disk 91 nearing capacity
+2025-08-19 10:02:10 serviceC ERROR timeout after 5000 ms
+2025-08-19 10:03:01 auth INFO login user 77 from 10.0.0.5
+2025-08-19 10:04:12 serviceA ALERT unauthorized root access from 0xBEEF

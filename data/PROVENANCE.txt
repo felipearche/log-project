@@ -1,0 +1,183 @@
+---
+timestamp: 2025-08-22
+commit: 1bf3a20
+seed: 20250819
+input: dataset=synth_tokens; mode=baseline; calibration=conformal
+cmd: NA (backfilled)
+CSV_ROW: 2025-08-22,1bf3a20,synth_tokens,baseline,conformal,ADWIN,20250819,2000,0,0,1.0000,20.475,28.9968,59.1463,,,0.01,5000.0,200,0.002,200,auto,20250819,baseline conformal
+---
+timestamp: 2025-08-22
+commit: 1bf3a20
+seed: 20250819
+input: dataset=synth_tokens; mode=baseline; calibration=no_calib
+cmd: NA (backfilled)
+CSV_ROW: 2025-08-22,1bf3a20,synth_tokens,baseline,no_calib,ADWIN,20250819,2000,0,0,1.0000,19.7118,25.0704,59.0281,,,,,200,0.002,200,auto,20250819,baseline no-calib
+---
+timestamp: 2025-08-24
+commit: 77fbbca
+seed: 20250819
+input: dataset=synth_tokens; mode=baseline; calibration=conformal
+cmd: NA (backfilled)
+CSV_ROW: 2025-08-24,77fbbca,synth_tokens,baseline,conformal,ADWIN,20250819,2000,0,0,1.0000,2.9879,3.2125,371.809,100.5,,0.01,5000.0,200,0.002,200,auto,20250819,baseline conformal;cpu_sampler=process_avg;energy_na
+---
+timestamp: 2025-08-24
+commit: 77fbbca
+seed: 20250819
+input: dataset=synth_tokens; mode=baseline; calibration=no_calib
+cmd: NA (backfilled)
+CSV_ROW: 2025-08-24,77fbbca,synth_tokens,baseline,no_calib,ADWIN,20250819,2000,0,0,1.0000,3.0161,3.252,356.272,100.6,,,,200,0.002,200,auto,20250819,baseline no-calib;cpu_sampler=process_avg;energy_na
+---
+timestamp: 2025-08-24
+commit: 77fbbca
+seed: 20250819
+input: dataset=mini_tokens; mode=baseline; calibration=conformal
+cmd: NA (backfilled)
+CSV_ROW: 2025-08-24,77fbbca,mini_tokens,baseline,conformal,ADWIN,20250819,5,0,0,NA,2.9588,2.9588,330.14,99.9,,0.01,5000.0,200,0.002,200,auto,20250819,baseline conformal;cpu_sampler=process_avg;energy_na
+---
+timestamp: 2025-08-24
+commit: 77fbbca
+seed: 20250819
+input: dataset=mini_tokens; mode=baseline; calibration=no_calib
+cmd: NA (backfilled)
+CSV_ROW: 2025-08-24,77fbbca,mini_tokens,baseline,no_calib,ADWIN,20250819,5,0,0,NA,2.7333,2.7333,362.874,90.8,,,,200,0.002,200,auto,20250819,baseline no-calib;cpu_sampler=process_avg;energy_na
+---
+timestamp: 2025-08-25
+commit: 16283bd
+seed: 20250819
+input: dataset=synth_tokens; mode=baseline; calibration=conformal
+cmd: NA (backfilled)
+CSV_ROW: 2025-08-25,16283bd,synth_tokens,baseline,conformal,ADWIN,20250819,2000,0,0,1.0000,8.1592,8.60435,130.723,95.5,,0.01,5000.0,200,0.002,200,auto,20250819,baseline conformal;cpu_sampler=process_avg;energy_na
+---
+timestamp: 2025-08-25
+commit: 16283bd
+seed: 20250819
+input: dataset=synth_tokens; mode=baseline; calibration=no_calib
+cmd: NA (backfilled)
+CSV_ROW: 2025-08-25,16283bd,synth_tokens,baseline,no_calib,ADWIN,20250819,2000,0,0,1.0000,8.14614,8.7476,131.904,95.5,,,,200,0.002,200,auto,20250819,baseline no-calib;cpu_sampler=process_avg;energy_na
+---
+timestamp: 2025-08-25
+commit: 16283bd
+seed: 20250819
+input: dataset=mini_tokens; mode=baseline; calibration=conformal
+cmd: NA (backfilled)
+CSV_ROW: 2025-08-25,16283bd,mini_tokens,baseline,conformal,ADWIN,20250819,5,0,0,NA,8.46641,8.46641,104.268,93.0,,0.01,5000.0,200,0.002,200,auto,20250819,baseline conformal;cpu_sampler=process_avg;energy_na
+---
+timestamp: 2025-08-25
+commit: 16283bd
+seed: 20250819
+input: dataset=mini_tokens; mode=baseline; calibration=no_calib
+cmd: NA (backfilled)
+CSV_ROW: 2025-08-25,16283bd,mini_tokens,baseline,no_calib,ADWIN,20250819,5,0,0,NA,7.50048,7.50048,115.678,91.5,,,,200,0.002,200,auto,20250819,baseline no-calib;cpu_sampler=process_avg;energy_na
+---
+timestamp: 2025-08-25
+commit: 833f5eb
+seed: 20250819
+input: dataset=synth_tokens; mode=baseline; calibration=conformal
+cmd: NA (backfilled)
+CSV_ROW: 2025-08-25,833f5eb,synth_tokens,baseline,conformal,ADWIN,20250819,2000,0,0,1.0000,7.72907,8.12616,135.917,95,,0.01,5000,200,0.002,200,auto,20250819,baseline conformal;cpu_sampler=process_avg;energy_na
+---
+timestamp: 2025-08-25
+commit: 833f5eb
+seed: 20250819
+input: dataset=mini_tokens; mode=baseline; calibration=conformal
+cmd: NA (backfilled)
+CSV_ROW: 2025-08-25,833f5eb,mini_tokens,baseline,conformal,ADWIN,20250819,5,0,0,NA,7.37337,7.37337,119,90.1,,0.01,5000,200,0.002,200,auto,20250819,baseline conformal;cpu_sampler=process_avg;energy_na
+---
+timestamp: 2025-08-25
+commit: 833f5eb
+seed: 20250819
+input: dataset=synth_tokens; mode=baseline; calibration=no_calib
+cmd: NA (backfilled)
+CSV_ROW: 2025-08-25,833f5eb,synth_tokens,baseline,no_calib,ADWIN,20250819,2000,0,0,1.0000,7.98654,8.46099,135.907,95,,,,200,0.002,200,auto,20250819,baseline no-calib;cpu_sampler=process_avg;energy_na
+---
+timestamp: 2025-08-25
+commit: 833f5eb
+seed: 20250819
+input: dataset=mini_tokens; mode=baseline; calibration=no_calib
+cmd: NA (backfilled)
+CSV_ROW: 2025-08-25,833f5eb,mini_tokens,baseline,no_calib,ADWIN,20250819,5,0,0,NA,7.7078,7.7078,112.845,90.9,,,,200,0.002,200,auto,20250819,baseline no-calib;cpu_sampler=process_avg;energy_na
+---
+timestamp: 2025-08-25
+commit: 8ddae6b
+seed: 20250819
+input: dataset=synth_tokens; mode=baseline; calibration=conformal
+cmd: NA (backfilled)
+CSV_ROW: 2025-08-25,8ddae6b,synth_tokens,baseline,conformal,ADWIN,20250819,2000,0,0,1.0000,3.58834,3.98174,306.789,94.9,,0.01,5000,200,0.002,200,auto,20250819,baseline conformal;cpu_sampler=process_avg;energy_na
+---
+timestamp: 2025-08-26
+commit: 78fcdac
+seed: 20250819
+input: dataset=synth_tokens; mode=baseline; calibration=conformal
+cmd: NA (backfilled)
+CSV_ROW: 2025-08-26,78fcdac,synth_tokens,baseline,conformal,ADWIN,20250819,2000,0,0,1.0000,3.42831,3.74482,321.26,95.3,,0.01,5000,200,0.002,200,auto,20250819,baseline conformal;cpu_sampler=process_avg;energy_na
+---
+timestamp: 2025-08-30
+commit: df14fcd
+seed: 20250819
+input: dataset=synth_tokens; mode=transformer; calibration=conformal
+cmd: NA (backfilled)
+CSV_ROW: 2025-08-30,df14fcd,synth_tokens,transformer,conformal,ADWIN,20250819,2000,0,0,0.9833,0.655757,0.81848,1745.67,99.1,,0.01,5000,200,0.002,,,,run;cpu_sampler=process_avg;energy_na
+---
+timestamp: 2025-08-30
+commit: df14fcd
+seed: 20250819
+input: dataset=synth_tokens; mode=transformer; calibration=no_calib
+cmd: NA (backfilled)
+CSV_ROW: 2025-08-30,df14fcd,synth_tokens,transformer,no_calib,ADWIN,20250819,2000,0,0,0.9833,0.594906,0.694341,1873.8,99.3,,,,200,0.002,,,,run;cpu_sampler=process_avg;energy_na
+---
+timestamp: 2025-08-30
+commit: df14fcd
+seed: 20250819
+input: dataset=mini_tokens; mode=transformer; calibration=conformal
+cmd: NA (backfilled)
+CSV_ROW: 2025-08-30,df14fcd,mini_tokens,transformer,conformal,ADWIN,20250819,5,0,0,NA,0.614665,0.614665,808.995,0,,0.01,5000,200,0.002,,,,run;cpu_sampler=process_avg;energy_na
+---
+timestamp: 2025-08-30
+commit: df14fcd
+seed: 20250819
+input: dataset=mini_tokens; mode=transformer; calibration=no_calib
+cmd: NA (backfilled)
+CSV_ROW: 2025-08-30,df14fcd,mini_tokens,transformer,no_calib,ADWIN,20250819,5,0,0,NA,0.77521,0.77521,714.321,0,,,,200,0.002,,,,run;cpu_sampler=process_avg;energy_na
+---
+timestamp: 2025-08-30
+commit: NA
+seed: 20250819
+input: dataset=synth_tokens; mode=transformer; calibration=conformal
+cmd: NA (backfilled)
+CSV_ROW: 2025-08-30,,synth_tokens,transformer,conformal,ADWIN,20250819,2000,0,0,0.9833,1.55972,1.85405,731.608,99,,0.01,5000,200,0.002,,,,run;cpu_sampler=process_avg;energy_na
+---
+timestamp: 2025-08-30
+commit: NA
+seed: 20250819
+input: dataset=mini_tokens; mode=transformer; calibration=conformal
+cmd: NA (backfilled)
+CSV_ROW: 2025-08-30,,mini_tokens,transformer,conformal,ADWIN,20250819,5,0,0,NA,1.49587,1.49587,454.644,35.1,,0.01,5000,200,0.002,,,,run;cpu_sampler=process_avg;energy_na
+---
+timestamp: 2025-08-30
+commit: NA
+seed: 20250819
+input: dataset=synth_tokens; mode=transformer; calibration=no_calib
+cmd: NA (backfilled)
+CSV_ROW: 2025-08-30,,synth_tokens,transformer,no_calib,ADWIN,20250819,2000,0,0,0.9833,1.49281,1.66124,782.31,99.3,,,,200,0.002,,,,run;cpu_sampler=process_avg;energy_na
+---
+timestamp: 2025-08-30
+commit: NA
+seed: 20250819
+input: dataset=mini_tokens; mode=transformer; calibration=no_calib
+cmd: NA (backfilled)
+CSV_ROW: 2025-08-30,,mini_tokens,transformer,no_calib,ADWIN,20250819,5,0,0,NA,1.58965,1.58965,427.124,31.5,,,,200,0.002,,,,run;cpu_sampler=process_avg;energy_na
+---
+timestamp: 2025-08-30
+commit: local
+seed: 20250819
+input: dataset=synth_tokens; mode=baseline; calibration=conformal
+cmd: NA (backfilled)
+CSV_ROW: 2025-08-30,local,synth_tokens,baseline,conformal,ADWIN,20250819,2000,0,0,1.0000,3.75865,4.01352,297.026,97.9,,0.01,5000,200,0.002,200,auto,20250819,baseline conformal;cpu_sampler=process_avg;energy_na
+---
+timestamp: 2025-08-30
+commit: 17ccad5
+seed: 20250819
+input: dataset=synth_tokens; mode=baseline; calibration=conformal
+cmd: NA (backfilled)
+CSV_ROW: 2025-08-30,17ccad5,synth_tokens,baseline,conformal,ADWIN,20250819,2000,0,0,1.0000,3.18669,3.42367,328.544,100.6,,0.01,5000,200,0.002,200,auto,20250819,baseline conformal;cpu_sampler=process_avg;energy_na
+notes: 2025-08-30 — TPR normalized (synth=4dp, mini=NA); provenance rebuilt 1:1; README_TABLE regenerated. Metrics unchanged.

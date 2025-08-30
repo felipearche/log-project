@@ -1,0 +1,30 @@
+# --- Python venv & bytecode ---
+.venv/
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+
+# --- Build / packaging ---
+build/
+dist/
+*.egg-info/
+.eggs/
+
+# --- Test / tooling caches ---
+.pytest_cache/
+.mypy_cache/
+
+# --- Local machine-only artifacts ---
+env/env.txt
+
+# --- Logs and caches we do NOT track ---
+experiments/logs/
+
+# --- Misc ---
+.git_bad/
+fsck.txt
+_audited/
+
+# Optional vector exports
+figures/*.svg
