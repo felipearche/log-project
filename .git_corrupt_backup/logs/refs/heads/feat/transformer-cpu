@@ -1,7 +1,0 @@
-0000000000000000000000000000000000000000 df14fcdd19876347176c86d46fa00484c278a8dd Felipe Arche <felipefdezarche@gmail.com> 1756534977 +0530	branch: Created from HEAD
-df14fcdd19876347176c86d46fa00484c278a8dd fc78cb4d7c6f3623e785c889721ebe4bdd9aa7f6 Felipe Arche <felipefdezarche@gmail.com> 1756536875 +0530	commit: Normalize TPR formatting (synth 4dp; mini NA); regenerate table & figures
-fc78cb4d7c6f3623e785c889721ebe4bdd9aa7f6 91e6ff10abaf46f4734060250a92092544f6a840 Felipe Arche <felipefdezarche@gmail.com> 1756540510 +0530	commit: tests: add table-constraint guard (p95≤p99, TPR format policy)
-91e6ff10abaf46f4734060250a92092544f6a840 a55cbef82a80cb897d7c9c9286563b2515f465a7 Felipe Arche <felipefdezarche@gmail.com> 1756540865 +0530	commit: mode(transformer): add module and wireup; tweak README and .gitignore
-a55cbef82a80cb897d7c9c9286563b2515f465a7 227e0412df0d01a9d22d00c4a79cf35b89705fea Felipe Arche <felipefdezarche@gmail.com> 1756541268 +0530	commit: prov: normalize TPR (synth 4dp, mini NA) and rebuild 1:1
-227e0412df0d01a9d22d00c4a79cf35b89705fea 9777e32494aead9f04ab48dce46fccaf1d78c29b Felipe Arche <felipefdezarche@gmail.com> 1756541356 +0530	commit: prov: rebuild 1:1 after transformer 2×2 (TPR normalized)
-9777e32494aead9f04ab48dce46fccaf1d78c29b 17ccad5222f6b848f64dfa9fd6458b25da6f1f76 Felipe Arche <felipefdezarche@gmail.com> 1756541419 +0530	commit: figs+table: refresh after transformer 2×2

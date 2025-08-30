@@ -28,3 +28,5 @@ _audited/
 
 # Optional vector exports
 figures/*.svg
+
+.git_corrupt_backup/
