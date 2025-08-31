@@ -180,3 +180,6 @@ seed: 20250819
 input: dataset=synth_tokens; mode=baseline; calibration=conformal
 cmd: NA (backfilled)
 CSV_ROW: 2025-08-30,17ccad5,synth_tokens,baseline,conformal,ADWIN,20250819,2000,0,0,1.0000,3.18669,3.42367,328.544,100.6,,0.01,5000,200,0.002,200,auto,20250819,baseline conformal;cpu_sampler=process_avg;energy_na
+notes: 2025-08-31 backfilled two early CPU_pct blanks to 'NA'; rebuilt PROVENANCE; added trailing LF to scripts/make_release.ps1
+---
+notes: 2025-08-31 — Cosmetic tidy: removed '...' from .gitignore; dropped pandas from env/requirements.lock; cleaned .pytest_cache (excluded from releases). Metrics unchanged.
