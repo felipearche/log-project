@@ -181,3 +181,6 @@ input: dataset=synth_tokens; mode=baseline; calibration=conformal
 cmd: NA (backfilled)
 CSV_ROW: 2025-08-30,17ccad5,synth_tokens,baseline,conformal,ADWIN,20250819,2000,0,0,1.0000,3.18669,3.42367,328.544,100.6,,0.01,5000,200,0.002,200,auto,20250819,baseline conformal;cpu_sampler=process_avg;energy_na
 notes: 2025-08-30 — TPR normalized (synth=4dp, mini=NA); provenance rebuilt 1:1; README_TABLE regenerated. Metrics unchanged.
+2025-08-31 — Normalized text files to UTF-8 (no BOM) + LF; removed pytest cache; regenerated README_TABLE.txt and figures; data/HASHES.txt up-to-date (no payload changes). Metrics unchanged.
+
+
