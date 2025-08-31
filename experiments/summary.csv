@@ -1,6 +1,6 @@
 date,commit,dataset,mode,calibration,drift_detector,seed,events,anomalies,drifts,TPR_at_1pct_FPR,p95_ms,p99_ms,eps,CPU_pct,energy_J,calib_target_fpr,calib_window,warmup,adwin_delta,iso_n_estimators,iso_max_samples,iso_random_state,notes
-2025-08-22,1bf3a20,synth_tokens,baseline,conformal,ADWIN,20250819,2000,0,0,1.0000,20.475,28.9968,59.1463,,,0.01,5000.0,200,0.002,200,auto,20250819,baseline conformal
-2025-08-22,1bf3a20,synth_tokens,baseline,no_calib,ADWIN,20250819,2000,0,0,1.0000,19.7118,25.0704,59.0281,,,,,200,0.002,200,auto,20250819,baseline no-calib
+2025-08-22,1bf3a20,synth_tokens,baseline,conformal,ADWIN,20250819,2000,0,0,1.0000,20.475,28.9968,59.1463,NA,,0.01,5000.0,200,0.002,200,auto,20250819,baseline conformal
+2025-08-22,1bf3a20,synth_tokens,baseline,no_calib,ADWIN,20250819,2000,0,0,1.0000,19.7118,25.0704,59.0281,NA,,,,200,0.002,200,auto,20250819,baseline no-calib
 2025-08-24,77fbbca,synth_tokens,baseline,conformal,ADWIN,20250819,2000,0,0,1.0000,2.9879,3.2125,371.809,100.5,,0.01,5000.0,200,0.002,200,auto,20250819,baseline conformal;cpu_sampler=process_avg;energy_na
 2025-08-24,77fbbca,synth_tokens,baseline,no_calib,ADWIN,20250819,2000,0,0,1.0000,3.0161,3.252,356.272,100.6,,,,200,0.002,200,auto,20250819,baseline no-calib;cpu_sampler=process_avg;energy_na
 2025-08-24,77fbbca,mini_tokens,baseline,conformal,ADWIN,20250819,5,0,0,NA,2.9588,2.9588,330.14,99.9,,0.01,5000.0,200,0.002,200,auto,20250819,baseline conformal;cpu_sampler=process_avg;energy_na

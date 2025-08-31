@@ -4,14 +4,14 @@ commit: 1bf3a20
 seed: 20250819
 input: dataset=synth_tokens; mode=baseline; calibration=conformal
 cmd: NA (backfilled)
-CSV_ROW: 2025-08-22,1bf3a20,synth_tokens,baseline,conformal,ADWIN,20250819,2000,0,0,1.0000,20.475,28.9968,59.1463,,,0.01,5000.0,200,0.002,200,auto,20250819,baseline conformal
+CSV_ROW: 2025-08-22,1bf3a20,synth_tokens,baseline,conformal,ADWIN,20250819,2000,0,0,1.0000,20.475,28.9968,59.1463,NA,,0.01,5000.0,200,0.002,200,auto,20250819,baseline conformal
 ---
 timestamp: 2025-08-22
 commit: 1bf3a20
 seed: 20250819
 input: dataset=synth_tokens; mode=baseline; calibration=no_calib
 cmd: NA (backfilled)
-CSV_ROW: 2025-08-22,1bf3a20,synth_tokens,baseline,no_calib,ADWIN,20250819,2000,0,0,1.0000,19.7118,25.0704,59.0281,,,,,200,0.002,200,auto,20250819,baseline no-calib
+CSV_ROW: 2025-08-22,1bf3a20,synth_tokens,baseline,no_calib,ADWIN,20250819,2000,0,0,1.0000,19.7118,25.0704,59.0281,NA,,,,200,0.002,200,auto,20250819,baseline no-calib
 ---
 timestamp: 2025-08-24
 commit: 77fbbca
@@ -180,7 +180,3 @@ seed: 20250819
 input: dataset=synth_tokens; mode=baseline; calibration=conformal
 cmd: NA (backfilled)
 CSV_ROW: 2025-08-30,17ccad5,synth_tokens,baseline,conformal,ADWIN,20250819,2000,0,0,1.0000,3.18669,3.42367,328.544,100.6,,0.01,5000,200,0.002,200,auto,20250819,baseline conformal;cpu_sampler=process_avg;energy_na
-notes: 2025-08-30 — TPR normalized (synth=4dp, mini=NA); provenance rebuilt 1:1; README_TABLE regenerated. Metrics unchanged.
-2025-08-31 — Normalized text files to UTF-8 (no BOM) + LF; removed pytest cache; regenerated README_TABLE.txt and figures; data/HASHES.txt up-to-date (no payload changes). Metrics unchanged.
-
-
