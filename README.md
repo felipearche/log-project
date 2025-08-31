@@ -437,3 +437,15 @@ See also `CITATION.cff` for a machine-readable citation.
 ```yaml
 repository-code: <REPO_URL>
 ```
+## 23) Maintenance summary — 2025-08-30
+
+The repository was brought to a publishable, reproducible state. Key actions (and where they are reflected):
+
+- **TPR formatting policy enforced** — `TPR_at_1pct_FPR` is **four decimals** for `synth_tokens` (e.g., `1.0000`) and the literal **`NA`** for `mini_tokens`. See the experiment schema and the table generator script.
+- **Provenance 1:1 rebuilt** — `data/PROVENANCE.txt` now has exactly one `CSV_ROW:` per row in `experiments/summary.csv` (counts match). A `notes:` line was added to the latest block documenting this maintenance.
+- **README table regenerated** — `README_TABLE.txt` reflects the **latest row per (dataset, mode, calibration)** with canonical formatting (TPR 4dp, p95/p99/eps 1dp, `NA` where applicable).
+- **Figures regenerated** — `figures/latency_p95_ms.png`, `figures/latency_p99_ms.png`, `figures/throughput_eps.png` were rebuilt from `experiments/summary.csv`.
+- **Encoding & EOL normalized** — All tracked text files are **UTF-8 (no BOM)** with **LF** and a single trailing newline. `scripts/normalize_line_endings.ps1` was corrected and re-run; policy is enforced by `.gitattributes`.
+- **Git hygiene** — A corrupted `.git` folder was quarantined to `.git_corrupt_backup/` and excluded via `.gitignore`. When sharing, avoid archiving `.git/`; prefer a clean clone.
+
+These changes do **not** alter results: only formatting, table/figure regeneration, and strict provenance were updated for reproducibility.
