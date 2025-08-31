@@ -184,3 +184,7 @@ notes: 2025-08-31 — Normalized data/HASHES.txt spacing to canonical two spaces
 
 notes: 2025-08-31 – fixed summary.csv line endings; removed malformed/blank rows introduced by earlier literal '\n'; normalized 4 empty commit cells to NA; synced PROVENANCE CSV_ROW; metrics unchanged.
 notes: 2025-09-01 – housekeeping only: removed stray "..." from .gitignore; added *.bak ignore; presentation-only; metrics unchanged.
+notes: 2025-09-01 – removed backup file experiments/summary.csv.bak (ignored); tests: 5 passed (pytest 8.3.3 in Docker); PROVENANCE↔summary mapping unchanged (26 rows); metrics unchanged.
+notes: 2025-09-01 – env docs: replaced env/ENV.md with lockfile-aligned version; removed docs/env.txt (stale); presentation-only; metrics unchanged.
+notes: 2025-09-01 – documentation-only: clarified scripts/fix_summary.py is DEV-ONLY helper requiring pandas; outside the reproducible pipeline; metrics unchanged.
+notes: 2025-09-01 � hardening: pinned Docker base to python:3.11.9-alpine; added HASHES format guard test; metrics unchanged.
