@@ -188,3 +188,4 @@ notes: 2025-09-01 â€“ removed backup file experiments/summary.csv.bak (ignored);
 notes: 2025-09-01 â€“ env docs: replaced env/ENV.md with lockfile-aligned version; removed docs/env.txt (stale); presentation-only; metrics unchanged.
 notes: 2025-09-01 â€“ documentation-only: clarified scripts/fix_summary.py is DEV-ONLY helper requiring pandas; outside the reproducible pipeline; metrics unchanged.
 notes: 2025-09-01 – hardening: pinned Docker base to python:3.11.9-alpine; added HASHES format guard test; metrics unchanged.
+notes: 2025-09-01 – hardening: pinned Docker base to python:3.11.9-alpine; added HASHES format guard test; metrics unchanged.
