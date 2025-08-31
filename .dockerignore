@@ -1,5 +1,5 @@
 # .dockerignore (normalized)
-.venv
+.venv/
 __pycache__/
 *.pyc
 .experiments_cache/
@@ -8,4 +8,3 @@ experiments/logs/
 .git
 .gitignore
 .pytest_cache/
-.venv/

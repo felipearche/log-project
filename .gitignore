@@ -22,6 +22,7 @@ env/env.txt
 experiments/logs/
 
 # --- Misc ---
+*.bak
 .git_bad/
 fsck.txt
 _audited/

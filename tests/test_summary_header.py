@@ -1,4 +1,4 @@
-﻿import csv
+import csv
 
 EXPECTED_HEADER = [
     "date","commit","dataset","mode","calibration","drift_detector","seed",

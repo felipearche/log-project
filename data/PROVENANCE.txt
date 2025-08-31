@@ -183,3 +183,4 @@ CSV_ROW: 2025-08-30,17ccad5,synth_tokens,baseline,conformal,ADWIN,20250819,2000,
 notes: 2025-08-31 — Normalized data/HASHES.txt spacing to canonical two spaces; added tests/test_summary_header.py (24-col header guard); verified TPR policy (mini_tokens=NA; synth_tokens=4dp); rebuilt PROVENANCE 1:1 (CSV rows=26; PROVENANCE CSV_ROW=26). Metrics unchanged. | Backfilled energy_J→NA; CSV_ROW synchronized. | normalized summary.csv EOL to LF (UTF-8, no BOM) | 2025-08-31 — README_TABLE.txt sorted to dataset→mode→calibration; updated scripts/make_readme_table.py to enforce it; presentation-only; metrics unchanged.
 
 notes: 2025-08-31 – fixed summary.csv line endings; removed malformed/blank rows introduced by earlier literal '\n'; normalized 4 empty commit cells to NA; synced PROVENANCE CSV_ROW; metrics unchanged.
+notes: 2025-09-01 – housekeeping only: removed stray "..." from .gitignore; added *.bak ignore; presentation-only; metrics unchanged.

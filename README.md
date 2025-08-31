@@ -128,9 +128,9 @@ docker run --rm -v "${PWD}:/app" log-project:latest python scripts/hash_files.py
 **Example entries (update if files change):**
 ```
 2025-08-29  data/synth_tokens.json  137400  sha256=8AF36305BB4FA61486322BFAFE148F6481C7FF1772C081F3E9590FB5C79E6600
-2025-08-29  data/mini_tokens.json   533     sha256=3CA2BCE42228159B81E5B2255B6BC352819B22FFA74BBD4F78AC82F00A2E1263
-2025-08-29  data/synth_labels.json  6000    sha256=814DA8A6BAB57EC08702DDC0EFFAC7AFDC88868B4C2EE4C6087C735FB22EDADA
-2025-08-29  data/raw/mini.log       310     sha256=F5953777A9A84819D55964E5772792CE8819A3FED1E0365FA279EB53F6496FB4
+2025-08-29  data/mini_tokens.json  533  sha256=3CA2BCE42228159B81E5B2255B6BC352819B22FFA74BBD4F78AC82F00A2E1263
+2025-08-29  data/synth_labels.json  6000  sha256=814DA8A6BAB57EC08702DDC0EFFAC7AFDC88868B4C2EE4C6087C735FB22EDADA
+2025-08-29  data/raw/mini.log  310  sha256=F5953777A9A84819D55964E5772792CE8819A3FED1E0365FA279EB53F6496FB4
 ```
 
 ---
@@ -259,6 +259,7 @@ __pycache__/
 experiments/logs/
 _audited/
 fsck.txt
+*.bak
 ```
 
 ---
@@ -291,7 +292,18 @@ python -m pytest -q
 
 ## 13) Release (tag + zip + hashes + provenance)
 
-**Note:** Release zips must exclude **.venv/**, **experiments/logs/**, **.pytest_cache/**, **__pycache__/**, and the **.git/** folder. See **RELEASE.md** for the exact command sequence (archive layout, SHA-256 hash recording, and provenance block).
+**Note:** Release zips must exclude **.venv/**, **experiments/logs/**, **.pytest_cache/**, **__pycache__/**, and the **.git/** folder.
+
+**Use the script (Windows / PowerShell):**
+```powershell
+# Create the release zip + write release/HASHES.txt and release/PROVENANCE.txt
+pwsh -NoProfile -File .\scripts\make_release.ps1
+
+# Verify contents and hashes
+Get-ChildItem -Recurse release\ | Select-Object FullName,Length
+Get-Content release\HASHES.txt
+Get-Content release\PROVENANCE.txt
+```
 
 **Policy:** Model artifacts and release hashes/provenance live under `release/`.
 Do **not** add model files or release hashes to `data/HASHES.txt` (that file must list only the four canonical data artifacts).
@@ -437,6 +449,9 @@ See also `CITATION.cff` for a machine-readable citation.
 ```yaml
 repository-code: <REPO_URL>
 ```
+
+---
+
 ## 23) Maintenance summary — 2025-08-30
 
 The repository was brought to a publishable, reproducible state. Key actions (and where they are reflected):
@@ -449,3 +464,12 @@ The repository was brought to a publishable, reproducible state. Key actions (an
 - **Git hygiene** — A corrupted `.git` folder was quarantined to `.git_corrupt_backup/` and excluded via `.gitignore`. When sharing, avoid archiving `.git/`; prefer a clean clone.
 
 These changes do **not** alter results: only formatting, table/figure regeneration, and strict provenance were updated for reproducibility.
+
+---
+
+## 24) Maintenance summary — 2025-08-31
+
+- **Encoding/EOL compliance** — Added a single trailing LF to `scripts/make_release.ps1` to conform to the repo policy (UTF‑8 **no BOM**, **LF**, single trailing newline). See §11 for the policy and normalization script.
+- **CPU_pct backfill (historic)** — Backfilled **two** early `CPU_pct` blanks to the literal **`NA`** in `experiments/summary.csv` for full-column coverage and clarity. Immediately **rebuilt** `data/PROVENANCE.txt` to preserve the strict **1:1** mapping with `CSV_ROW:` lines (post‑check: **CSV rows=26; PROVENANCE CSV_ROW=26**).
+- **Tests** — Post-change test suite: **4 passed**.
+- **Policy note** — For **new runs**, `CPU_pct` should be **numeric** (process average). For **historical runs** or when unavailable, record the literal **`NA`** (consistent with the `energy_J` convention).
