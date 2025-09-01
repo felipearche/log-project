@@ -57,10 +57,20 @@ def generate(n: int, anom_ratio: float, seed: int) -> Tuple[List[List[str]], Lis
 def main() -> None:
     ap = argparse.ArgumentParser(description="Deterministic synthetic log generator")
     ap.add_argument("--n", type=int, default=2000, help="number of sequences")
-    ap.add_argument("--anom_ratio", type=float, default=0.03, help="fraction of anomalies (0..1)")
+    ap.add_argument(
+        "--anom_ratio", type=float, default=0.03, help="fraction of anomalies (0..1)"
+    )
     ap.add_argument("--seed", type=int, default=20250819, help="PRNG seed")
-    ap.add_argument("--tokens_out", default="data/synth_tokens.json", help="output path for tokens JSON")
-    ap.add_argument("--labels_out", default="data/synth_labels.json", help="output path for labels JSON")
+    ap.add_argument(
+        "--tokens_out",
+        default="data/synth_tokens.json",
+        help="output path for tokens JSON",
+    )
+    ap.add_argument(
+        "--labels_out",
+        default="data/synth_labels.json",
+        help="output path for labels JSON",
+    )
     args = ap.parse_args()
 
     tokens, labels = generate(args.n, args.anom_ratio, args.seed)
@@ -83,7 +93,7 @@ def main() -> None:
     anoms = sum(labels)
     print(
         f"wrote: {args.tokens_out} (n={total}, anomalies={anoms}, "
-        f"anom_ratio~={anoms/total if total else 0:.4f})"
+        f"anom_ratio~={anoms / total if total else 0:.4f})"
     )
     print(f"wrote: {args.labels_out}")
 

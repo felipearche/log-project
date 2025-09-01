@@ -26,9 +26,9 @@ SRC = Path("experiments/summary.csv")
 OUT = Path("README_TABLE.txt")
 
 # Canonical human-facing order
-DS_ORDER   = ["synth_tokens", "mini_tokens"]
+DS_ORDER = ["synth_tokens", "mini_tokens"]
 MODE_ORDER = ["baseline", "transformer"]
-CAL_ORDER  = ["conformal", "no_calib"]
+CAL_ORDER = ["conformal", "no_calib"]
 
 
 def _order_index(value: str, order_list: list[str]) -> tuple[int, str]:
@@ -86,7 +86,7 @@ def main():
     # Group by (dataset, mode, calibration), keep latest (last occurrence)
     keyed: "OrderedDict[tuple[str,str,str], dict]" = OrderedDict()
     for row in rows:
-        key = (row.get("dataset",""), row.get("mode",""), row.get("calibration",""))
+        key = (row.get("dataset", ""), row.get("mode", ""), row.get("calibration", ""))
         keyed[key] = row  # overwrite => last one wins
 
     # Sort keys by dataset → mode → calibration using canonical orders
@@ -106,18 +106,20 @@ def main():
     C_P99 = "p99_ms"
     C_EPS = "eps"
 
-    header = ["dataset","mode","calibration","TPR@1%FPR","p95_ms","p99_ms","eps"]
+    header = ["dataset", "mode", "calibration", "TPR@1%FPR", "p95_ms", "p99_ms", "eps"]
     lines = []
     lines.append("| " + " | ".join(header) + " |")
     lines.append("|" + "|".join(["---"] * len(header)) + "|")
 
     for (ds, md, cal), row in sorted_items:
         r = [
-            ds, md, cal,
-            _fmt_tpr(row.get(C_TPR,""), ds),
-            _fmt1(row.get(C_P95,"")),
-            _fmt1(row.get(C_P99,"")),
-            _fmt1(row.get(C_EPS,"")),
+            ds,
+            md,
+            cal,
+            _fmt_tpr(row.get(C_TPR, ""), ds),
+            _fmt1(row.get(C_P95, "")),
+            _fmt1(row.get(C_P99, "")),
+            _fmt1(row.get(C_EPS, "")),
         ]
         lines.append("| " + " | ".join(r) + " |")
 

@@ -5,8 +5,10 @@ Sliding-window conformal calibration for streaming anomaly scores.
 - On ADWIN drift: call `calib.reset()` to clear calibration state.
 - ASCII-only text to avoid encoding issues.
 """
+
 from collections import deque
 from typing import Iterable, Deque, List
+
 
 class SlidingConformal:
     """
@@ -14,6 +16,7 @@ class SlidingConformal:
     Maintains the last `window` scores. `threshold()` returns the
     (1-alpha) empirical quantile. Call `reset()` on drift.
     """
+
     def __init__(self, alpha: float = 0.01, window: int = 500):
         if not (0.0 < alpha < 1.0):
             raise ValueError("alpha must be in (0,1)")

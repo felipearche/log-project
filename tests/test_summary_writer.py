@@ -1,4 +1,7 @@
-import csv, os
+import csv
+import os
+
+
 def test_summary_has_24_columns_and_key_fields():
     p = "experiments/summary.csv"
     assert os.path.exists(p), f"Missing {p}"

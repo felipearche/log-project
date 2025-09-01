@@ -1,27 +1,44 @@
-#!/usr/bin/env python3
-# scripts/make_plots.py
-import argparse, csv, os, sys
+import argparse
+import csv
+import os
+import sys
 from collections import OrderedDict
 import matplotlib
+import matplotlib.pyplot as plt
+from matplotlib.ticker import FuncFormatter
+
+#!/usr/bin/env python3
+# scripts/make_plots.py
 matplotlib.use("Agg")
 # Always save with a white background (looks good in light/dark docs)
 matplotlib.rcParams["savefig.facecolor"] = "white"
 
-import matplotlib.pyplot as plt
-from matplotlib.ticker import FuncFormatter
 
 # Stable ordering for bars
-DS_ORDER   = ["synth_tokens", "mini_tokens"]
+DS_ORDER = ["synth_tokens", "mini_tokens"]
 MODE_ORDER = ["baseline", "transformer"]
-CAL_ORDER  = ["conformal", "no_calib"]
+CAL_ORDER = ["conformal", "no_calib"]
+
 
 def parse_args():
-    p = argparse.ArgumentParser(description="Generate canonical figures from experiments/summary.csv")
-    p.add_argument("--summary", default="experiments/summary.csv", help="Path to summary.csv")
-    p.add_argument("--outdir",  default="figures", help="Output directory for PNGs/SVGs")
-    p.add_argument("--spacing", type=float, default=1.22, help="Horizontal spacing between bars (default=1.22)")
-    p.add_argument("--svg", action="store_true", help="Also write .svg files alongside .png")
+    p = argparse.ArgumentParser(
+        description="Generate canonical figures from experiments/summary.csv"
+    )
+    p.add_argument(
+        "--summary", default="experiments/summary.csv", help="Path to summary.csv"
+    )
+    p.add_argument("--outdir", default="figures", help="Output directory for PNGs/SVGs")
+    p.add_argument(
+        "--spacing",
+        type=float,
+        default=1.22,
+        help="Horizontal spacing between bars (default=1.22)",
+    )
+    p.add_argument(
+        "--svg", action="store_true", help="Also write .svg files alongside .png"
+    )
     return p.parse_args()
+
 
 def read_latest_groups(summary_path):
     groups = OrderedDict()
@@ -29,29 +46,47 @@ def read_latest_groups(summary_path):
         r = csv.reader(f)
         header = next(r)
         idx = {name: i for i, name in enumerate(header)}
-        required = ["dataset","mode","calibration","p95_ms","p99_ms","eps"]
+        required = ["dataset", "mode", "calibration", "p95_ms", "p99_ms", "eps"]
         for col in required:
             if col not in idx:
-                raise SystemExit(f"[ERROR] Missing required column in summary.csv: {col}")
+                raise SystemExit(
+                    f"[ERROR] Missing required column in summary.csv: {col}"
+                )
         for row in r:
             key = (row[idx["dataset"]], row[idx["mode"]], row[idx["calibration"]])
-            groups[key] = row   # keep latest per group (last wins)
+            groups[key] = row  # keep latest per group (last wins)
     return groups, header
 
+
 def order_keys(keys):
-    def rank(v, lst): return lst.index(v) if v in lst else len(lst)
-    return sorted(keys, key=lambda k: (rank(k[0], DS_ORDER), rank(k[1], MODE_ORDER), rank(k[2], CAL_ORDER)))
+    def rank(v, lst):
+        return lst.index(v) if v in lst else len(lst)
+
+    return sorted(
+        keys,
+        key=lambda k: (
+            rank(k[0], DS_ORDER),
+            rank(k[1], MODE_ORDER),
+            rank(k[2], CAL_ORDER),
+        ),
+    )
+
 
 def to_float(x):
-    try: return float(x)
-    except: return None
+    try:
+        return float(x)
+    except Exception:
+        return None
 
-def eps_formatter(y, _): return f"{y:,.0f}"
+
+def eps_formatter(y, _):
+    return f"{y:,.0f}"
+
 
 def draw(metric, ylabel, groups, idx, outpng, spacing=1.22, also_svg=False):
     keys = order_keys(list(groups.keys()))
     labels, values = [], []
-    for (ds, mode, cal) in keys:
+    for ds, mode, cal in keys:
         v = to_float(groups[(ds, mode, cal)][idx[metric]])
         if v is None:  # skip NA
             continue
@@ -95,10 +130,16 @@ def draw(metric, ylabel, groups, idx, outpng, spacing=1.22, also_svg=False):
 
     # Bar value labels (1 decimal everywhere for uniformity)
     for b, v in zip(bars, values):
-        ax.text(b.get_x() + b.get_width()/2, b.get_height()*1.01, f"{v:.1f}",
-                ha="center", va="bottom", fontsize=11)
+        ax.text(
+            b.get_x() + b.get_width() / 2,
+            b.get_height() * 1.01,
+            f"{v:.1f}",
+            ha="center",
+            va="bottom",
+            fontsize=11,
+        )
 
-    # More bottom margin so 2-line ticks don’t feel cramped
+    # More bottom margin so 2-line ticks donÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢t feel cramped
     fig.tight_layout()
     plt.subplots_adjust(bottom=0.28)
 
@@ -108,6 +149,7 @@ def draw(metric, ylabel, groups, idx, outpng, spacing=1.22, also_svg=False):
     plt.close(fig)
     print(f"Wrote {outpng}" + (" (+ .svg)" if also_svg else ""))
 
+
 def main():
     args = parse_args()
     if not os.path.exists(args.summary):
@@ -116,9 +158,34 @@ def main():
     groups, header = read_latest_groups(args.summary)
     idx = {name: i for i, name in enumerate(header)}
 
-    draw("p95_ms", "p95 latency (ms)", groups, idx, os.path.join(args.outdir, "latency_p95_ms.png"), spacing=args.spacing, also_svg=args.svg)
-    draw("p99_ms", "p99 latency (ms)", groups, idx, os.path.join(args.outdir, "latency_p99_ms.png"), spacing=args.spacing, also_svg=args.svg)
-    draw("eps",     "events/s",        groups, idx, os.path.join(args.outdir, "throughput_eps.png"), spacing=args.spacing, also_svg=args.svg)
+    draw(
+        "p95_ms",
+        "p95 latency (ms)",
+        groups,
+        idx,
+        os.path.join(args.outdir, "latency_p95_ms.png"),
+        spacing=args.spacing,
+        also_svg=args.svg,
+    )
+    draw(
+        "p99_ms",
+        "p99 latency (ms)",
+        groups,
+        idx,
+        os.path.join(args.outdir, "latency_p99_ms.png"),
+        spacing=args.spacing,
+        also_svg=args.svg,
+    )
+    draw(
+        "eps",
+        "events/s",
+        groups,
+        idx,
+        os.path.join(args.outdir, "throughput_eps.png"),
+        spacing=args.spacing,
+        also_svg=args.svg,
+    )
+
 
 if __name__ == "__main__":
     main()

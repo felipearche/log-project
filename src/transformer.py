@@ -109,7 +109,9 @@ class TransformerScorer:
         if n == 0:
             return self._unit(np.zeros(self.embed_dim, dtype=np.float32))
         # Right side of deque is most recent; assign ages 1..n (oldest->newest)
-        weights = np.array([self.decay ** (n - i) for i in range(1, n + 1)], dtype=np.float32)
+        weights = np.array(
+            [self.decay ** (n - i) for i in range(1, n + 1)], dtype=np.float32
+        )
         weights_sum = float(weights.sum())
         if weights_sum <= 0.0 or not math.isfinite(weights_sum):
             weights = np.ones(n, dtype=np.float32) / float(n)

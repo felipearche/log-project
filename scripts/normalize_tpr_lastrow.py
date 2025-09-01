@@ -1,4 +1,7 @@
-import sys, csv, io
+import sys
+import csv
+import io
+
 path = sys.argv[1] if len(sys.argv) > 1 else "experiments/summary.csv"
 with open(path, "r", encoding="utf-8") as f:
     rows = list(csv.reader(f))
