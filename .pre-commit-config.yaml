@@ -1,0 +1,14 @@
+﻿exclude: |
+  ^data/(mini_tokens\.json|synth_labels\.json|synth_tokens\.json)$
+
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.6.0
+    hooks:
+      - id: trailing-whitespace
+        # (optional) also keep JSON out of this hook:
+        exclude_types: [json]
+
+      - id: end-of-file-fixer
+        # IMPORTANT: this prevents touching ANY .json files
+        exclude_types: [json]

@@ -356,7 +356,7 @@ Windows 11 Home (build 26100)
 Client: 28.3.2 • Server: 28.3.2 • Docker Desktop 4.44.3
 
 **Image Python/libs**
-python==3.11.13; numpy==1.26.4; scikit-learn==1.5.2; matplotlib==3.9.2; psutil==7.0.0; scipy==1.16.1
+python==3.11.9; numpy==1.26.4; scikit-learn==1.5.2; matplotlib==3.9.2; psutil==7.0.0; scipy==1.16.1
 
 > Note: All throughput/latency numbers in this README were measured on the above machine unless noted.
 

@@ -23,4 +23,3 @@ if ($PSBoundParameters.ContainsKey('Data') -and $Data -ne "data/synth_tokens.jso
     # Use the image default CMD
     docker run --rm -v "${PWD}:/app" -e COMMIT=$env:COMMIT log-project:latest
 }
-
