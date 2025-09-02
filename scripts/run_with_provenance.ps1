@@ -1,4 +1,4 @@
-﻿param(
+param(
   [switch]$Build = $false,
   [string]$Seed  = "20250819",
   [string]$Data  = "data/synth_tokens.json",

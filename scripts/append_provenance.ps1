@@ -1,4 +1,4 @@
-﻿param(
+param(
   [Parameter(Mandatory=$true)][string]$Data,
   [Parameter(Mandatory=$true)][string]$Cmd,
   [Parameter(Mandatory=$true)][string]$Notes
