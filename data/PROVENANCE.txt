@@ -190,3 +190,4 @@ notes: 2025-09-01 – documentation-only: clarified scripts/fix_summary.py is DE
 notes: 2025-09-01 – hardening: pinned Docker base to python:3.11.9-alpine; added HASHES format guard test; metrics unchanged.
 notes: 2025-09-01 – tests: 6 passed (pytest 8.3.3 in Docker) including HASHES format guard; reproducibility unchanged.
 notes: 2025-09-01 – hardening/cleanup: pinned Docker base to python:3.11.9-slim; removed stray "\" in scripts/run_with_provenance.ps1; deleted .pytest_cache; removed placeholder "..." from .gitignore; Makefile cleaned; metrics & results unchanged.
+notes: 2025-09-02 – scripts/make_plots.py: expanded one-line exception; normalized comment apostrophe; ruff format; '.ruff_cache/' ignored; CITATION version ensured; tests: 6 passed (pytest 8.3.3 in Docker, python:3.11.9-alpine).
