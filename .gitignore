@@ -31,3 +31,4 @@ _audited/
 figures/*.svg
 
 .git_corrupt_backup/
+.ruff_cache/
