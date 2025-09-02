@@ -1,4 +1,4 @@
-param(
+﻿param(
   [switch]$Build = $false,
   [string]$Seed  = "20250819",
   [string]$Data  = "data/synth_tokens.json",
@@ -41,6 +41,6 @@ CSV_ROW: $last
 "@
 
 $utf8NoBom = New-Object System.Text.UTF8Encoding($false)
-[IO.File]::AppendAllText("data/PROVENANCE.txt", ($block -replace "`r`n","`n") + "`n", $utf8NoBom)
+[IO.File]::AppendAllText("docs/PROVENANCE.txt", ($block -replace "`r`n","`n") + "`n", $utf8NoBom)
 
 Write-Host "[provenance] commit=$commit  seed=$Seed  appended 1 block"

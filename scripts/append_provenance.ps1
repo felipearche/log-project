@@ -1,4 +1,4 @@
-param(
+﻿param(
   [Parameter(Mandatory=$true)][string]$Data,
   [Parameter(Mandatory=$true)][string]$Cmd,
   [Parameter(Mandatory=$true)][string]$Notes
@@ -21,5 +21,5 @@ CSV_ROW: $csvRow
 "@
 
 $utf8NoBom = New-Object System.Text.UTF8Encoding($false)
-[IO.File]::AppendAllText("data\PROVENANCE.txt", $block, $utf8NoBom)
+[IO.File]::AppendAllText("docs\PROVENANCE.txt", $block, $utf8NoBom)
 Write-Host "Appended provenance block." -ForegroundColor Green
