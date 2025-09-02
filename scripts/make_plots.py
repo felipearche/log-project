@@ -139,7 +139,7 @@ def draw(metric, ylabel, groups, idx, outpng, spacing=1.22, also_svg=False):
             fontsize=11,
         )
 
-    # More bottom margin so 2-line ticks donÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢t feel cramped
+    # More bottom margin so 2-line ticks donÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â‚¬Å¾Ã‚Â¢t feel cramped
     fig.tight_layout()
     plt.subplots_adjust(bottom=0.28)
 
