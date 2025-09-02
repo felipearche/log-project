@@ -120,6 +120,9 @@ Track every dataset in three places:
 2. **Policy:** `data/HASHES.txt` lists `YYYY-MM-DD  data/<path>  <bytes>  sha256=<HEX>` for each tracked artifact (UTF-8 **no BOM**, **LF**). Exactly **4 entries** are expected.
 3. `docs/PROVENANCE.txt` â€” one block per run, containing the **verbatim** `CSV_ROW:`.
 
+- **Scope clarification (2025-09-03):** `data/` now contains **artifact data only**.
+  Non-artifacts were relocated (`data/make_synth.py`→`scripts/`, `data/PROVENANCE.txt`→`docs/PROVENANCE.txt`, `data/DATASETS.md`→`docs/DATASETS.md`). `data/HASHES.txt` covers only artifact JSON/log files; docs/scripts are excluded.
+
 **Regenerate hashes (preferred):**
 ```powershell
 docker run --rm -v "${PWD}:/app" log-project:latest python scripts/hash_files.py
@@ -456,3 +459,4 @@ repository-code: <REPO_URL>
 
 - **2025-08-31**: Encoding/EOL compliance - Added a single trailing LF to `scripts/make_release.ps1` to conform to the repo policy (UTFâ€‘8 no BOM, LF, single trailing newline). See Â§11 for the policy and normalization script.; CPU_pct backfill (historic) - Backfilled two early `CPU_pct` blanks to the literal `NA` in `experiments/summary.csv` for full-column coverage and clarity. Immediately rebuilt `docs/PROVENANCE.txt` to preserve the strict 1:1 mapping with `CSV_ROW:` lines (postâ€‘check: CSV rows=26; PROVENANCE CSV_ROW=26).; Tests - Post-change test suite: 4 passed.
 - **2025-08-30**: TPR formatting policy enforced - `TPR_at_1pct_FPR` is four decimals for `synth_tokens` (e.g., `1.0000`) and the literal `NA` for `mini_tokens`. See the experiment schema and the table generator script.; Provenance 1:1 rebuilt - `docs/PROVENANCE.txt` now has exactly one `CSV_ROW:` per row in `experiments/summary.csv` (counts match). A `notes:` line was added to the latest block documenting this maintenance.; README table regenerated - `README_TABLE.txt` reflects the latest row per (dataset, mode, calibration) with canonical formatting (TPR 4dp, p95/p99/eps 1dp, `NA` where applicable).
+- **2025-09-03**: Repository hygiene & provenance scope — Moved non-artifacts out of `data/` (scripts→`scripts/`, docs→`docs/`); updated references to `docs/PROVENANCE.txt`; added `.gitattributes` (LF policy; keep protected JSONs byte-exact); ignored `.ruff_cache/` in `.gitignore`. Provenance 1:1 mapping unchanged; metrics unchanged.
