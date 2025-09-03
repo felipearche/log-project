@@ -200,3 +200,4 @@ notes: 2025-09-03 – Align Docker base image note:
 notes: 2025-09-03 – assets & attributes: normalized 3 SVGs (CRLF→LF, stripped trailing whitespace, UTF-8 no BOM, single trailing LF); updated .gitattributes to mark *.png as binary and normalized it to LF; hooks passed; tests unchanged; metrics unchanged.
 notes: 2025-09-03 – maintenance policy: switched '*.png' to 'binary' in .gitattributes; added local 'no-bom' pre-commit hook (scripts/check_no_bom.py) covering md/ps1/py/txt/yml/yaml; documented clean packaging via 'git archive'; normalized local .git/hooks/pre-commit to LF; re-ran hooks (passed); data/HASHES.txt unchanged (all entries match); protected JSON EOF policy verified.
 2025-09-03  maintenance: added dist/ to .gitignore; release zips via git archive into dist/
+2025-09-03  release: v0.1.1 tagged; CITATION.cff version=0.1.1 date-released=2025-09-03; untracked log-project-src.zip; added dist/ ignore; no data changes; tests=6 passed; HASHES verified.

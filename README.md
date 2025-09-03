@@ -317,7 +317,7 @@ Do **not** add model files or release hashes to `data/HASHES.txt` (that file mus
 ## 14) Fresh-clone reproducibility check
 ```powershell
 cd ..
-git clone <REPO_URL> log-project-fresh
+git clone https://github.com/felipearche/log-project log-project-fresh
 cd log-project-fresh
 docker build -t log-project:latest .
 $env:COMMIT = (git rev-parse --short HEAD).Trim()
@@ -448,10 +448,10 @@ Felipe Arche. *log-project: Streaming, Drift-Aware Log Anomaly Detection (Calibr
 See also `CITATION.cff` for a machine-readable citation.
 
 ### Repository link
-- Replace every `<REPO_URL>` with your **actual** HTTPS repo URL.
+- Replace every `https://github.com/felipearche/log-project` with your **actual** HTTPS repo URL.
 - Set the same URL in `CITATION.cff`:
 ```yaml
-repository-code: <REPO_URL>
+repository-code: https://github.com/felipearche/log-project
 ```
 
 ---
