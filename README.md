@@ -460,3 +460,13 @@ repository-code: <REPO_URL>
 - **2025-08-31**: Encoding/EOL compliance - Added a single trailing LF to `scripts/make_release.ps1` to conform to the repo policy (UTF8 no BOM, LF, single trailing newline). See §11 for the policy and normalization script.; CPU_pct backfill (historic) - Backfilled two early `CPU_pct` blanks to the literal `NA` in `experiments/summary.csv` for full-column coverage and clarity. Immediately rebuilt `docs/PROVENANCE.txt` to preserve the strict 1:1 mapping with `CSV_ROW:` lines (postcheck: CSV rows=26; PROVENANCE CSV_ROW=26).; Tests - Post-change test suite: 4 passed.
 - **2025-08-30**: TPR formatting policy enforced - `TPR_at_1pct_FPR` is four decimals for `synth_tokens` (e.g., `1.0000`) and the literal `NA` for `mini_tokens`. See the experiment schema and the table generator script.; Provenance 1:1 rebuilt - `docs/PROVENANCE.txt` now has exactly one `CSV_ROW:` per row in `experiments/summary.csv` (counts match). A `notes:` line was added to the latest block documenting this maintenance.; README table regenerated - `README_TABLE.txt` reflects the latest row per (dataset, mode, calibration) with canonical formatting (TPR 4dp, p95/p99/eps 1dp, `NA` where applicable).
 - **2025-09-03**: Repository hygiene & provenance scope  Moved non-artifacts out of `data/` (scripts`scripts/`, docs`docs/`); updated references to `docs/PROVENANCE.txt`; added `.gitattributes` (LF policy; keep protected JSONs byte-exact); ignored `.ruff_cache/` in `.gitignore`. Provenance 1:1 mapping unchanged; metrics unchanged.
+
+## Maintenance summaries (latest)
+
+- **2025-09-03** (IST): **Green build** & repo hygiene
+  - Fixed mid-token splits in `src/stream.py`, `src/calibration.py`, `src/log_tokenize.py`, and `scripts/make_plots.py`.
+  - Corrected summary writing in `src/stream.py`: **TPR** now formatted to **4 decimals or `NA`**; **anomalies** column now records `n_anom` (previously mis-written).
+  - Enforced **LF** line endings across the tree; removed **UTF‑8 BOM** from `.pre-commit-config.yaml`; widened local **BOM guard** to include `ya?ml`.
+  - Re-generated `experiments/summary.csv` **with labels** for `synth_tokens`; `p95 <= p99` and TPR formatting policy satisfied.
+  - **Pre-commit:** all hooks pass; **tests:** 6 passed (`pytest==8.3.3`).
+  - **Policy reminders:** three protected JSONs (`data/mini_tokens.json`, `data/synth_labels.json`, `data/synth_tokens.json`) remain byte-identical with **no trailing newline**; `data/HASHES.txt` unchanged (4 lines, uppercase `sha256=...`).
