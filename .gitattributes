@@ -7,3 +7,4 @@ data/mini_tokens.json   -text
 data/synth_labels.json  -text
 data/synth_tokens.json  -text
 data/raw/mini.log       -text
+*.png -text
