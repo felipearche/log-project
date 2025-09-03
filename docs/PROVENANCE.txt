@@ -202,3 +202,4 @@ notes: 2025-09-03 – maintenance policy: switched '*.png' to 'binary' in .gitat
 2025-09-03  maintenance: added dist/ to .gitignore; release zips via git archive into dist/
 2025-09-03  release: v0.1.1 tagged; CITATION.cff version=0.1.1 date-released=2025-09-03; untracked log-project-src.zip; added dist/ ignore; no data changes; tests=6 passed; HASHES verified.
 2025-09-03  maintenance: standardized packaging dir to dist/; updated release script & README; cleaned caches.
+2025-09-03  provenance: normalized data/HASHES.txt to 3-field canonical format (path␠␠size␠␠SHA256); tests updated to accept legacy 4-field; cryptographic values unchanged.
