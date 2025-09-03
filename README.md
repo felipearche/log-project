@@ -236,6 +236,8 @@ docker run --rm -v "${PWD}:/app" log-project:latest `
 
 ## 11) Encoding & EOL policy
 
+> **Note (protected JSONs):** The three data JSONs — `data/mini_tokens.json`, `data/synth_labels.json`, `data/synth_tokens.json` — are intentionally tracked **byte-for-byte** for provenance and hashing. They are marked `-text` in `.gitattributes` and must remain exactly identical to the published hashes, including **no trailing newline**. Most editors try to add one; please do not.
+
 - All tracked text files are **UTF-8 (no BOM)** with **LF** line endings, and each file ends with a **single trailing newline**.
 - Enforced by the checked-in **`.gitattributes`** (authoritative). An `.editorconfig` is **optional** and may be added locally as an editor hint.
 - Repo can be normalized with `git add --renormalize .` after setting the policy.
