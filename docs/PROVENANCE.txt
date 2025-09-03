@@ -194,7 +194,7 @@ notes: 2025-09-02 – scripts/make_plots.py: expanded one-line exception; normal
 notes: 2025-09-03 – moved non-artifacts out of data/ (make_synth.py→scripts/, PROVENANCE.txt→docs/, DATASETS.md→docs/); updated README and scripts to new paths; added .gitattributes (LF policy; protected JSONs -text) and '.ruff_cache/' to .gitignore; tests passed; provenance/CSV mapping unchanged; metrics unchanged.
 notes: 2025-09-03 – audit: verified HASHES format and contents; 6 tests passing; protected JSON EOF policy enforced; removed BOM from pre-commit config and widened BOM guard to YAML; local .git/hooks/pre-commit had CRLF (non-tracked).
 notes: 2025-09-03 – Green build: fixed mid-token splits; corrected stream summary (TPR 4dp or NA; anomalies column fixed); normalized EOL to LF; widened BOM guard to include YAML/YML; regenerated experiments/summary.csv with labels (synth_tokens); hooks passed; tests: 6 passed (pytest 8.3.3). Metrics unchanged.
-
-2025-09-03 â€“ Align Docker base image note:
+notes: 2025-09-03 â€“ Align Docker base image note:
   - Actual base image in Dockerfile: python:3.11.9-slim
   - Corrected prior note to match Dockerfile and ensure audit-grade consistency.
+notes: 2025-09-03 – assets & attributes: normalized 3 SVGs (CRLF→LF, stripped trailing whitespace, UTF-8 no BOM, single trailing LF); updated .gitattributes to mark *.png as binary and normalized it to LF; hooks passed; tests unchanged; metrics unchanged.
