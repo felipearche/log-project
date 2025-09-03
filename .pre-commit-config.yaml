@@ -23,3 +23,10 @@ repos:
     hooks:
       - id: ruff
       - id: ruff-format
+  - repo: local
+    hooks:
+      - id: forbid-bom
+        name: Forbid UTF-8 BOM in text files
+        entry: python scripts/check_no_bom.py
+        language: system
+        files: \.(md|ps1|py|txt)$

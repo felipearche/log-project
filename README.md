@@ -1,4 +1,4 @@
-﻿# log-project â€” Streaming, Drift-Aware Log Anomaly Detection (Calibrated, Reproducible)
+# log-project â€” Streaming, Drift-Aware Log Anomaly Detection (Calibrated, Reproducible)
 
 ## 0) Overview
 A real-time log anomaly detector that:
