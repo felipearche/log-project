@@ -456,7 +456,7 @@ repository-code: <REPO_URL>
 
 ---
 
-## Maintenance summaries
+## Maintenance summaries (latest)
 
 - **2025-08-31**: Encoding/EOL compliance - Added a single trailing LF to `scripts/make_release.ps1` to conform to the repo policy (UTF8 no BOM, LF, single trailing newline). See §11 for the policy and normalization script.; CPU_pct backfill (historic) - Backfilled two early `CPU_pct` blanks to the literal `NA` in `experiments/summary.csv` for full-column coverage and clarity. Immediately rebuilt `docs/PROVENANCE.txt` to preserve the strict 1:1 mapping with `CSV_ROW:` lines (postcheck: CSV rows=26; PROVENANCE CSV_ROW=26).; Tests - Post-change test suite: 4 passed.
 - **2025-08-30**: TPR formatting policy enforced - `TPR_at_1pct_FPR` is four decimals for `synth_tokens` (e.g., `1.0000`) and the literal `NA` for `mini_tokens`. See the experiment schema and the table generator script.; Provenance 1:1 rebuilt - `docs/PROVENANCE.txt` now has exactly one `CSV_ROW:` per row in `experiments/summary.csv` (counts match). A `notes:` line was added to the latest block documenting this maintenance.; README table regenerated - `README_TABLE.txt` reflects the latest row per (dataset, mode, calibration) with canonical formatting (TPR 4dp, p95/p99/eps 1dp, `NA` where applicable).
@@ -466,9 +466,6 @@ repository-code: <REPO_URL>
   - Updated `.gitattributes` to mark `*.png` as **binary** (prevents EOL normalization and diffs on images); normalized `.gitattributes` to **LF**.
   - Added a dated PROVENANCE note recording the actual Docker base image and the above maintenance.
   - Hooks: all passing; tests: unchanged; metrics/results: unchanged.
-
-## Maintenance summaries (latest)
-
 - **2025-09-03** (IST): **Green build** & repo hygiene
   - Fixed mid-token splits in `src/stream.py`, `src/calibration.py`, `src/log_tokenize.py`, and `scripts/make_plots.py`.
   - Corrected summary writing in `src/stream.py`: **TPR** now formatted to **4 decimals or `NA`**; **anomalies** column now records `n_anom` (previously mis-written).
@@ -476,3 +473,16 @@ repository-code: <REPO_URL>
   - Re-generated `experiments/summary.csv` **with labels** for `synth_tokens`; `p95 <= p99` and TPR formatting policy satisfied.
   - **Pre-commit:** all hooks pass; **tests:** 6 passed (`pytest==8.3.3`).
   - **Policy reminders:** three protected JSONs (`data/mini_tokens.json`, `data/synth_labels.json`, `data/synth_tokens.json`) remain byte-identical with **no trailing newline**; `data/HASHES.txt` unchanged (4 lines, uppercase `sha256=...`).
+
+---
+
+## Release Packaging (Reproducible)
+
+To produce a clean source archive (no caches, no `.git`):
+
+```powershell
+git archive --format=zip -o log-project-src.zip HEAD
+```
+
+Policy recap: UTF-8 **without BOM**, **LF-only** line endings; a single final LF on text files.
+Exceptions: `data/mini_tokens.json`, `data/synth_labels.json`, `data/synth_tokens.json` must **not** end with a newline.
