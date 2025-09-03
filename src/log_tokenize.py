@@ -1,7 +1,9 @@
+#!/usr/bin/env python3
 import re
 import json
 import argparse
 import os
+from typing import List
 
 NUM_RE = re.compile(r"\d+")
 HEX_RE = re.compile(r"0x[0-9A-Fa-f]+")
@@ -17,7 +19,7 @@ def normalize_text(line: str) -> str:
 
 
 def to_sequences(in_path: str, out_path: str, max_lines: int = 200000) -> None:
-    seqs = []
+    seqs: List[List[str]] = []
     with open(in_path, "r", encoding="utf-8", errors="strict") as f:
         for i, raw in enumerate(f, 1):
             if i > max_lines:
@@ -27,9 +29,9 @@ def to_sequences(in_path: str, out_path: str, max_lines: int = 200000) -> None:
             if toks:
                 seqs.append(toks)
     os.makedirs(os.path.dirname(out_path) or ".", exist_ok=True)
+    # Protected JSONs must end without a trailing newline
     with open(out_path, "w", encoding="utf-8", newline="") as g:
         json.dump(seqs, g, ensure_ascii=False)
-        g.write("\n")
 
 
 if __name__ == "__main__":

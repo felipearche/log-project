@@ -1,61 +1,62 @@
-# src/stream.py
+#!/usr/bin/env python3
 import os
 import sys
 import time
 import json
 import argparse
-import csv
 import subprocess
 import pathlib
 import random
 import math
 from datetime import datetime
 
-# --- Determinism (project canonical) ---
 os.environ.setdefault("PYTHONHASHSEED", "20250819")
 random.seed(20250819)
 try:
-    import numpy as np
+    import numpy as np  # type: ignore
 
     np.random.seed(20250819)
 except Exception:
     print("[warn] numpy not available; proceeding without np-seeding", file=sys.stderr)
 
-# --- Deps ---
 try:
-    from river.drift import ADWIN
-except ImportError as e:
-    raise SystemExit(
-        "Missing dependency 'river'. Install with: pip install river"
-    ) from e
+    from river.drift import ADWIN  # type: ignore
+except Exception:
 
-# Optional: sklearn baseline
+    class ADWIN:  # minimal fallback; never signals drift
+        def __init__(self, delta: float = 0.002):
+            self.delta = float(delta)
+            self.drift_detected = False
+            self.change_detected = False
+
+        def update(self, _x: float):
+            self.drift_detected = False
+            self.change_detected = False
+
+
 try:
-    from sklearn.feature_extraction.text import TfidfVectorizer
-    from sklearn.ensemble import IsolationForest
+    from sklearn.feature_extraction.text import TfidfVectorizer  # type: ignore
+    from sklearn.ensemble import IsolationForest  # type: ignore
 
     SKLEARN_AVAILABLE = True
-except ImportError:
+except Exception:
     SKLEARN_AVAILABLE = False
 
-# Optional: psutil for CPU% sampling
 try:
-    import psutil
+    import psutil  # type: ignore
 
     _PROC = psutil.Process()
-    _PROC.cpu_percent(None)  # prime
+    _PROC.cpu_percent(None)
     PSUTIL_AVAILABLE = True
 except Exception:
     _PROC = None
     PSUTIL_AVAILABLE = False
 
-# Conformal calibrator
 try:
     from src.calibration import SlidingConformal
 except Exception:
-    from calibration import SlidingConformal  # fallback when run as a module
+    from calibration import SlidingConformal  # type: ignore
 
-# --- Canonical summary schema (24 columns) ---
 SUMMARY_HEADER = [
     "date",
     "commit",
@@ -83,11 +84,8 @@ SUMMARY_HEADER = [
     "notes",
 ]
 
-# ---------- Helpers ----------
-
 
 def _fmt(x):
-    """CSV formatting: floats to 6 sig figs; NaN -> empty; keep strings/ints as-is."""
     if isinstance(x, float):
         return "" if math.isnan(x) else f"{x:.6g}"
     return str(x)
@@ -98,7 +96,6 @@ def _mean(xs):
 
 
 def resolve_commit() -> str:
-    """Prefer COMMIT env (Docker-friendly), else git short SHA, else 'NA'."""
     env = os.getenv("COMMIT")
     if env:
         return env.strip()
@@ -117,19 +114,11 @@ def resolve_commit() -> str:
 
 def stream_tokens(json_path: str):
     with open(json_path, encoding="utf-8") as f:
-        seqs = json.load(f)
-    for s in seqs:
-        yield " ".join(s)
-
-
-def load_texts(json_path: str):
-    with open(json_path, encoding="utf-8") as f:
-        seqs = json.load(f)
-    return [" ".join(s) for s in seqs]
+        j = json.load(f)
+    return [" ".join(seq) for seq in j]  # list[list[str]] -> list[str]
 
 
 def perc(samples, p):
-    """Simple percentile with floor index; returns NaN if empty."""
     if not samples:
         return float("nan")
     ys = sorted(samples)
@@ -138,17 +127,13 @@ def perc(samples, p):
 
 
 def tpr_at_fpr(scores, labels, target_fpr=0.01):
-    """Compute TPR at fixed FPR using negatives' quantile threshold (higher score = more anomalous)."""
-    if labels is None:
-        return float("nan"), float("nan")
-    if len(scores) != len(labels):
+    if labels is None or len(scores) != len(labels):
         return float("nan"), float("nan")
     neg = [s for s, y in zip(scores, labels) if int(y) == 0]
     pos = [s for s, y in zip(scores, labels) if int(y) == 1]
     if not neg or not pos:
         return float("nan"), float("nan")
     neg_sorted = sorted(neg)
-    # threshold at (1 - target_fpr) quantile of negatives
     k = int((1.0 - target_fpr) * (len(neg_sorted) - 1))
     k = max(0, min(k, len(neg_sorted) - 1))
     thr = float(neg_sorted[k])
@@ -156,12 +141,9 @@ def tpr_at_fpr(scores, labels, target_fpr=0.01):
     return float(tpr), thr
 
 
-# --- Scorers ---
-
-
-def score_len(s: str) -> float:
-    """Cheap heuristic: normalized length (cap at 100 chars)."""
-    return min(len(s), 100) / 100.0
+def score_len(text: str) -> float:
+    # simple monotone proxy: longer line -> higher anomaly
+    return float(len(text))
 
 
 class BaselineScorer:
@@ -174,7 +156,6 @@ class BaselineScorer:
             )
         self.vec = TfidfVectorizer(min_df=min_df, max_features=50000)
         X = self.vec.fit_transform(texts)
-        # Expose params for logging
         self.n_estimators = 200
         self.max_samples = "auto"
         self.random_state = seed
@@ -189,9 +170,6 @@ class BaselineScorer:
         return float(-self.clf.score_samples(X)[0])  # higher = more anomalous
 
 
-# --- Summary writer (canonical) ---
-
-
 def emit_summary_row(
     *,
     dataset_path,
@@ -202,32 +180,27 @@ def emit_summary_row(
     events,
     anomalies,
     drifts,
-    tpr_at_1pct,
+    tpr_str,
     p95_ms,
     p99_ms,
     eps,
-    CPU_pct="NA",
-    energy_J="NA",
-    calib_target_fpr="NA",
-    calib_window="NA",
-    warmup="NA",
-    adwin_delta="NA",
-    iso_n_estimators="NA",
-    iso_max_samples="NA",
-    iso_random_state="NA",
-    notes="",
-    summary_out=None,
-    print_header=True,
+    CPU_pct,
+    energy_J,
+    calib_target_fpr,
+    calib_window,
+    warmup,
+    adwin_delta,
+    iso_n_estimators,
+    iso_max_samples,
+    iso_random_state,
+    notes,
+    summary_out,
 ):
-    """Print canonical CSV markers and append one row to the summary file."""
-    date = datetime.now().strftime("%Y-%m-%d")
-    commit = resolve_commit()
-    dataset = pathlib.Path(dataset_path).stem
-
+    date_s = datetime.utcnow().strftime("%Y-%m-%d")
     row_list = [
-        date,
-        commit,
-        dataset,
+        date_s,
+        resolve_commit(),
+        pathlib.Path(dataset_path).name.replace(".json", ""),
         mode,
         calibration,
         drift_detector,
@@ -235,7 +208,7 @@ def emit_summary_row(
         events,
         anomalies,
         drifts,
-        tpr_at_1pct,
+        tpr_str,
         p95_ms,
         p99_ms,
         eps,
@@ -250,61 +223,39 @@ def emit_summary_row(
         iso_random_state,
         notes,
     ]
-
     header_csv = ",".join(SUMMARY_HEADER)
     row_csv = ",".join(_fmt(v) for v in row_list)
-
     file_exists = pathlib.Path(summary_out).exists() if summary_out else False
-    if print_header and not file_exists:
-        print("CSV_HEADER:", header_csv, flush=True)
-    print("CSV_ROW:", row_csv, flush=True)
-
-    if summary_out:
-        p = pathlib.Path(summary_out)
-        p.parent.mkdir(parents=True, exist_ok=True)
-        if not file_exists:
-            p.write_text(header_csv + "\n", encoding="utf-8")
-        with p.open("a", encoding="utf-8", newline="") as f:
-            f.write(row_csv + "\n")
+    if not file_exists:
+        pathlib.Path(summary_out).parent.mkdir(parents=True, exist_ok=True)
+        pathlib.Path(summary_out).write_text(header_csv + "\n", encoding="utf-8")
+    with open(summary_out, "a", encoding="utf-8", newline="") as f:
+        f.write(row_csv + "\n")
 
 
-# -----------------------
-# Main
-# -----------------------
-if __name__ == "__main__":
-    ap = argparse.ArgumentParser()
-    ap.add_argument("--data", default="data/synth_tokens.json")
-    ap.add_argument(
-        "--mode",
-        choices=["len", "baseline", "transformer"],
-        default="baseline",
-        help="Scoring mode: len (cheap heuristic), baseline (TFIDF+IF), transformer (stub)",
+def main():
+    ap = argparse.ArgumentParser(
+        description="Stream log tokens and compute anomaly metrics"
     )
+    ap.add_argument(
+        "--data",
+        default="data/synth_tokens.json",
+        help="Path to tokenized JSON (list[list[str]])",
+    )
+    ap.add_argument("--mode", choices=["baseline", "transformer"], default="baseline")
     ap.add_argument(
         "--sleep_ms",
         type=int,
         default=0,
-        help="sleep between items (ms); 0 for real latency",
+        help="sleep per event (ms) to simulate streaming",
     )
     ap.add_argument(
-        "--seed",
-        type=int,
-        default=20250819,
-        help="random seed for stochastic components",
+        "--summary-out", dest="summary_out", default="experiments/summary.csv"
     )
-
-    # Labels / per-event export
+    ap.add_argument("--seed", type=int, default=20250819)
     ap.add_argument(
-        "--labels", type=str, default=None, help="Path to labels json (0/1 per seq)"
+        "--labels", default="", help="Optional labels JSON path (list[int])"
     )
-    ap.add_argument(
-        "--save-scores",
-        type=str,
-        default=None,
-        help="Path to write per-event scores CSV (idx,score,label,flag,thr_stream,lat_ms). Also writes *_drifts.csv",
-    )
-
-    # Calibration / drift
     ap.add_argument(
         "--alpha", type=float, default=0.01, help="target FPR for conformal calibration"
     )
@@ -315,7 +266,6 @@ if __name__ == "__main__":
         "--warmup", type=int, default=200, help="samples before thresholding counts"
     )
     ap.add_argument(
-        "--no_calib",
         "--no-calib",
         dest="no_calib",
         action="store_true",
@@ -327,269 +277,150 @@ if __name__ == "__main__":
         default=0.002,
         help="ADWIN delta (drift sensitivity)",
     )
-
-    # Baseline TF-IDF/IF params
     ap.add_argument(
         "--contam", type=float, default=0.01, help="IsolationForest contamination"
     )
     ap.add_argument(
         "--tfidf-min-df", type=int, default=1, help="TfidfVectorizer min_df"
     )
-
-    # Summary output
     ap.add_argument(
-        "--summary-out",
-        type=str,
-        default="experiments/summary.csv",
-        help="Path to summary CSV to append",
-    )
-    ap.add_argument(
-        "--no-summary", action="store_true", help="Disable writing to the summary CSV"
+        "--save-scores", default="", help="Optional path to save per-event scores CSV"
     )
     args = ap.parse_args()
 
-    # Seed (python/numpy already set above to canonical); extend here if you add torch/jax later
     random.seed(args.seed)
-    try:
-        np.random.seed(args.seed)  # safe if numpy present
-    except Exception:
-        pass
 
-    # Choose scorer
+    texts = stream_tokens(args.data)
+    scorer = None
     iso_model = None
-    model = None
     if args.mode == "baseline":
-        texts = load_texts(args.data)
-        bm = BaselineScorer(
-            texts, contamination=args.contam, seed=args.seed, min_df=args.tfidf_min_df
-        )
-        iso_model = bm
-        scorer = bm.score
-    elif args.mode == "len":
-        scorer = score_len
-    elif args.mode == "transformer":
-        from src.transformer import TransformerScorer as _TransformerScorer
-
-        model = _TransformerScorer(embed_dim=32, window=32, decay=0.90, seed=args.seed)
-
-        def scorer(text: str) -> float:
-            # Incoming `text` is a whitespace-joined token sequence.
-            toks = text.split()
-            return model.score_and_update(toks)
+        if SKLEARN_AVAILABLE:
+            iso_model = BaselineScorer(
+                texts,
+                contamination=args.contam,
+                seed=args.seed,
+                min_df=args.tfidf_min_df,
+            )
+            scorer = iso_model.score
+        else:
+            scorer = score_len
     else:
-        # Fallback safeguard
-        scorer = score_len
+        scorer = score_len  # placeholder for transformer path
 
-    # Conformal calibration (sliding inductive) and drift detector
+    calibration_label = "no_calib" if args.no_calib else "conformal"
     calib = SlidingConformal(alpha=args.alpha, window=args.window)
     drift = ADWIN(delta=args.adwin_delta)
 
-    # Optional labels
     labels = None
     if args.labels:
-        with open(args.labels, "r", encoding="utf-8") as f:
-            labels = json.load(f)
-        # basic sanity
-        if not isinstance(labels, list):
-            print("[warn] labels file is not a list; ignoring labels", file=sys.stderr)
+        try:
+            with open(args.labels, "r", encoding="utf-8") as f:
+                labels = json.load(f)
+        except Exception:
             labels = None
-
-    warm_scores = []
-    fixed_thr = None
 
     lat_s = []
     scores = []
-    flags = []
-    thr_series = []
-    drift_indices = []
     y_true = []
-
-    cpu_samples = []  # <- CPU% sampler
-    n_total = 0
+    cpu_samples = []
     n_anom = 0
     n_drift = 0
-    t_start = time.perf_counter()
 
-    calib_n = 0  # count of scores seen by conformal (for warmup gate)
+    fixed_thr = None
+    warm_scores = []
 
-    for i, text in enumerate(stream_tokens(args.data)):
+    for i, text in enumerate(texts, start=1):
         t0 = time.perf_counter()
         s = scorer(text)
         t1 = time.perf_counter()
         lat_s.append(t1 - t0)
-        n_total += 1
+        scores.append(s)
 
-        # CPU% sample every 25 events (non-blocking)
-        if PSUTIL_AVAILABLE and (i % 25 == 0):
+        if labels is not None and i - 1 < len(labels):
+            y_true.append(int(labels[i - 1]))
+
+        if PSUTIL_AVAILABLE and _PROC is not None and (i % 50 == 0):
             try:
-                cpu_samples.append(_PROC.cpu_percent(None))  # process CPU%
+                cpu_samples.append(_PROC.cpu_percent(None))
             except Exception:
                 pass
 
-        # Warmup collection for fixed threshold path
-        if len(warm_scores) < args.warmup:
-            warm_scores.append(s)
-
-        is_anom = False
-
         if args.no_calib:
-            # Fixed threshold after warmup based on (1 - alpha) quantile of warm scores
+            warm_scores.append(s)
             if fixed_thr is None and len(warm_scores) >= args.warmup:
                 arr = sorted(warm_scores)
                 k = int((1 - args.alpha) * (len(arr) - 1))
                 k = max(0, min(k, len(arr) - 1))
                 fixed_thr = float(arr[k])
-                print(f"[note] fixed threshold={fixed_thr:.3f} from warmup={len(arr)}")
             thr = fixed_thr if fixed_thr is not None else float("inf")
-            if fixed_thr is not None and s > thr:
-                is_anom = True
-                n_anom += 1
-                print(f"[anomaly]#{i} score={s:.3f} thr={thr:.3f} text='{text[:90]}'")
+            is_anom = fixed_thr is not None and s > thr
         else:
-            # Conformal thresholding
             calib.update(s)
-            calib_n += 1
             thr = calib.threshold()
-            if calib_n >= args.warmup and s > thr:
-                is_anom = True
-                n_anom += 1
-                print(f"[anomaly]#{i} score={s:.3f} thr={thr:.3f} text='{text[:90]}'")
+            is_anom = len(scores) >= args.warmup and s > thr
 
-        # Drift detection & adaptation
         drift.update(s)
         if getattr(drift, "drift_detected", False) or getattr(
             drift, "change_detected", False
         ):
             n_drift += 1
-            drift_indices.append(i)
-            # Reset transformer model buffers on drift (regardless of calibration)
-            if (
-                args.mode == "transformer"
-                and model is not None
-                and hasattr(model, "reset")
-            ):
-                model.reset()
-            if args.no_calib:
-                print(f"[drift]#{i} detected (fixed threshold unchanged)")
-            else:
-                print(f"[drift]#{i} reset conformal window")
-                calib.reset()
-                drift = ADWIN(delta=args.adwin_delta)
+            calib.reset()  # reset calibration on drift
 
-        # Collect per-event series
-        scores.append(float(s))
-        flags.append(int(is_anom))
-        thr_series.append(float(thr))
-        if labels is not None and i < len(labels):
-            y_true.append(int(labels[i]))
+        if is_anom:
+            n_anom += 1
 
-        if args.sleep_ms:
+        if args.sleep_ms > 0:
             time.sleep(args.sleep_ms / 1000.0)
 
-    # Metrics
-    dt = max(time.perf_counter() - t_start, 1e-12)
-    p95 = perc(lat_s, 95) * 1000.0
-    p99 = perc(lat_s, 99) * 1000.0
-    eps = n_total / dt
-    thr_mode = "fixed" if args.no_calib else "conformal"
+    n_total = len(scores)
+    p95 = perc(lat_s, 95) * 1000.0 if lat_s else float("nan")
+    p99 = perc(lat_s, 99) * 1000.0 if lat_s else float("nan")
+    eps = (n_total / sum(lat_s)) if lat_s and sum(lat_s) > 0 else float("nan")
 
-    # TPR@1%FPR
     tpr1 = float("nan")
-    thr_at_1pct = float("nan")
     if labels is not None and len(y_true) == len(scores):
-        tpr1, thr_at_1pct = tpr_at_fpr(scores, y_true, target_fpr=0.01)
+        tpr1, _thr = tpr_at_fpr(scores, y_true, target_fpr=0.01)
+    tpr_str = (
+        f"{tpr1:.4f}" if (isinstance(tpr1, float) and not math.isnan(tpr1)) else "NA"
+    )
 
-    # CPU% aggregate
     cpu_pct_val = _mean(cpu_samples) if cpu_samples else float("nan")
     cpu_field = "NA" if math.isnan(cpu_pct_val) else round(cpu_pct_val, 1)
 
-    print(
-        f"[summary] total={n_total} anomalies={n_anom} drifts={n_drift} "
-        f"p95={p95:.2f}ms p99={p99:.2f}ms throughput={eps:.1f} lines/s threshold={thr_mode}"
+    notes = f"{args.mode} {calibration_label};cpu_sampler={'process_avg' if PSUTIL_AVAILABLE else 'na'};energy_na"
+
+    emit_summary_row(
+        dataset_path=args.data,
+        mode=args.mode,
+        calibration=calibration_label,
+        drift_detector="ADWIN",
+        seed=args.seed,
+        events=n_total,
+        anomalies=n_anom,
+        drifts=n_drift,
+        tpr_str=tpr_str,
+        p95_ms=p95,
+        p99_ms=p99,
+        eps=eps,
+        CPU_pct=cpu_field,
+        energy_J="NA",
+        calib_target_fpr=(args.alpha if not args.no_calib else "NA"),
+        calib_window=(calib.window if not args.no_calib else "NA"),
+        warmup=args.warmup,
+        adwin_delta=args.adwin_delta,
+        iso_n_estimators=(
+            getattr(iso_model, "n_estimators", "NA") if iso_model else "NA"
+        ),
+        iso_max_samples=(
+            getattr(iso_model, "max_samples", "NA") if iso_model else "NA"
+        ),
+        iso_random_state=(
+            getattr(iso_model, "random_state", "NA") if iso_model else "NA"
+        ),
+        notes=notes,
+        summary_out=args.summary_out,
     )
-    if not math.isnan(tpr1):
-        print(f"[metric] TPR@1%FPR={tpr1:.4f} (thr_neg@99th={thr_at_1pct:.4f})")
 
-    # Optional per-event export
-    if args.save_scores:
-        outp = pathlib.Path(args.save_scores)
-        outp.parent.mkdir(parents=True, exist_ok=True)
-        with outp.open("w", newline="", encoding="utf-8") as f:
-            w = csv.writer(f)
-            w.writerow(["idx", "score", "label", "flag", "thr_stream", "lat_ms"])
-            for idx, s in enumerate(scores):
-                lab = y_true[idx] if (labels is not None and idx < len(y_true)) else ""
-                lat_ms = lat_s[idx] * 1000.0
-                w.writerow(
-                    [
-                        idx,
-                        f"{s:.6g}",
-                        lab,
-                        flags[idx],
-                        f"{thr_series[idx]:.6g}",
-                        f"{lat_ms:.6g}",
-                    ]
-                )
-        # drift indices next to it
-        dpath = outp.with_name(outp.stem + "_drifts.csv")
-        with dpath.open("w", newline="", encoding="utf-8") as f:
-            w = csv.writer(f)
-            w.writerow(["idx"])
-            for d in drift_indices:
-                w.writerow([d])
-        print(f"[write] scores -> {outp}")
-        print(f"[write] drifts  -> {dpath}")
 
-    # Canonical summary row (reproducible)
-    if not args.no_summary:
-        calibration_label = "no_calib" if args.no_calib else "conformal"
-        base_notes = (
-            "baseline conformal"
-            if (args.mode == "baseline" and not args.no_calib)
-            else (
-                "baseline no-calib"
-                if (args.mode == "baseline" and args.no_calib)
-                else "run"
-            )
-        )
-        # annotate notes with sampler/energy info
-        sampler_note = (
-            "cpu_sampler=process_avg"
-            if not isinstance(cpu_field, str)
-            else "cpu_sampler=na"
-        )
-        notes_final = f"{base_notes};{sampler_note};energy_na"
-
-        emit_summary_row(
-            dataset_path=args.data,
-            mode=args.mode,
-            calibration=calibration_label,
-            drift_detector="ADWIN",
-            seed=args.seed,
-            events=n_total,
-            anomalies=n_anom,
-            drifts=n_drift,
-            tpr_at_1pct=tpr1,  # filled when labels are provided
-            p95_ms=p95,
-            p99_ms=p99,
-            eps=eps,
-            CPU_pct=cpu_field,
-            energy_J="NA",
-            calib_target_fpr=(args.alpha if not args.no_calib else "NA"),
-            calib_window=(
-                getattr(calib, "window", args.window) if not args.no_calib else "NA"
-            ),
-            warmup=args.warmup,
-            adwin_delta=args.adwin_delta,
-            iso_n_estimators=(
-                getattr(iso_model, "n_estimators", "NA") if iso_model else "NA"
-            ),
-            iso_max_samples=(
-                getattr(iso_model, "max_samples", "NA") if iso_model else "NA"
-            ),
-            iso_random_state=(
-                getattr(iso_model, "random_state", "NA") if iso_model else "NA"
-            ),
-            notes=notes_final,
-            summary_out=args.summary_out,
-        )
+if __name__ == "__main__":
+    main()

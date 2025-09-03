@@ -1,20 +1,15 @@
+#!/usr/bin/env python3
 import argparse
 import csv
 import os
-import sys
 from collections import OrderedDict
+
 import matplotlib
+
+matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 from matplotlib.ticker import FuncFormatter
 
-#!/usr/bin/env python3
-# scripts/make_plots.py
-matplotlib.use("Agg")
-# Always save with a white background (looks good in light/dark docs)
-matplotlib.rcParams["savefig.facecolor"] = "white"
-
-
-# Stable ordering for bars
 DS_ORDER = ["synth_tokens", "mini_tokens"]
 MODE_ORDER = ["baseline", "transformer"]
 CAL_ORDER = ["conformal", "no_calib"]
@@ -22,17 +17,14 @@ CAL_ORDER = ["conformal", "no_calib"]
 
 def parse_args():
     p = argparse.ArgumentParser(
-        description="Generate canonical figures from experiments/summary.csv"
+        description="Generate figures from experiments/summary.csv"
     )
     p.add_argument(
         "--summary", default="experiments/summary.csv", help="Path to summary.csv"
     )
     p.add_argument("--outdir", default="figures", help="Output directory for PNGs/SVGs")
     p.add_argument(
-        "--spacing",
-        type=float,
-        default=1.22,
-        help="Horizontal spacing between bars (default=1.22)",
+        "--spacing", type=float, default=1.22, help="Horizontal spacing between bars"
     )
     p.add_argument(
         "--svg", action="store_true", help="Also write .svg files alongside .png"
@@ -79,7 +71,7 @@ def to_float(x):
         return None
 
 
-def eps_formatter(y, _):
+def eps_formatter(y, _pos):
     return f"{y:,.0f}"
 
 
@@ -100,35 +92,31 @@ def draw(metric, ylabel, groups, idx, outpng, spacing=1.22, also_svg=False):
 
     n = len(values)
     xs = [i * spacing for i in range(n)]
-    width = 0.62  # slightly wider bars than before to match tighter spacing
+    width = 0.62
 
-    fig_w = max(8.5, n * 2.2)
-    fig, ax = plt.subplots(figsize=(fig_w, 5.0))
+    fig, ax = plt.subplots(figsize=(max(6.0, 1.2 * n), 4.0), dpi=120)
     bars = ax.bar(xs, values, width=width)
 
-    # Frame (all spines visible) + light grid
-    for s in ax.spines.values():
+    for spine in ["top", "right"]:
+        s = ax.spines[spine]
         s.set_visible(True)
         s.set_linewidth(1.2)
     ax.set_axisbelow(True)
     ax.yaxis.grid(True, linestyle="--", alpha=0.35)
 
-    # Axes & ticks
     ax.set_ylabel(ylabel)
     ax.set_xticks(xs)
     ax.set_xticklabels(labels, rotation=0, ha="center")
-    ax.tick_params(axis="x", pad=12)  # extra breathing room for 2-line labels
+    ax.tick_params(axis="x", pad=12)
 
     if metric == "eps":
         ax.yaxis.set_major_formatter(FuncFormatter(eps_formatter))
     else:
         ax.yaxis.set_major_formatter(FuncFormatter(lambda y, _: f"{y:.1f}"))
 
-    # Headroom for value labels
     ymax = max(values) if values else 1.0
     ax.set_ylim(0, ymax * 1.15)
 
-    # Bar value labels (1 decimal everywhere for uniformity)
     for b, v in zip(bars, values):
         ax.text(
             b.get_x() + b.get_width() / 2,
@@ -139,22 +127,15 @@ def draw(metric, ylabel, groups, idx, outpng, spacing=1.22, also_svg=False):
             fontsize=11,
         )
 
-    # More bottom margin so 2-line ticks donÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¾Ãƒâ€šÃ‚Â¢t feel cramped
     fig.tight_layout()
-    plt.subplots_adjust(bottom=0.28)
-
-    fig.savefig(outpng, dpi=300)
+    fig.savefig(outpng)
     if also_svg:
-        fig.savefig(outpng.replace(".png", ".svg"))
+        fig.savefig(os.path.splitext(outpng)[0] + ".svg")
     plt.close(fig)
-    print(f"Wrote {outpng}" + (" (+ .svg)" if also_svg else ""))
 
 
 def main():
     args = parse_args()
-    if not os.path.exists(args.summary):
-        print(f"[ERROR] Summary not found: {args.summary}", file=sys.stderr)
-        sys.exit(2)
     groups, header = read_latest_groups(args.summary)
     idx = {name: i for i, name in enumerate(header)}
 

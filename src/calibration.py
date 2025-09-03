@@ -47,7 +47,6 @@ class SlidingConformal:
         n = len(self._buf)
         if n == 0:
             return float("inf")  # no anomalies until warmup filled
-        # empirical quantile index (1-alpha)
         k = max(1, int(round((1.0 - self.alpha) * n)))
         arr: List[float] = sorted(self._buf)
         return arr[k - 1]

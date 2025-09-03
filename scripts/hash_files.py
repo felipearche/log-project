@@ -11,7 +11,7 @@ FILES = [
 ]
 
 
-def sha256(path):
+def sha256(path: str) -> str:
     h = hashlib.sha256()
     with open(path, "rb") as f:
         for chunk in iter(lambda: f.read(1 << 20), b""):
@@ -19,7 +19,7 @@ def sha256(path):
     return h.hexdigest().upper()
 
 
-def main():
+def main() -> None:
     today = datetime.date.today().strftime("%Y-%m-%d")
     lines = []
     for p in FILES:

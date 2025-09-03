@@ -1,4 +1,4 @@
-# log-project â€” Streaming, Drift-Aware Log Anomaly Detection (Calibrated, Reproducible)
+# log-project  Streaming, Drift-Aware Log Anomaly Detection (Calibrated, Reproducible)
 
 ## 0) Overview
 A real-time log anomaly detector that:
@@ -7,7 +7,7 @@ A real-time log anomaly detector that:
 3) adapts to **drift** using **ADWIN** and **resets the calibrator on detected changes**.
 
 Every run appends **one canonical row** to `experiments/summary.csv` (24-column schema).
-Reproducibility pillars: **pinned environment** (`env/requirements.lock`), **Docker parity**, **commit capture** (`COMMIT` envâ†’`git` short SHAâ†’`NA` fallback), **UTF-8/LF policy**, and **strict provenance** (one block per CSV row).
+Reproducibility pillars: **pinned environment** (`env/requirements.lock`), **Docker parity**, **commit capture** (`COMMIT` env`git` short SHA`NA` fallback), **UTF-8/LF policy**, and **strict provenance** (one block per CSV row).
 
 > Portability: always mount with `-v "${PWD}:/app"` (quoted) so it works even if your path contains spaces.
 > TPR formatting: for new rows, record `TPR_at_1pct_FPR` with **four decimals** (e.g., `1.0000`); leave older rows unchanged; use **literal `NA`** for unlabeled datasets.
@@ -35,7 +35,7 @@ docker run --rm -v "${PWD}:/app" -e COMMIT=$env:COMMIT log-project:latest `
 
 Output: one new row in `experiments/summary.csv` + one provenance block in `docs/PROVENANCE.txt`.
 
-> Optional: also generate vector figures for docs/slides: add `--svg` to `make_plots.py`. Prefer **PNG** in the repo; generate SVGs on demand (donâ€™t commit).
+> Optional: also generate vector figures for docs/slides: add `--svg` to `make_plots.py`. Prefer **PNG** in the repo; generate SVGs on demand (dont commit).
 
 ---
 
@@ -60,7 +60,7 @@ docker run --rm -v "${PWD}:/app" -e COMMIT=$env:COMMIT log-project:latest `
 Each command emits exactly one `CSV_ROW:` and a matching provenance block.
 
 ---
-### Transformer 2Ã—2 (adds 4 rows)
+### Transformer 22 (adds 4 rows)
 
 ```powershell
 $env:COMMIT = (git rev-parse --short HEAD).Trim()
@@ -87,7 +87,7 @@ docker run --rm -v "${PWD}:/app" -e COMMIT=$env:COMMIT log-project:latest `
 docker run --rm -v "${PWD}:/app" -e COMMIT=$env:COMMIT log-project:latest `
   python scripts/make_readme_table.py --csv experiments/summary.csv --out README_TABLE.txt
 
-# (Optional) normalize 'nan' â†’ 'NA' if any appear in the Markdown table output
+# (Optional) normalize 'nan'  'NA' if any appear in the Markdown table output
 $utf8NoBom = New-Object System.Text.UTF8Encoding($false)
 $content   = (Get-Content README_TABLE.txt -Raw) -replace '\bnan\b','NA'
 [IO.File]::WriteAllText('README_TABLE.txt', $content + "`n", $utf8NoBom)
@@ -118,10 +118,10 @@ Track every dataset in three places:
 
 1. Tokenized logs live in `data/*.json`. See **`docs/DATASETS.md`** for schema, sizes, counts, and SHA-256.
 2. **Policy:** `data/HASHES.txt` lists `YYYY-MM-DD  data/<path>  <bytes>  sha256=<HEX>` for each tracked artifact (UTF-8 **no BOM**, **LF**). Exactly **4 entries** are expected.
-3. `docs/PROVENANCE.txt` â€” one block per run, containing the **verbatim** `CSV_ROW:`.
+3. `docs/PROVENANCE.txt`  one block per run, containing the **verbatim** `CSV_ROW:`.
 
 - **Scope clarification (2025-09-03):** `data/` now contains **artifact data only**.
-  Non-artifacts were relocated (`data/make_synth.py`→`scripts/`, `data/PROVENANCE.txt`→`docs/PROVENANCE.txt`, `data/DATASETS.md`→`docs/DATASETS.md`). `data/HASHES.txt` covers only artifact JSON/log files; docs/scripts are excluded.
+  Non-artifacts were relocated (`data/make_synth.py``scripts/`, `data/PROVENANCE.txt``docs/PROVENANCE.txt`, `data/DATASETS.md``docs/DATASETS.md`). `data/HASHES.txt` covers only artifact JSON/log files; docs/scripts are excluded.
 
 **Regenerate hashes (preferred):**
 ```powershell
@@ -165,7 +165,7 @@ if ($rows -ne $provCsvRows) { throw "Provenance mismatch: CSV=$rows PROVENANCE=$
 ---
 
 ## 6) Canonical results schema (24 columns)
-Policy: no blank cellsâ€”use `NA` when not applicable. `TPR_at_1pct_FPR` is numeric for labeled datasets and the literal `NA` for unlabeled.
+Policy: no blank cellsuse `NA` when not applicable. `TPR_at_1pct_FPR` is numeric for labeled datasets and the literal `NA` for unlabeled.
 
 Header (first line of `experiments/summary.csv`):
 ```
@@ -194,7 +194,7 @@ date,commit,dataset,mode,calibration,drift_detector,seed,events,anomalies,drifts
 --seed 20250819
 --sleep_ms 0
 ```
-**Drift handling:** On ADWIN change â†’ increment drift count, call `calib.reset()`, continue.
+**Drift handling:** On ADWIN change  increment drift count, call `calib.reset()`, continue.
 For unlabeled datasets, `TPR_at_1pct_FPR` is the literal `NA`. CPU metric: `CPU_pct` is the mean **process** CPU%.
 
 ---
@@ -270,9 +270,9 @@ fsck.txt
 ## 12) Testing
 Covers:
 - Tokenizer masking and lowercase
-- Summary schema (24 columns; p95_ms â‰¤ p99_ms)
+- Summary schema (24 columns; p95_ms  p99_ms)
 - Calibration docs / ASCII
-- Drift â†’ conformal reset (smoke)
+- Drift  conformal reset (smoke)
 - Determinism (smoke)
 
 ```powershell
@@ -328,11 +328,11 @@ Verify: one new CSV row + matching provenance block.
 ---
 
 ## 15) Metrics (definitions)
-- **TPR_at_1pct_FPR** â€” TPR computed at the score threshold set by the 99th percentile of negatives (target FPR=1%).
-- **p95_ms**, **p99_ms** â€” end-to-end per-event latency percentiles.
-- **eps** â€” throughput, events per second.
-- **CPU_pct** â€” process average CPU% during the run.
-- **drifts** â€” ADWIN change detections (each triggers `calib.reset()`).
+- **TPR_at_1pct_FPR**  TPR computed at the score threshold set by the 99th percentile of negatives (target FPR=1%).
+- **p95_ms**, **p99_ms**  end-to-end per-event latency percentiles.
+- **eps**  throughput, events per second.
+- **CPU_pct**  process average CPU% during the run.
+- **drifts**  ADWIN change detections (each triggers `calib.reset()`).
 
 ---
 
@@ -347,16 +347,16 @@ Verify: one new CSV row + matching provenance block.
 (Example capture; see `experiments/environment_snapshot.md` in this repo for the current machine.)
 
 **CPU**
-AMD Ryzen 7 5800HS with Radeon Graphics â€” 8 cores / 16 threads
+AMD Ryzen 7 5800HS with Radeon Graphics  8 cores / 16 threads
 
 **Memory**
-TotalPhysicalMemoryBytesâ‰ˆ15.41 GB
+TotalPhysicalMemoryBytes15.41 GB
 
 **OS**
 Windows 11 Home (build 26100)
 
 **Docker**
-Client: 28.3.2 â€¢ Server: 28.3.2 â€¢ Docker Desktop 4.44.3
+Client: 28.3.2  Server: 28.3.2  Docker Desktop 4.44.3
 
 **Image Python/libs**
 python==3.11.9; numpy==1.26.4; scikit-learn==1.5.2; matplotlib==3.9.2; psutil==7.0.0; scipy==1.16.1
@@ -367,7 +367,7 @@ python==3.11.9; numpy==1.26.4; scikit-learn==1.5.2; matplotlib==3.9.2; psutil==7
 
 ## 18) Data ethics & privacy
 
-- Logs can contain sensitive data (PII, secrets). The tokenizer masks `0xâ€¦` (as `<hex>`), IPv4 addresses (`<ip>`), and integers (`\d+`), but **this is not a full PII scrubber**.
+- Logs can contain sensitive data (PII, secrets). The tokenizer masks `0x` (as `<hex>`), IPv4 addresses (`<ip>`), and integers (`\d+`), but **this is not a full PII scrubber**.
 - Before committing new datasets:
   - Remove or redact user identifiers, secrets/keys, tokens.
   - Prefer synthetic or anonymized logs for public sharing.
@@ -386,7 +386,7 @@ python==3.11.9; numpy==1.26.4; scikit-learn==1.5.2; matplotlib==3.9.2; psutil==7
 1. Implement under `src/` (e.g., `src/detectors/my_detector.py`).
 2. Register CLI options in `src/stream.py`.
 3. Include any new hyperparams in the summary CSV and provenance block.
-4. Add tests in `tests/` and update Â§7 flags if needed.
+4. Add tests in `tests/` and update §7 flags if needed.
 
 **Add a drift detector**
 - Ensure a **reset hook** is called to flush conformal history on drift.
@@ -429,11 +429,11 @@ PY
 - **`AttributeError: 'SlidingConformal' object has no attribute 'size'`:** Update to the latest code (the calibrator implements `size()` for compatibility with `src/stream.py`).
 
 Other common issues:
-- **Docker mount issues on Windows** â†’ Always quote the mount: `-v "${PWD}:/app"`.
-- **Table shows `nan`** â†’ Regenerate the table (see Â§3.1); the generator renders textual `nan` as `NA`.
-- **TPR formatting varies (`1` vs `1.0000`)** â†’ Use `scripts/normalize_tpr_lastrow.py` after runs; donâ€™t rewrite historical rows.
-- **CRLF vs LF / missing final newline** â†’ `scripts/normalize_line_endings.ps1` fixes this across the repo.
-- **PowerShell 5.1 vs 7** â†’ Scripts are 5.1-compatible; prefer **pwsh 7+** for consistency.
+- **Docker mount issues on Windows**  Always quote the mount: `-v "${PWD}:/app"`.
+- **Table shows `nan`**  Regenerate the table (see §3.1); the generator renders textual `nan` as `NA`.
+- **TPR formatting varies (`1` vs `1.0000`)**  Use `scripts/normalize_tpr_lastrow.py` after runs; dont rewrite historical rows.
+- **CRLF vs LF / missing final newline**  `scripts/normalize_line_endings.ps1` fixes this across the repo.
+- **PowerShell 5.1 vs 7**  Scripts are 5.1-compatible; prefer **pwsh 7+** for consistency.
 
 ---
 
@@ -457,6 +457,6 @@ repository-code: <REPO_URL>
 
 ## Maintenance summaries
 
-- **2025-08-31**: Encoding/EOL compliance - Added a single trailing LF to `scripts/make_release.ps1` to conform to the repo policy (UTFâ€‘8 no BOM, LF, single trailing newline). See Â§11 for the policy and normalization script.; CPU_pct backfill (historic) - Backfilled two early `CPU_pct` blanks to the literal `NA` in `experiments/summary.csv` for full-column coverage and clarity. Immediately rebuilt `docs/PROVENANCE.txt` to preserve the strict 1:1 mapping with `CSV_ROW:` lines (postâ€‘check: CSV rows=26; PROVENANCE CSV_ROW=26).; Tests - Post-change test suite: 4 passed.
+- **2025-08-31**: Encoding/EOL compliance - Added a single trailing LF to `scripts/make_release.ps1` to conform to the repo policy (UTF8 no BOM, LF, single trailing newline). See §11 for the policy and normalization script.; CPU_pct backfill (historic) - Backfilled two early `CPU_pct` blanks to the literal `NA` in `experiments/summary.csv` for full-column coverage and clarity. Immediately rebuilt `docs/PROVENANCE.txt` to preserve the strict 1:1 mapping with `CSV_ROW:` lines (postcheck: CSV rows=26; PROVENANCE CSV_ROW=26).; Tests - Post-change test suite: 4 passed.
 - **2025-08-30**: TPR formatting policy enforced - `TPR_at_1pct_FPR` is four decimals for `synth_tokens` (e.g., `1.0000`) and the literal `NA` for `mini_tokens`. See the experiment schema and the table generator script.; Provenance 1:1 rebuilt - `docs/PROVENANCE.txt` now has exactly one `CSV_ROW:` per row in `experiments/summary.csv` (counts match). A `notes:` line was added to the latest block documenting this maintenance.; README table regenerated - `README_TABLE.txt` reflects the latest row per (dataset, mode, calibration) with canonical formatting (TPR 4dp, p95/p99/eps 1dp, `NA` where applicable).
-- **2025-09-03**: Repository hygiene & provenance scope — Moved non-artifacts out of `data/` (scripts→`scripts/`, docs→`docs/`); updated references to `docs/PROVENANCE.txt`; added `.gitattributes` (LF policy; keep protected JSONs byte-exact); ignored `.ruff_cache/` in `.gitignore`. Provenance 1:1 mapping unchanged; metrics unchanged.
+- **2025-09-03**: Repository hygiene & provenance scope  Moved non-artifacts out of `data/` (scripts`scripts/`, docs`docs/`); updated references to `docs/PROVENANCE.txt`; added `.gitattributes` (LF policy; keep protected JSONs byte-exact); ignored `.ruff_cache/` in `.gitignore`. Provenance 1:1 mapping unchanged; metrics unchanged.

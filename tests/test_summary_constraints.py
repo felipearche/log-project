@@ -15,11 +15,11 @@ def test_p95_le_p99_and_tpr_policy():
     required = {"dataset", "mode", "TPR_at_1pct_FPR", "p95_ms", "p99_ms"}
     assert required.issubset(idx), f"Missing required columns: {required - set(idx)}"
 
-    p95_i, p99_i, ds_i, tpr_i = (
-        idx["p95_ms"],
-        idx["p99_ms"],
+    ds_i, tpr_i, p95_i, p99_i = (
         idx["dataset"],
         idx["TPR_at_1pct_FPR"],
+        idx["p95_ms"],
+        idx["p99_ms"],
     )
 
     for i, row in enumerate(rows[1:], start=1):

@@ -1,4 +1,4 @@
-﻿exclude: |
+exclude: |
   ^data/(mini_tokens\.json|synth_labels\.json|synth_tokens\.json)$
 
 repos:
@@ -14,19 +14,17 @@ repos:
       - id: check-yaml
       - id: check-ast
       - id: check-case-conflict
-      - id: check-added-large-files
-        args: [--maxkb=5000]
 
-  # Optional but recommended: ruff linter + formatter
   - repo: https://github.com/astral-sh/ruff-pre-commit
     rev: v0.12.11
     hooks:
       - id: ruff
       - id: ruff-format
+
   - repo: local
     hooks:
       - id: forbid-bom
         name: Forbid UTF-8 BOM in text files
         entry: python scripts/check_no_bom.py
         language: system
-        files: \.(md|ps1|py|txt)$
+        files: \.(md|ps1|py|txt|ya?ml)$

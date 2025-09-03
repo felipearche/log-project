@@ -1,14 +1,9 @@
 * text=auto eol=lf
-data/synth_tokens.json -text
-data/mini_tokens.json  -text
-data/synth_labels.json -text
-data/raw/mini.log     -text
-
-* text=auto eol=lf
 *.ps1 text eol=lf
 *.md  text eol=lf
 
-# Keep exact bytes (no EOL normalization) for protected JSONs
+# Keep exact bytes (no EOL normalization) for protected JSONs and raw log
 data/mini_tokens.json   -text
 data/synth_labels.json  -text
 data/synth_tokens.json  -text
+data/raw/mini.log       -text
