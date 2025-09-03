@@ -32,3 +32,5 @@ figures/*.svg
 
 .git_corrupt_backup/
 .ruff_cache/
+
+/log-project-src.zip
