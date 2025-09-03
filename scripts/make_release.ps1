@@ -1,5 +1,5 @@
 param(
-  [string]$OutDir = "release",
+  [string]$OutDir = "dist",
   [switch]$IncludeGitTrackedOnly = $true
 )
 
@@ -59,7 +59,7 @@ $prov += "timestamp: $(Get-Date -Format s)Z"
 $prov += "commit: $short"
 $prov += "input: repo snapshot (git tracked files; excludes venv/caches/logs)"
 $prov += "cmd: scripts/make_release.ps1"
-$prov += "output: release/$zipName"
+$prov += "output: dist/$zipName"
 $prov += "sha256: $hash"
 $prov += "notes: created zip with exclusions; metrics and source unchanged."
 $prov += ""

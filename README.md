@@ -300,7 +300,7 @@ python -m pytest -q
 
 **Use the script (Windows / PowerShell):**
 ```powershell
-# Create the release zip + write release/HASHES.txt and release/PROVENANCE.txt
+# Create the release zip + write dist/HASHES.txt and dist/PROVENANCE.txt
 pwsh -NoProfile -File .\scripts\make_release.ps1
 
 # Verify contents and hashes
@@ -309,7 +309,7 @@ Get-Content release\HASHES.txt
 Get-Content release\PROVENANCE.txt
 ```
 
-**Policy:** Model artifacts and release hashes/provenance live under `release/`.
+**Policy:** Model artifacts and release hashes/provenance live under `dist/`.
 Do **not** add model files or release hashes to `data/HASHES.txt` (that file must list only the four canonical data artifacts).
 
 ---
@@ -387,7 +387,7 @@ python==3.11.9; numpy==1.26.4; scikit-learn==1.5.2; matplotlib==3.9.2; psutil==7
 1. Implement under `src/` (e.g., `src/detectors/my_detector.py`).
 2. Register CLI options in `src/stream.py`.
 3. Include any new hyperparams in the summary CSV and provenance block.
-4. Add tests in `tests/` and update §7 flags if needed.
+4. Add tests in `tests/` and update Â§7 flags if needed.
 
 **Add a drift detector**
 - Ensure a **reset hook** is called to flush conformal history on drift.
@@ -431,7 +431,7 @@ PY
 
 Other common issues:
 - **Docker mount issues on Windows**  Always quote the mount: `-v "${PWD}:/app"`.
-- **Table shows `nan`**  Regenerate the table (see §3.1); the generator renders textual `nan` as `NA`.
+- **Table shows `nan`**  Regenerate the table (see Â§3.1); the generator renders textual `nan` as `NA`.
 - **TPR formatting varies (`1` vs `1.0000`)**  Use `scripts/normalize_tpr_lastrow.py` after runs; dont rewrite historical rows.
 - **CRLF vs LF / missing final newline**  `scripts/normalize_line_endings.ps1` fixes this across the repo.
 - **PowerShell 5.1 vs 7**  Scripts are 5.1-compatible; prefer **pwsh 7+** for consistency.
@@ -458,18 +458,18 @@ repository-code: https://github.com/felipearche/log-project
 
 ## Maintenance summaries (latest)
 
-- **2025-08-31**: Encoding/EOL compliance - Added a single trailing LF to `scripts/make_release.ps1` to conform to the repo policy (UTF8 no BOM, LF, single trailing newline). See §11 for the policy and normalization script.; CPU_pct backfill (historic) - Backfilled two early `CPU_pct` blanks to the literal `NA` in `experiments/summary.csv` for full-column coverage and clarity. Immediately rebuilt `docs/PROVENANCE.txt` to preserve the strict 1:1 mapping with `CSV_ROW:` lines (postcheck: CSV rows=26; PROVENANCE CSV_ROW=26).; Tests - Post-change test suite: 4 passed.
+- **2025-08-31**: Encoding/EOL compliance - Added a single trailing LF to `scripts/make_release.ps1` to conform to the repo policy (UTF8 no BOM, LF, single trailing newline). See Â§11 for the policy and normalization script.; CPU_pct backfill (historic) - Backfilled two early `CPU_pct` blanks to the literal `NA` in `experiments/summary.csv` for full-column coverage and clarity. Immediately rebuilt `docs/PROVENANCE.txt` to preserve the strict 1:1 mapping with `CSV_ROW:` lines (postcheck: CSV rows=26; PROVENANCE CSV_ROW=26).; Tests - Post-change test suite: 4 passed.
 - **2025-08-30**: TPR formatting policy enforced - `TPR_at_1pct_FPR` is four decimals for `synth_tokens` (e.g., `1.0000`) and the literal `NA` for `mini_tokens`. See the experiment schema and the table generator script.; Provenance 1:1 rebuilt - `docs/PROVENANCE.txt` now has exactly one `CSV_ROW:` per row in `experiments/summary.csv` (counts match). A `notes:` line was added to the latest block documenting this maintenance.; README table regenerated - `README_TABLE.txt` reflects the latest row per (dataset, mode, calibration) with canonical formatting (TPR 4dp, p95/p99/eps 1dp, `NA` where applicable).
 - **2025-09-03**: Repository hygiene & provenance scope  Moved non-artifacts out of `data/` (scripts`scripts/`, docs`docs/`); updated references to `docs/PROVENANCE.txt`; added `.gitattributes` (LF policy; keep protected JSONs byte-exact); ignored `.ruff_cache/` in `.gitignore`. Provenance 1:1 mapping unchanged; metrics unchanged.
 - **2025-09-03**: **Assets & attributes**
-  - Normalized 3 SVGs in `figures/` (CRLF→LF; stripped trailing whitespace; UTF‑8 no BOM; single final LF).
+  - Normalized 3 SVGs in `figures/` (CRLFâ†’LF; stripped trailing whitespace; UTFâ€‘8 no BOM; single final LF).
   - Updated `.gitattributes` to mark `*.png` as **binary** (prevents EOL normalization and diffs on images); normalized `.gitattributes` to **LF**.
   - Added a dated PROVENANCE note recording the actual Docker base image and the above maintenance.
   - Hooks: all passing; tests: unchanged; metrics/results: unchanged.
 - **2025-09-03** (IST): **Green build** & repo hygiene
   - Fixed mid-token splits in `src/stream.py`, `src/calibration.py`, `src/log_tokenize.py`, and `scripts/make_plots.py`.
   - Corrected summary writing in `src/stream.py`: **TPR** now formatted to **4 decimals or `NA`**; **anomalies** column now records `n_anom` (previously mis-written).
-  - Enforced **LF** line endings across the tree; removed **UTF‑8 BOM** from `.pre-commit-config.yaml`; widened local **BOM guard** to include `ya?ml`.
+  - Enforced **LF** line endings across the tree; removed **UTFâ€‘8 BOM** from `.pre-commit-config.yaml`; widened local **BOM guard** to include `ya?ml`.
   - Re-generated `experiments/summary.csv` **with labels** for `synth_tokens`; `p95 <= p99` and TPR formatting policy satisfied.
   - **Pre-commit:** all hooks pass; **tests:** 6 passed (`pytest==8.3.3`).
   - **Policy reminders:** three protected JSONs (`data/mini_tokens.json`, `data/synth_labels.json`, `data/synth_tokens.json`) remain byte-identical with **no trailing newline**; `data/HASHES.txt` unchanged (4 lines, uppercase `sha256=...`).
