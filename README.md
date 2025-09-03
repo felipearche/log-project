@@ -119,7 +119,7 @@ Embed examples (the plotting script writes to `figures/`):
 Track every dataset in three places:
 
 1. Tokenized logs live in `data/*.json`. See **`docs/DATASETS.md`** for schema, sizes, counts, and SHA-256.
-2. **Policy:** `data/HASHES.txt` lists **`path␠␠size␠␠SHA256`** (three fields, two spaces). Exactly **4 entries** are expected. Use **uppercase 64‑hex SHA‑256**.
+2. **Policy:** `data/HASHES.txt` lists **`path  size  SHA256`** (three fields, two spaces). Exactly **4 entries** are expected. Use **uppercase 64‑hex SHA‑256**.
 3. `docs/PROVENANCE.txt` → one block per run, containing the **verbatim** `CSV_ROW:`.
 
 - **Scope clarification (2025-09-03):** `data/` now contains **artifact data only**.
@@ -453,8 +453,8 @@ Felipe Arche. *log-project: Streaming, Drift-Aware Log Anomaly Detection (Calibr
 See also `CITATION.cff` for a machine-readable citation.
 
 ### Repository link
-- Replace every `https://github.com/felipearche/log-project` with your **actual** HTTPS repo URL.
-- Set the same URL in `CITATION.cff`:
+Repository-code: https://github.com/felipearche/log-project (also set in CITATION.cff)
+
 ```yaml
 repository-code: https://github.com/felipearche/log-project
 ```
@@ -485,7 +485,9 @@ repository-code: https://github.com/felipearche/log-project
 To produce a clean source archive (no caches, no `.git`):
 
 ```powershell
-git archive --format=zip -o log-project-src.zip HEAD
+# ensure dist/ exists
+mkdir dist 2>$null
+git archive --format=zip -o dist/log-project-src.zip HEAD
 ```
 
 Policy recap: UTF-8 **without BOM**, **LF-only** line endings; a single final LF on text files.
