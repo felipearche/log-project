@@ -180,25 +180,25 @@ seed: 20250819
 input: dataset=synth_tokens; mode=baseline; calibration=conformal
 cmd: NA (backfilled)
 CSV_ROW: 2025-08-30,17ccad5,synth_tokens,baseline,conformal,ADWIN,20250819,2000,0,0,1.0000,3.18669,3.42367,328.544,100.6,NA,0.01,5000,200,0.002,200,auto,20250819,baseline conformal;cpu_sampler=process_avg;energy_na
-notes: 2025-08-31 – Normalized data/HASHES.txt spacing to canonical two spaces; added tests/test_summary_header.py (24-col header guard); verified TPR policy (mini_tokens=NA; synth_tokens=4dp); rebuilt PROVENANCE 1:1 (CSV rows=26; PROVENANCE CSV_ROW=26). Metrics unchanged. | Backfilled energy_J→NA; CSV_ROW synchronized. | normalized summary.csv EOL to LF (UTF-8, no BOM) | 2025-08-31 – README_TABLE.txt sorted to dataset→mode→calibration; updated scripts/make_readme_table.py to enforce it; presentation-only; metrics unchanged.
+notes: 2025-08-31 â€“ Normalized data/HASHES.txt spacing to canonical two spaces; added tests/test_summary_header.py (24-col header guard); verified TPR policy (mini_tokens=NA; synth_tokens=4dp); rebuilt PROVENANCE 1:1 (CSV rows=26; PROVENANCE CSV_ROW=26). Metrics unchanged. | Backfilled energy_Jâ†’NA; CSV_ROW synchronized. | normalized summary.csv EOL to LF (UTF-8, no BOM) | 2025-08-31 â€“ README_TABLE.txt sorted to datasetâ†’modeâ†’calibration; updated scripts/make_readme_table.py to enforce it; presentation-only; metrics unchanged.
 
-notes: 2025-08-31 – fixed summary.csv line endings; removed malformed/blank rows introduced by earlier literal '\n'; normalized 4 empty commit cells to NA; synced PROVENANCE CSV_ROW; metrics unchanged.
-notes: 2025-09-01 – housekeeping only: removed stray "..." from .gitignore; added *.bak ignore; presentation-only; metrics unchanged.
-notes: 2025-09-01 – removed backup file experiments/summary.csv.bak (ignored); tests: 5 passed (pytest 8.3.3 in Docker); PROVENANCE-summary mapping unchanged (26 rows); metrics unchanged.
-notes: 2025-09-01 – env docs: replaced env/ENV.md with lockfile-aligned version; removed docs/env.txt (stale); presentation-only; metrics unchanged.
-notes: 2025-09-01 – documentation-only: clarified scripts/fix_summary.py is DEV-ONLY helper requiring pandas; outside the reproducible pipeline; metrics unchanged.
-notes: 2025-09-01 – hardening: pinned Docker base to python:3.11.9-alpine; added HASHES format guard test; metrics unchanged.
-notes: 2025-09-01 – tests: 6 passed (pytest 8.3.3 in Docker) including HASHES format guard; reproducibility unchanged.
-notes: 2025-09-01 – hardening/cleanup: pinned Docker base to python:3.11.9-slim; removed stray "\" in scripts/run_with_provenance.ps1; deleted .pytest_cache; removed placeholder "..." from .gitignore; Makefile cleaned; metrics & results unchanged.
-notes: 2025-09-02 – scripts/make_plots.py: expanded one-line exception; normalized comment apostrophe; ruff format; '.ruff_cache/' ignored; CITATION version ensured; tests: 6 passed (pytest 8.3.3 in Docker, python:3.11.9-alpine).
-notes: 2025-09-03 – moved non-artifacts out of data/ (make_synth.py→scripts/, PROVENANCE.txt→docs/, DATASETS.md→docs/); updated README and scripts to new paths; added .gitattributes (LF policy; protected JSONs -text) and '.ruff_cache/' to .gitignore; tests passed; provenance/CSV mapping unchanged; metrics unchanged.
-notes: 2025-09-03 – audit: verified HASHES format and contents; 6 tests passing; protected JSON EOF policy enforced; removed BOM from pre-commit config and widened BOM guard to YAML; local .git/hooks/pre-commit had CRLF (non-tracked).
-notes: 2025-09-03 – Green build: fixed mid-token splits; corrected stream summary (TPR 4dp or NA; anomalies column fixed); normalized EOL to LF; widened BOM guard to include YAML/YML; regenerated experiments/summary.csv with labels (synth_tokens); hooks passed; tests: 6 passed (pytest 8.3.3). Metrics unchanged.
-notes: 2025-09-03 – Align Docker base image note:
+notes: 2025-08-31 â€“ fixed summary.csv line endings; removed malformed/blank rows introduced by earlier literal '\n'; normalized 4 empty commit cells to NA; synced PROVENANCE CSV_ROW; metrics unchanged.
+notes: 2025-09-01 â€“ housekeeping only: removed stray "..." from .gitignore; added *.bak ignore; presentation-only; metrics unchanged.
+notes: 2025-09-01 â€“ removed backup file experiments/summary.csv.bak (ignored); tests: 5 passed (pytest 8.3.3 in Docker); PROVENANCE-summary mapping unchanged (26 rows); metrics unchanged.
+notes: 2025-09-01 â€“ env docs: replaced env/ENV.md with lockfile-aligned version; removed docs/env.txt (stale); presentation-only; metrics unchanged.
+notes: 2025-09-01 â€“ documentation-only: clarified scripts/fix_summary.py is DEV-ONLY helper requiring pandas; outside the reproducible pipeline; metrics unchanged.
+notes: 2025-09-01 â€“ hardening: pinned Docker base to python:3.11.9-alpine; added HASHES format guard test; metrics unchanged.
+notes: 2025-09-01 â€“ tests: 6 passed (pytest 8.3.3 in Docker) including HASHES format guard; reproducibility unchanged.
+notes: 2025-09-01 â€“ hardening/cleanup: pinned Docker base to python:3.11.9-slim; removed stray "\" in scripts/run_with_provenance.ps1; deleted .pytest_cache; removed placeholder "..." from .gitignore; Makefile cleaned; metrics & results unchanged.
+notes: 2025-09-02 â€“ scripts/make_plots.py: expanded one-line exception; normalized comment apostrophe; ruff format; '.ruff_cache/' ignored; CITATION version ensured; tests: 6 passed (pytest 8.3.3 in Docker, python:3.11.9-alpine).
+notes: 2025-09-03 â€“ moved non-artifacts out of data/ (make_synth.pyâ†’scripts/, PROVENANCE.txtâ†’docs/, DATASETS.mdâ†’docs/); updated README and scripts to new paths; added .gitattributes (LF policy; protected JSONs -text) and '.ruff_cache/' to .gitignore; tests passed; provenance/CSV mapping unchanged; metrics unchanged.
+notes: 2025-09-03 â€“ audit: verified HASHES format and contents; 6 tests passing; protected JSON EOF policy enforced; removed BOM from pre-commit config and widened BOM guard to YAML; local .git/hooks/pre-commit had CRLF (non-tracked).
+notes: 2025-09-03 â€“ Green build: fixed mid-token splits; corrected stream summary (TPR 4dp or NA; anomalies column fixed); normalized EOL to LF; widened BOM guard to include YAML/YML; regenerated experiments/summary.csv with labels (synth_tokens); hooks passed; tests: 6 passed (pytest 8.3.3). Metrics unchanged.
+notes: 2025-09-03 â€“ Align Docker base image note:
   - Actual base image in Dockerfile: python:3.11.9-slim
   - Corrected prior note to match Dockerfile and ensure audit-grade consistency.
-notes: 2025-09-03 – assets & attributes: normalized 3 SVGs (CRLF→LF, stripped trailing whitespace, UTF-8 no BOM, single trailing LF); updated .gitattributes to mark *.png as binary and normalized it to LF; hooks passed; tests unchanged; metrics unchanged.
-notes: 2025-09-03 – maintenance policy: switched '*.png' to 'binary' in .gitattributes; added local 'no-bom' pre-commit hook (scripts/check_no_bom.py) covering md/ps1/py/txt/yml/yaml; documented clean packaging via 'git archive'; normalized local .git/hooks/pre-commit to LF; re-ran hooks (passed); data/HASHES.txt unchanged (all entries match); protected JSON EOF policy verified.
+notes: 2025-09-03 â€“ assets & attributes: normalized 3 SVGs (CRLFâ†’LF, stripped trailing whitespace, UTF-8 no BOM, single trailing LF); updated .gitattributes to mark *.png as binary and normalized it to LF; hooks passed; tests unchanged; metrics unchanged.
+notes: 2025-09-03 â€“ maintenance policy: switched '*.png' to 'binary' in .gitattributes; added local 'no-bom' pre-commit hook (scripts/check_no_bom.py) covering md/ps1/py/txt/yml/yaml; documented clean packaging via 'git archive'; normalized local .git/hooks/pre-commit to LF; re-ran hooks (passed); data/HASHES.txt unchanged (all entries match); protected JSON EOF policy verified.
 2025-09-03  maintenance: added dist/ to .gitignore; release zips via git archive into dist/
 2025-09-03  release: v0.1.1 tagged; CITATION.cff version=0.1.1 date-released=2025-09-03; untracked log-project-src.zip; added dist/ ignore; no data changes; tests=6 passed; HASHES verified.
 2025-09-03  maintenance: standardized packaging dir to dist/; updated release script & README; cleaned caches.
@@ -206,12 +206,13 @@ notes: 2025-09-03 – maintenance policy: switched '*.png' to 'binary' in .gitat
 2025-09-04  maintenance: CI & docs housekeeping
 - CI: moved workflow to .github/workflows/ci.yml; removed root-level ci.yml.
 - CI: enabled pip cache (actions/setup-python@v5) with cache-dependency-path: env/requirements.lock.
-- README: added protected-JSONs note under “11) Encoding & EOL policy”.
+- README: added protected-JSONs note under â€œ11) Encoding & EOL policyâ€.
 - README: clarified canonical 3-field HASHES format (path  size  SHA256); tests accept legacy 4-field.
 - README: normalized example HASHES entries to 3-field; added CI badge.
 - Policy: documented dist/ as ephemeral (ignored); canonical provenance remains docs/PROVENANCE.txt and data/HASHES.txt.
 2025-09-04  docs: PR #1 merged (docs-only)
 - commit: ec491aa
 - Release docs: standardized dist/ across README and RELEASE; archive now writes to dist/log-project-src.zip; verify commands aligned.
-- README: clarified canonical 3‑field HASHES format (path  size  SHA256 — two spaces; uppercase 64‑hex); added declarative Repository‑code line (mirrors CITATION.cff); added pandas note for scripts/dev/fix_summary.py (dev‑only).
+- README: clarified canonical 3â€‘field HASHES format (path  size  SHA256 â€” two spaces; uppercase 64â€‘hex); added declarative Repositoryâ€‘code line (mirrors CITATION.cff); added pandas note for scripts/dev/fix_summary.py (devâ€‘only).
 - CI: all checks passed; tests: 6 passed; data/HASHES.txt unchanged; metrics unchanged.
+2025-09-04  Docker: pinned base to python@sha256:8fb099199b9f2d70342674bd9dbccd3ed03a258f26bbd1d556822c6dfc60c317
