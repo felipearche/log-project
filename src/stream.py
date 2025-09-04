@@ -13,17 +13,22 @@ from datetime import datetime
 os.environ.setdefault("PYTHONHASHSEED", "20250819")
 random.seed(20250819)
 try:
-    import numpy as np  # type: ignore
+    import numpy as np
 
     np.random.seed(20250819)
 except Exception:
     print("[warn] numpy not available; proceeding without np-seeding", file=sys.stderr)
 
+# Unified ADWIN handle: try river's ADWIN, else fallback; use 'Adwin' consistently.
 try:
-    from river.drift import ADWIN  # type: ignore
+    from river.drift import ADWIN as _RiverADWIN
+
+    Adwin = _RiverADWIN  # single symbol used throughout
 except Exception:
 
-    class ADWIN:  # minimal fallback; never signals drift
+    class _FallbackADWIN:
+        """Minimal fallback; never signals drift (for environments without river)."""
+
         def __init__(self, delta: float = 0.002):
             self.delta = float(delta)
             self.drift_detected = False
@@ -33,17 +38,18 @@ except Exception:
             self.drift_detected = False
             self.change_detected = False
 
+    Adwin = _FallbackADWIN
 
 try:
-    from sklearn.feature_extraction.text import TfidfVectorizer  # type: ignore
-    from sklearn.ensemble import IsolationForest  # type: ignore
+    from sklearn.feature_extraction.text import TfidfVectorizer
+    from sklearn.ensemble import IsolationForest
 
     SKLEARN_AVAILABLE = True
 except Exception:
     SKLEARN_AVAILABLE = False
 
 try:
-    import psutil  # type: ignore
+    import psutil
 
     _PROC = psutil.Process()
     _PROC.cpu_percent(None)
@@ -55,7 +61,7 @@ except Exception:
 try:
     from src.calibration import SlidingConformal
 except Exception:
-    from calibration import SlidingConformal  # type: ignore
+    from calibration import SlidingConformal
 
 SUMMARY_HEADER = [
     "date",
@@ -309,7 +315,7 @@ def main():
 
     calibration_label = "no_calib" if args.no_calib else "conformal"
     calib = SlidingConformal(alpha=args.alpha, window=args.window)
-    drift = ADWIN(delta=args.adwin_delta)
+    drift = Adwin(delta=args.adwin_delta)
 
     labels = None
     if args.labels:
