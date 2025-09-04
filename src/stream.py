@@ -1,14 +1,15 @@
 #!/usr/bin/env python3
-import os
-import sys
-import time
-import json
 import argparse
-import subprocess
+import json
+import math
+import os
 import pathlib
 import random
-import math
+import subprocess
+import sys
+import time
 from datetime import datetime
+from typing import Any
 
 os.environ.setdefault("PYTHONHASHSEED", "20250819")
 random.seed(20250819)
@@ -19,30 +20,33 @@ try:
 except Exception:
     print("[warn] numpy not available; proceeding without np-seeding", file=sys.stderr)
 
-# Unified ADWIN handle: try river's ADWIN, else fallback; use 'Adwin' consistently.
+
+# ---- Drift detector (ADWIN) selection, mypy-safe ----------------------------------
+class _FallbackADWIN:
+    """Minimal fallback; never signals drift (for environments without river)."""
+
+    def __init__(self, delta: float = 0.002):
+        self.delta = float(delta)
+        self.drift_detected = False
+        self.change_detected = False
+
+    def update(self, _x: float) -> None:
+        self.drift_detected = False
+        self.change_detected = False
+
+
+Adwin: type[Any] = _FallbackADWIN  # default
 try:
     from river.drift import ADWIN as _RiverADWIN
 
-    Adwin = _RiverADWIN  # single symbol used throughout
-except Exception:
+    Adwin = _RiverADWIN  # if available, prefer river's ADWIN
+except ImportError:
+    pass
 
-    class _FallbackADWIN:
-        """Minimal fallback; never signals drift (for environments without river)."""
-
-        def __init__(self, delta: float = 0.002):
-            self.delta = float(delta)
-            self.drift_detected = False
-            self.change_detected = False
-
-        def update(self, _x: float):
-            self.drift_detected = False
-            self.change_detected = False
-
-    Adwin = _FallbackADWIN
-
+# ---- Optional deps ----------------------------------------------------------------
 try:
-    from sklearn.feature_extraction.text import TfidfVectorizer
     from sklearn.ensemble import IsolationForest
+    from sklearn.feature_extraction.text import TfidfVectorizer
 
     SKLEARN_AVAILABLE = True
 except Exception:
@@ -58,11 +62,19 @@ except Exception:
     _PROC = None
     PSUTIL_AVAILABLE = False
 
-try:
-    from src.calibration import SlidingConformal
-except Exception:
-    from calibration import SlidingConformal
 
+# ---- Calibration import without mypy redefinition ---------------------------------
+def _get_sliding_conformal():
+    try:
+        from src.calibration import SlidingConformal as SC
+    except ImportError:
+        from calibration import SlidingConformal as SC
+    return SC
+
+
+SlidingConformal = _get_sliding_conformal()
+
+# ---- Summary schema ---------------------------------------------------------------
 SUMMARY_HEADER = [
     "date",
     "commit",
@@ -91,13 +103,13 @@ SUMMARY_HEADER = [
 ]
 
 
-def _fmt(x):
+def _fmt(x: Any) -> str:
     if isinstance(x, float):
         return "" if math.isnan(x) else f"{x:.6g}"
     return str(x)
 
 
-def _mean(xs):
+def _mean(xs: list[float]) -> float:
     return sum(xs) / len(xs) if xs else float("nan")
 
 
@@ -118,21 +130,23 @@ def resolve_commit() -> str:
         return "NA"
 
 
-def stream_tokens(json_path: str):
+def stream_tokens(json_path: str) -> list[str]:
     with open(json_path, encoding="utf-8") as f:
         j = json.load(f)
     return [" ".join(seq) for seq in j]  # list[list[str]] -> list[str]
 
 
-def perc(samples, p):
+def perc(samples: list[float], p: float) -> float:
     if not samples:
         return float("nan")
     ys = sorted(samples)
     k = int((p / 100.0) * (len(ys) - 1))
-    return float(ys[k])
+    return float(ys[max(0, min(k, len(ys) - 1))])
 
 
-def tpr_at_fpr(scores, labels, target_fpr=0.01):
+def tpr_at_fpr(
+    scores: list[float], labels: list[int] | None, target_fpr: float = 0.01
+) -> tuple[float, float]:
     if labels is None or len(scores) != len(labels):
         return float("nan"), float("nan")
     neg = [s for s, y in zip(scores, labels) if int(y) == 0]
@@ -155,7 +169,13 @@ def score_len(text: str) -> float:
 class BaselineScorer:
     """TF-IDF + IsolationForest anomaly score (higher = more anomalous)."""
 
-    def __init__(self, texts, contamination=0.01, seed=0, min_df=1):
+    def __init__(
+        self,
+        texts: list[str],
+        contamination: float = 0.01,
+        seed: int = 0,
+        min_df: int = 1,
+    ):
         if not SKLEARN_AVAILABLE:
             raise SystemExit(
                 "Missing dependency 'scikit-learn'. Install with: pip install scikit-learn"
@@ -178,30 +198,30 @@ class BaselineScorer:
 
 def emit_summary_row(
     *,
-    dataset_path,
-    mode,
-    calibration,
-    drift_detector,
-    seed,
-    events,
-    anomalies,
-    drifts,
-    tpr_str,
-    p95_ms,
-    p99_ms,
-    eps,
-    CPU_pct,
-    energy_J,
-    calib_target_fpr,
-    calib_window,
-    warmup,
-    adwin_delta,
-    iso_n_estimators,
-    iso_max_samples,
-    iso_random_state,
-    notes,
-    summary_out,
-):
+    dataset_path: str,
+    mode: str,
+    calibration: str,
+    drift_detector: str,
+    seed: int,
+    events: int,
+    anomalies: int,
+    drifts: int,
+    tpr_str: str,
+    p95_ms: float,
+    p99_ms: float,
+    eps: float,
+    CPU_pct: float | str,
+    energy_J: float | str,
+    calib_target_fpr: float | str,
+    calib_window: int | str,
+    warmup: int,
+    adwin_delta: float,
+    iso_n_estimators: int | str,
+    iso_max_samples: int | str,
+    iso_random_state: int | str,
+    notes: str,
+    summary_out: str,
+) -> None:
     date_s = datetime.utcnow().strftime("%Y-%m-%d")
     row_list = [
         date_s,
@@ -239,7 +259,7 @@ def emit_summary_row(
         f.write(row_csv + "\n")
 
 
-def main():
+def main() -> None:
     ap = argparse.ArgumentParser(
         description="Stream log tokens and compute anomaly metrics"
     )
@@ -297,8 +317,8 @@ def main():
     random.seed(args.seed)
 
     texts = stream_tokens(args.data)
-    scorer = None
-    iso_model = None
+    scorer: Any
+    iso_model: Any | None = None
     if args.mode == "baseline":
         if SKLEARN_AVAILABLE:
             iso_model = BaselineScorer(
@@ -317,7 +337,7 @@ def main():
     calib = SlidingConformal(alpha=args.alpha, window=args.window)
     drift = Adwin(delta=args.adwin_delta)
 
-    labels = None
+    labels: list[int] | None = None
     if args.labels:
         try:
             with open(args.labels, "r", encoding="utf-8") as f:
@@ -325,19 +345,19 @@ def main():
         except Exception:
             labels = None
 
-    lat_s = []
-    scores = []
-    y_true = []
-    cpu_samples = []
+    lat_s: list[float] = []
+    scores: list[float] = []
+    y_true: list[int] = []
+    cpu_samples: list[float] = []
     n_anom = 0
     n_drift = 0
 
-    fixed_thr = None
-    warm_scores = []
+    fixed_thr: float | None = None
+    warm_scores: list[float] = []
 
     for i, text in enumerate(texts, start=1):
         t0 = time.perf_counter()
-        s = scorer(text)
+        s = float(scorer(text))
         t1 = time.perf_counter()
         lat_s.append(t1 - t0)
         scores.append(s)
@@ -391,7 +411,7 @@ def main():
     )
 
     cpu_pct_val = _mean(cpu_samples) if cpu_samples else float("nan")
-    cpu_field = "NA" if math.isnan(cpu_pct_val) else round(cpu_pct_val, 1)
+    cpu_field: float | str = "NA" if math.isnan(cpu_pct_val) else round(cpu_pct_val, 1)
 
     notes = f"{args.mode} {calibration_label};cpu_sampler={'process_avg' if PSUTIL_AVAILABLE else 'na'};energy_na"
 
