@@ -210,3 +210,8 @@ notes: 2025-09-03 – maintenance policy: switched '*.png' to 'binary' in .gitat
 - README: clarified canonical 3-field HASHES format (path  size  SHA256); tests accept legacy 4-field.
 - README: normalized example HASHES entries to 3-field; added CI badge.
 - Policy: documented dist/ as ephemeral (ignored); canonical provenance remains docs/PROVENANCE.txt and data/HASHES.txt.
+2025-09-04  docs: PR #1 merged (docs-only)
+- commit: ec491aa
+- Release docs: standardized dist/ across README and RELEASE; archive now writes to dist/log-project-src.zip; verify commands aligned.
+- README: clarified canonical 3‑field HASHES format (path  size  SHA256 — two spaces; uppercase 64‑hex); added declarative Repository‑code line (mirrors CITATION.cff); added pandas note for scripts/dev/fix_summary.py (dev‑only).
+- CI: all checks passed; tests: 6 passed; data/HASHES.txt unchanged; metrics unchanged.
