@@ -1,4 +1,4 @@
-# log-project  Streaming, Drift-Aware Log Anomaly Detection (Calibrated, Reproducible)
+# log-project Streaming, Drift-Aware Log Anomaly Detection (Calibrated, Reproducible)
 
 [![CI](https://github.com/felipearche/log-project/actions/workflows/ci.yml/badge.svg)](https://github.com/felipearche/log-project/actions)
 
@@ -9,10 +9,20 @@ A real-time log anomaly detector that:
 3) adapts to **drift** using **ADWIN** and **resets the calibrator on detected changes**.
 
 Every run appends **one canonical row** to `experiments/summary.csv` (24-column schema).
-Reproducibility pillars: **pinned environment** (`env/requirements.lock`), **Docker parity**, **commit capture** (`COMMIT` env→`git` short SHA→`NA` fallback), **UTF-8/LF policy**, and **strict provenance** (one block per CSV row).
+Reproducibility pillars: **pinned environment** (`env/requirements.lock`), **Docker parity**, **commit capture** (`COMMIT` env`git` short SHA`NA` fallback), **UTF-8/LF policy**, and **strict provenance** (one block per CSV row).
 
 > Portability: always mount with `-v "${PWD}:/app"` (quoted) so it works even if your path contains spaces.
 > TPR formatting: for new rows, record `TPR_at_1pct_FPR` with **four decimals** (e.g., `1.0000`); leave older rows unchanged; use **literal `NA`** for unlabeled datasets.
+
+---
+
+## 0a) QA gates (pre-commit, mypy, pytest)
+
+- pre-commit: trailing whitespace, end-of-file, mixed line endings, merge conflicts, added large files, private keys, YAML syntax, ruff + ruff format, BOM guard (UTF-8, no BOM).
+- mypy: light typing gate via mypy.ini (Python 3.11, ignore_missing_imports = True, warn_unused_ignores = True). CI runs "mypy src".
+- pytest: 6 tests covering tokenizer masks, summary schema (24 cols), calibration docs/ASCII, ADWINâ†’conformal reset, determinism, and smoke.
+
+> Policy: run all three locally before pushing: pre-commit run -a â†’ mypy src â†’ pytest -q.
 
 ---
 
@@ -30,9 +40,9 @@ docker run --rm -v "${PWD}:/app" -e COMMIT=$env:COMMIT log-project:latest
 
 # 4) Generate figures + README table (inside Docker for deps parity)
 docker run --rm -v "${PWD}:/app" -e COMMIT=$env:COMMIT log-project:latest `
-  python scripts/make_plots.py --summary experiments/summary.csv
+ python scripts/make_plots.py --summary experiments/summary.csv
 docker run --rm -v "${PWD}:/app" -e COMMIT=$env:COMMIT log-project:latest `
-  python scripts/make_readme_table.py --csv experiments/summary.csv --out README_TABLE.txt
+ python scripts/make_readme_table.py --csv experiments/summary.csv --out README_TABLE.txt
 ```
 
 Output: one new row in `experiments/summary.csv` + one provenance block in `docs/PROVENANCE.txt`.
@@ -48,15 +58,15 @@ $env:COMMIT = (git rev-parse --short HEAD).Trim()
 
 # Calibrated (Sliding Conformal @ 1% target FPR)
 docker run --rm -v "${PWD}:/app" -e COMMIT=$env:COMMIT log-project:latest `
-  python -m src.stream --mode baseline --data data/synth_tokens.json --labels data/synth_labels.json
+ python -m src.stream --mode baseline --data data/synth_tokens.json --labels data/synth_labels.json
 docker run --rm -v "${PWD}:/app" -e COMMIT=$env:COMMIT log-project:latest `
-  python -m src.stream --mode baseline --data data/mini_tokens.json
+ python -m src.stream --mode baseline --data data/mini_tokens.json
 
 # No-calib ablation (fixed threshold)
 docker run --rm -v "${PWD}:/app" -e COMMIT=$env:COMMIT log-project:latest `
-  python -m src.stream --mode baseline --data data/synth_tokens.json --labels data/synth_labels.json --no_calib
+ python -m src.stream --mode baseline --data data/synth_tokens.json --labels data/synth_labels.json --no_calib
 docker run --rm -v "${PWD}:/app" -e COMMIT=$env:COMMIT log-project:latest `
-  python -m src.stream --mode baseline --data data/mini_tokens.json --no_calib
+ python -m src.stream --mode baseline --data data/mini_tokens.json --no_calib
 ```
 
 Each command emits exactly one `CSV_ROW:` and a matching provenance block.
@@ -69,15 +79,15 @@ $env:COMMIT = (git rev-parse --short HEAD).Trim()
 
 # Calibrated (Sliding Conformal @ 1% target FPR)
 docker run --rm -v "${PWD}:/app" -e COMMIT=$env:COMMIT log-project:latest `
-  python -m src.stream --mode transformer --data data/synth_tokens.json --labels data/synth_labels.json
+ python -m src.stream --mode transformer --data data/synth_tokens.json --labels data/synth_labels.json
 docker run --rm -v "${PWD}:/app" -e COMMIT=$env:COMMIT log-project:latest `
-  python -m src.stream --mode transformer --data data/mini_tokens.json
+ python -m src.stream --mode transformer --data data/mini_tokens.json
 
 # No-calib ablation (fixed threshold)
 docker run --rm -v "${PWD}:/app" -e COMMIT=$env:COMMIT log-project:latest `
-  python -m src.stream --mode transformer --data data/synth_tokens.json --labels data/synth_labels.json --no_calib
+ python -m src.stream --mode transformer --data data/synth_tokens.json --labels data/synth_labels.json --no_calib
 docker run --rm -v "${PWD}:/app" -e COMMIT=$env:COMMIT log-project:latest `
-  python -m src.stream --mode transformer --data data/mini_tokens.json --no_calib
+ python -m src.stream --mode transformer --data data/mini_tokens.json --no_calib
 ```
 
 ## 3) Results
@@ -87,12 +97,12 @@ docker run --rm -v "${PWD}:/app" -e COMMIT=$env:COMMIT log-project:latest `
 
 ```powershell
 docker run --rm -v "${PWD}:/app" -e COMMIT=$env:COMMIT log-project:latest `
-  python scripts/make_readme_table.py --csv experiments/summary.csv --out README_TABLE.txt
+ python scripts/make_readme_table.py --csv experiments/summary.csv --out README_TABLE.txt
 
-# (Optional) normalize 'nan' → 'NA' if any appear in the Markdown table output
+# (Optional) normalize "nan" â†’ "NA" if any appear in the Markdown table output
 $utf8NoBom = New-Object System.Text.UTF8Encoding($false)
-$content   = (Get-Content README_TABLE.txt -Raw) -replace '\bnan\b','NA'
-[IO.File]::WriteAllText('README_TABLE.txt', $content + "`n", $utf8NoBom)
+$content = (Get-Content README_TABLE.txt -Raw) -replace "\bnan\b","NA"
+[IO.File]::WriteAllText("README_TABLE.txt", $content + "`n", $utf8NoBom)
 ```
 
 > The generator shows the **latest row per (dataset, mode, calibration)**. TPR is formatted to **4 decimals**; p95/p99/eps to **1 decimal**; any textual `nan` is rendered as **NA**.
@@ -101,7 +111,7 @@ $content   = (Get-Content README_TABLE.txt -Raw) -replace '\bnan\b','NA'
 
 ```powershell
 docker run --rm -v "${PWD}:/app" -e COMMIT=$env:COMMIT log-project:latest `
-  python scripts/make_plots.py --summary experiments/summary.csv
+ python scripts/make_plots.py --summary experiments/summary.csv
 ```
 
 Embed examples (the plotting script writes to `figures/`):
@@ -115,15 +125,15 @@ Embed examples (the plotting script writes to `figures/`):
 
 ---
 
-## 4) Datasets & hashes (canonical)
+## 4) Datasets and hashes (canonical)
 Track every dataset in three places:
 
 1. Tokenized logs live in `data/*.json`. See **`docs/DATASETS.md`** for schema, sizes, counts, and SHA-256.
-2. **Policy:** `data/HASHES.txt` lists **`path  size  SHA256`** (three fields, two spaces). Exactly **4 entries** are expected. Use **uppercase 64‑hex SHA‑256**.
-3. `docs/PROVENANCE.txt` → one block per run, containing the **verbatim** `CSV_ROW:`.
+2. **Policy:** `data/HASHES.txt` lists **`path size SHA256`** (three fields, two spaces). Exactly **4 entries** are expected. Use **uppercase 64-hex SHA-256**.
+3. `docs/PROVENANCE.txt` one block per run, containing the **verbatim** `CSV_ROW:`.
 
 - **Scope clarification (2025-09-03):** `data/` now contains **artifact data only**.
-  Non-artifacts were relocated (`data/make_synth.py`→`scripts/`, `data/PROVENANCE.txt`→`docs/PROVENANCE.txt`, `data/DATASETS.md`→`docs/DATASETS.md`). `data/HASHES.txt` covers only artifact JSON/log files; docs/scripts are excluded.
+ Non-artifacts were relocated (`data/make_synth.py` â†’ `scripts/`, `data/PROVENANCE.txt` â†’ `docs/PROVENANCE.txt`, `data/DATASETS.md` â†’ `docs/DATASETS.md`). `data/HASHES.txt` covers only artifact JSON/log files; docs/scripts are excluded.
 
 **Regenerate hashes (preferred):**
 ```powershell
@@ -132,10 +142,10 @@ docker run --rm -v "${PWD}:/app" log-project:latest python scripts/hash_files.py
 
 **Example entries (update if files change):**
 ```
-data/synth_tokens.json  137400  8AF36305BB4FA61486322BFAFE148F6481C7FF1772C081F3E9590FB5C79E6600
-data/mini_tokens.json  533  3CA2BCE42228159B81E5B2255B6BC352819B22FFA74BBD4F78AC82F00A2E1263
-data/synth_labels.json  6000  814DA8A6BAB57EC08702DDC0EFFAC7AFDC88868B4C2EE4C6087C735FB22EDADA
-data/raw/mini.log  310  F5953777A9A84819D55964E5772792CE8819A3FED1E0365FA279EB53F6496FB4
+data/synth_tokens.json 137400 8AF36305BB4FA61486322BFAFE148F6481C7FF1772C081F3E9590FB5C79E6600
+data/mini_tokens.json 533 3CA2BCE42228159B81E5B2255B6BC352819B22FFA74BBD4F78AC82F00A2E1263
+data/synth_labels.json 6000 814DA8A6BAB57EC08702DDC0EFFAC7AFDC88868B4C2EE4C6087C735FB22EDADA
+data/raw/mini.log 310 F5953777A9A84819D55964E5772792CE8819A3FED1E0365FA279EB53F6496FB4
 ```
 
 ---
@@ -167,7 +177,7 @@ if ($rows -ne $provCsvRows) { throw "Provenance mismatch: CSV=$rows PROVENANCE=$
 ---
 
 ## 6) Canonical results schema (24 columns)
-Policy: no blank cells — use  `NA` when not applicable. `TPR_at_1pct_FPR` is numeric for labeled datasets and the literal `NA` for unlabeled.
+Policy: no blank cells - use `NA` when not applicable. `TPR_at_1pct_FPR` is numeric for labeled datasets and the literal `NA` for unlabeled.
 
 Header (first line of `experiments/summary.csv`):
 ```
@@ -184,19 +194,19 @@ date,commit,dataset,mode,calibration,drift_detector,seed,events,anomalies,drifts
 ## 7) Running the pipeline (CLI)
 **Flags (most common):**
 ```
---data PATH                  # tokens JSON
---labels PATH                # optional labels JSON for TPR metric
---alpha 0.01                 # default 1% (alpha)
---window 5000                # sliding window size
---warmup 200                 # warmup events
---no_calib                   # disable conformal (ablation)
---adwin-delta 0.002          # drift sensitivity
---save-scores PATH           # per-event scores CSV (optional)
+--data PATH # tokens JSON
+--labels PATH # optional labels JSON for TPR metric
+--alpha 0.01 # default 1% (alpha)
+--window 5000 # sliding window size
+--warmup 200 # warmup events
+--no_calib # disable conformal (ablation)
+--adwin-delta 0.002 # drift sensitivity
+--save-scores PATH # per-event scores CSV (optional)
 --summary-out experiments/summary.csv
 --seed 20250819
 --sleep_ms 0
 ```
-**Drift handling:** On ADWIN change → increment drift count, call `calib.reset()`, continue.
+**Drift handling:** On ADWIN change â†’ increment drift count, call `calib.reset()`, continue.
 For unlabeled datasets, `TPR_at_1pct_FPR` is the literal `NA`. CPU metric: `CPU_pct` is the mean **process** CPU%.
 
 ---
@@ -209,12 +219,12 @@ For unlabeled datasets, `TPR_at_1pct_FPR` is the literal `NA`. CPU metric: `CPU_
 Recreate tokens from raw:
 ```powershell
 docker run --rm -v "${PWD}:/app" log-project:latest `
-  python src/log_tokenize.py --in data/raw/mini.log --out data/mini_tokens.json
+ python src/log_tokenize.py --in data/raw/mini.log --out data/mini_tokens.json
 ```
 
 ---
 
-## 9) Determinism & seeds
+## 9) Determinism and seeds
 - Canonical seed: **20250819** (experiments + synthesis).
 - Python hashing determinism (optional):
 ```powershell
@@ -224,7 +234,7 @@ $env:PYTHONHASHSEED = "0"
 
 ---
 
-## 10) Environment & build (pinned)
+## 10) Environment and build (pinned)
 - `env/requirements.lock` pins exact versions (e.g., `numpy 1.26.4`, `scipy 1.16.1`, `scikit-learn 1.5.2`, `psutil 7.0.0`, `matplotlib`, etc.).
 - Dockerfile installs only from the lockfile; `CMD` runs the default pipeline.
 - **Dev-only utility:** `scripts/dev/fix_summary.py` requires **pandas**. Install it separately (e.g., `pip install pandas`) or list it in a dev-only file such as `env/dev-requirements.txt`.
@@ -232,14 +242,14 @@ $env:PYTHONHASHSEED = "0"
 Record actual versions from the built image:
 ```powershell
 docker run --rm -v "${PWD}:/app" log-project:latest `
-  python scripts/print_versions.py
+ python scripts/print_versions.py
 ```
 
 ---
 
-## 11) Encoding & EOL policy
+## 11) Encoding and EOL policy
 
-> **Note (protected JSONs):** The three data JSONs — `data/mini_tokens.json`, `data/synth_labels.json`, `data/synth_tokens.json` — are intentionally tracked **byte-for-byte** for provenance and hashing. They are marked `-text` in `.gitattributes` and must remain exactly identical to the published hashes, including **no trailing newline**. Most editors try to add one; please do not.
+> **Note (protected JSONs):** The three data JSONs - `data/mini_tokens.json`, `data/synth_labels.json`, `data/synth_tokens.json` - are intentionally tracked **byte-for-byte** for provenance and hashing. They are marked `-text` in `.gitattributes` and must remain exactly identical to the published hashes, including **no trailing newline**. Most editors try to add one; please do not.
 
 - All tracked text files are **UTF-8 (no BOM)** with **LF** line endings, and each file ends with a **single trailing newline**.
 - Enforced by checked-in **`.gitattributes`** and **`.editorconfig`** (authoritative).
@@ -250,9 +260,9 @@ docker run --rm -v "${PWD}:/app" log-project:latest `
 * text=auto eol=lf
 *.png binary
 data/synth_tokens.json -text
-data/mini_tokens.json  -text
+data/mini_tokens.json -text
 data/synth_labels.json -text
-data/raw/mini.log     -text
+data/raw/mini.log -text
 ```
 
 **Normalize now (one-time):**
@@ -276,15 +286,15 @@ fsck.txt
 ## 12) Testing
 Covers:
 - Tokenizer masking and lowercase
-- Summary schema (24 columns; p95_ms ≤ p99_ms)
+- Summary schema (24 columns; p95_ms â‰¤ p99_ms)
 - Calibration docs / ASCII
-- Drift → conformal reset (smoke)
+- Drift conformal reset (smoke)
 - Determinism (smoke)
 
 ```powershell
 docker build -t log-project:latest .
 docker run --rm -v "${PWD}:/app" log-project:latest `
-  sh -lc 'python -m pip install --quiet pytest==8.3.3 && python -m pytest -q'
+ sh -lc 'python -m pip install --quiet pytest==8.3.3 && python -m pytest -q'
 ```
 
 **Local venv (Windows):**
@@ -334,35 +344,35 @@ Verify: one new CSV row + matching provenance block.
 ---
 
 ## 15) Metrics (definitions)
-- **TPR_at_1pct_FPR** → TPR computed at the score threshold set by the 99th percentile of negatives (target FPR=1%).
-- **p95_ms**, **p99_ms** → end-to-end per-event latency percentiles.
-- **eps** → throughput, events per second.
-- **CPU_pct** → process average CPU% during the run.
-- **drifts** → ADWIN change detections (each triggers `calib.reset()`).
+- **TPR_at_1pct_FPR** â†’ TPR computed at the score threshold set by the 99th percentile of negatives (target FPR=1%).
+- **p95_ms**, **p99_ms** â†’ end-to-end per-event latency percentiles.
+- **eps** â†’ throughput, events per second.
+- **CPU_pct** â†’ process average CPU% during the run.
+- **drifts** â†’ ADWIN change detections (each triggers `calib.reset()`).
 
 ---
 
-## 16) Motivation & impact
+## 16) Motivation and impact
 - **Reliability under drift:** Sliding Conformal + ADWIN maintain a stable operating point (1% FPR) in streaming settings.
 - **Systems + ML:** We report latency (p95/p99), throughput (eps), and CPU% to demonstrate edge feasibility.
 - **Reproducibility culture:** Docker, pinned env, dataset hashes, strict provenance, and encoding/EOL policy.
 
 ---
 
-## 17) System & benchmark environment (recorded)
+## 17) System and benchmark environment (recorded)
 (Example capture; see `experiments/environment_snapshot.md` in this repo for the current machine.)
 
 **CPU**
-AMD Ryzen 7 5800HS with Radeon Graphics — 8 cores / 16 threads
+AMD Ryzen 7 5800HS with Radeon Graphics - 8 cores / 16 threads
 
 **Memory**
-TotalPhysicalMemoryBytes—15.41 GB
+TotalPhysicalMemoryBytes-15.41 GB
 
 **OS**
 Windows 11 Home (build 26100)
 
 **Docker**
-Client: 28.3.2 — Server: 28.3.2 — Docker Desktop 4.44.3
+Client: 28.3.2 - Server: 28.3.2 - Docker Desktop 4.44.3
 
 **Image Python/libs**
 python==3.11.9; numpy==1.26.4; scikit-learn==1.5.2; matplotlib==3.9.2; psutil==7.0.0; scipy==1.16.1
@@ -371,13 +381,13 @@ python==3.11.9; numpy==1.26.4; scikit-learn==1.5.2; matplotlib==3.9.2; psutil==7
 
 ---
 
-## 18) Data ethics & privacy
+## 18) Data ethics and privacy
 
 - Logs can contain sensitive data (PII, secrets). The tokenizer masks `0x` (as `<hex>`), IPv4 addresses (`<ip>`), and integers (`\d+`), but **this is not a full PII scrubber**.
 - Before committing new datasets:
-  - Remove or redact user identifiers, secrets/keys, tokens.
-  - Prefer synthetic or anonymized logs for public sharing.
-  - Document any remaining sensitive fields in `docs/DATASETS.md`.
+ - Remove or redact user identifiers, secrets/keys, tokens.
+ - Prefer synthetic or anonymized logs for public sharing.
+ - Document any remaining sensitive fields in `docs/DATASETS.md`.
 
 ---
 
@@ -392,7 +402,7 @@ python==3.11.9; numpy==1.26.4; scikit-learn==1.5.2; matplotlib==3.9.2; psutil==7
 1. Implement under `src/` (e.g., `src/detectors/my_detector.py`).
 2. Register CLI options in `src/stream.py`.
 3. Include any new hyperparams in the summary CSV and provenance block.
-4. Add tests in `tests/` and update §7 flags if needed.
+4. Add tests in `tests/` and update 7 flags if needed.
 
 **Add a drift detector**
 - Ensure a **reset hook** is called to flush conformal history on drift.
@@ -402,29 +412,54 @@ python==3.11.9; numpy==1.26.4; scikit-learn==1.5.2; matplotlib==3.9.2; psutil==7
 ## 20) CI suggestion (GitHub Actions)
 
 ```yaml
-name: ci
-on: [push, pull_request]
+name: CI
+
+on:
+ push:
+ branches: [ master ]
+ pull_request:
+ branches: [ master ]
+
 jobs:
-  test:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: docker/setup-buildx-action@v3
-      - run: docker build -t log-project:latest .
-      - run: docker run --rm -v "${{ github.workspace }}:/app" log-project:latest \
-               sh -lc 'python -m pip install --quiet pytest==8.3.3 && python -m pytest -q'
-      - run: docker run --rm -v "${{ github.workspace }}:/app" log-project:latest \
-               python - << 'PY'
-import csv, sys
-expected = ["date","commit","dataset","mode","calibration","drift_detector","seed","events","anomalies","drifts","TPR_at_1pct_FPR","p95_ms","p99_ms","eps","CPU_pct","energy_J","calib_target_fpr","calib_window","warmup","adwin_delta","iso_n_estimators","iso_max_samples","iso_random_state","notes"]
-with open("experiments/summary.csv", newline="", encoding="utf-8") as f:
-    r = csv.reader(f)
-    hdr = next(r, [])
-    if hdr != expected:
-        print("Header mismatch:", hdr, file=sys.stderr)
-        sys.exit(1)
-print("summary.csv header OK")
-PY
+ build:
+ runs-on: ${{ matrix.os }}
+ strategy:
+ fail-fast: false
+ matrix:
+ os: [ubuntu-latest, windows-latest]
+ python-version: ["3.11"]
+
+ steps:
+ - name: Checkout
+ uses: actions/checkout@v4
+
+ - name: Set up Python
+ uses: actions/setup-python@v5
+ with:
+ python-version: ${{ matrix.python-version }}
+ cache: pip
+ cache-dependency-path: |
+ env/requirements.lock
+ env/requirements.txt
+
+ - name: Install dependencies (hashed)
+ run: |
+ python -m pip install --upgrade pip
+ pip install --require-hashes -r env/requirements.txt
+
+ - name: Run pre-commit
+ run: |
+ pre-commit --version
+ pre-commit run -a
+
+ - name: Type check (mypy)
+ run: |
+ pip install mypy
+ mypy src
+
+ - name: Run tests
+ run: |
+ pytest -q
 ```
 
 ---
@@ -432,18 +467,18 @@ PY
 ## 21) Troubleshooting
 
 - **Plots script expects only `summary.csv`:** If you see references to `--scores`, update to the latest `scripts/make_plots.py` (figures are derived from `experiments/summary.csv` only).
-- **`AttributeError: 'SlidingConformal' object has no attribute 'size'`:** Update to the latest code (the calibrator implements `size()` for compatibility with `src/stream.py`).
+- **`AttributeError: "SlidingConformal" object has no attribute "size"`:** Update to the latest code (the calibrator implements `size()` for compatibility with `src/stream.py`).
 
 Other common issues:
-- **Docker mount issues on Windows** → Always quote the mount: `-v "${PWD}:/app"`.
-- **Table shows `nan`** → Regenerate the table (see §3.1); the generator renders textual `nan` as `NA`.
-- **TPR formatting varies (`1` vs `1.0000`)** → Use `scripts/normalize_tpr_lastrow.py` after runs; don't rewrite historical rows.
-- **CRLF vs LF / missing final newline** → `scripts/normalize_line_endings.ps1` fixes this across the repo.
-- **PowerShell 5.1 vs 7** → Scripts are 5.1-compatible; prefer **pwsh 7+** for consistency.
+- **Docker mount issues on Windows** â†’ Always quote the mount: `-v "${PWD}:/app"`.
+- **Table shows `nan`** â†’ Regenerate the table (see 3.1); the generator renders textual `nan` as `NA`.
+- **TPR formatting varies (`1` vs `1.0000`)** â†’ Use `scripts/normalize_tpr_lastrow.py` after runs; don't rewrite historical rows.
+- **CRLFâ†’LF / missing final newline** `scripts/normalize_line_endings.ps1` fixes this across the repo.
+- **PowerShell 5.1 vs 7** â†’ Scripts are 5.1-compatible; prefer **pwsh 7+** for consistency.
 
 ---
 
-## 22) License & citation
+## 22) License and citation
 
 This project is licensed under the **MIT License**. See [LICENSE](LICENSE).
 
@@ -463,21 +498,21 @@ repository-code: https://github.com/felipearche/log-project
 
 ## Maintenance summaries (latest)
 
-- **2025-08-31**: Encoding/EOL compliance — Added a single trailing LF to `scripts/make_release.ps1` to conform to the repo policy (UTF8 no BOM, LF, single trailing newline). See §11 for the policy and normalization script.; CPU_pct backfill (historic) — Backfilled two early `CPU_pct` blanks to the literal `NA` in `experiments/summary.csv` for full-column coverage and clarity. Immediately rebuilt `docs/PROVENANCE.txt` to preserve the strict 1:1 mapping with `CSV_ROW:` lines (postcheck: CSV rows=26; PROVENANCE CSV_ROW=26).; Tests — Post-change test suite: 4 passed.
-- **2025-08-30**: TPR formatting policy enforced — `TPR_at_1pct_FPR` is four decimals for `synth_tokens` (e.g., `1.0000`) and the literal `NA` for `mini_tokens`. See the experiment schema and the table generator script.; Provenance 1:1 rebuilt — `docs/PROVENANCE.txt` now has exactly one `CSV_ROW:` per row in `experiments/summary.csv` (counts match). A `notes:` line was added to the latest block documenting this maintenance.; README table regenerated — `README_TABLE.txt` reflects the latest row per (dataset, mode, calibration) with canonical formatting (TPR 4dp, p95/p99/eps 1dp, `NA` where applicable).
-- **2025-09-03**: Repository hygiene & provenance scope — Moved non-artifacts out of `data/` (scripts→`scripts/`, docs→`docs/`); updated references to `docs/PROVENANCE.txt`; added `.gitattributes` (LF policy; keep protected JSONs byte-exact); ignored `.ruff_cache/` in `.gitignore`. Provenance 1:1 mapping unchanged; metrics unchanged.
-- **2025-09-03**: **Assets & attributes**
-  - Normalized 3 SVGs in `figures/` (CRLF→LF; stripped trailing whitespace; UTF‑8 no BOM; single final LF).
-  - Updated `.gitattributes` to mark `*.png` as **binary** (prevents EOL normalization and diffs on images); normalized `.gitattributes` to **LF**.
-  - Added a dated PROVENANCE note recording the actual Docker base image and the above maintenance.
-  - Hooks: all passing; tests: unchanged; metrics/results: unchanged.
-- **2025-09-03** (IST): **Green build** & repo hygiene
-  - Fixed mid-token splits in `src/stream.py`, `src/calibration.py`, `src/log_tokenize.py`, and `scripts/make_plots.py`.
-  - Corrected summary writing in `src/stream.py`: **TPR** now formatted to **4 decimals or `NA`**; **anomalies** column now records `n_anom` (previously mis-written).
-  - Enforced **LF** line endings across the tree; removed **UTF‑8 BOM** from `.pre-commit-config.yaml`; widened local **BOM guard** to include `ya?ml`.
-  - Re-generated `experiments/summary.csv` **with labels** for `synth_tokens`; `p95 <= p99` and TPR formatting policy satisfied.
-  - **Pre-commit:** all hooks pass; **tests:** 6 passed (`pytest==8.3.3`).
-  - **Policy reminders:** three protected JSONs (`data/mini_tokens.json`, `data/synth_labels.json`, `data/synth_tokens.json`) remain byte-identical with **no trailing newline**; `data/HASHES.txt` unchanged (4 lines, uppercase 64‑hex SHA‑256).
+- **2025-08-31**: Encoding/EOL compliance - Added a single trailing LF to `scripts/make_release.ps1` to conform to the repo policy (UTF8 no BOM, LF, single trailing newline). See 11 for the policy and normalization script.; CPU_pct backfill (historic) - Backfilled two early `CPU_pct` blanks to the literal `NA` in `experiments/summary.csv` for full-column coverage and clarity. Immediately rebuilt `docs/PROVENANCE.txt` to preserve the strict 1:1 mapping with `CSV_ROW:` lines (postcheck: CSV rows=26; PROVENANCE CSV_ROW=26).; Tests - Post-change test suite: 4 passed.
+- **2025-08-30**: TPR formatting policy enforced - `TPR_at_1pct_FPR` is four decimals for `synth_tokens` (e.g., `1.0000`) and the literal `NA` for `mini_tokens`. See the experiment schema and the table generator script.; Provenance 1:1 rebuilt - `docs/PROVENANCE.txt` now has exactly one `CSV_ROW:` per row in `experiments/summary.csv` (counts match). A `notes:` line was added to the latest block documenting this maintenance.; README table regenerated - `README_TABLE.txt` reflects the latest row per (dataset, mode, calibration) with canonical formatting (TPR 4dp, p95/p99/eps 1dp, `NA` where applicable).
+- **2025-09-03**: Repository hygiene and provenance scope - Moved non-artifacts out of `data/` (scripts`scripts/`, docs`docs/`); updated references to `docs/PROVENANCE.txt`; added `.gitattributes` (LF policy; keep protected JSONs byte-exact); ignored `.ruff_cache/` in `.gitignore`. Provenance 1:1 mapping unchanged; metrics unchanged.
+- **2025-09-03**: **Assets and attributes**
+ - Normalized 3 SVGs in `figures/` (CRLFâ†’LF; stripped trailing whitespace; UTF-8 no BOM; single final LF).
+ - Updated `.gitattributes` to mark `*.png` as **binary** (prevents EOL normalization and diffs on images); normalized `.gitattributes` to **LF**.
+ - Added a dated PROVENANCE note recording the actual Docker base image and the above maintenance.
+ - Hooks: all passing; tests: unchanged; metrics/results: unchanged.
+- **2025-09-03** (IST): **Green build** and repo hygiene
+ - Fixed mid-token splits in `src/stream.py`, `src/calibration.py`, `src/log_tokenize.py`, and `scripts/make_plots.py`.
+ - Corrected summary writing in `src/stream.py`: **TPR** now formatted to **4 decimals or `NA`**; **anomalies** column now records `n_anom` (previously mis-written).
+ - Enforced **LF** line endings across the tree; removed **UTF-8 BOM** from `.pre-commit-config.yaml`; widened local **BOM guard** to include `ya?ml`.
+ - Re-generated `experiments/summary.csv` **with labels** for `synth_tokens`; `p95 <= p99` and TPR formatting policy satisfied.
+ - **Pre-commit:** all hooks pass; **tests:** 6 passed (`pytest==8.3.3`).
+ - **Policy reminders:** three protected JSONs (`data/mini_tokens.json`, `data/synth_labels.json`, `data/synth_tokens.json`) remain byte-identical with **no trailing newline**; `data/HASHES.txt` unchanged (4 lines, uppercase 64-hex SHA-256).
 ---
 
 ## Release Packaging (Reproducible)
