@@ -1,19 +1,39 @@
-exclude: |
-  ^data/(mini_tokens\.json|synth_labels\.json|synth_tokens\.json)$
-
 repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v6.0.0
     hooks:
       - id: trailing-whitespace
         exclude_types: [json]
+        # Keep protected JSONs untouched; JSON often needs exact bytes
+        exclude: |
+          (?x)(
+            ^data/mini_tokens\.json$|
+            ^data/synth_labels\.json$|
+            ^data/synth_tokens\.json$
+          )
       - id: end-of-file-fixer
         exclude_types: [json]
+        exclude: |
+          (?x)(
+            ^data/mini_tokens\.json$|
+            ^data/synth_labels\.json$|
+            ^data/synth_tokens\.json$
+          )
       - id: mixed-line-ending
         args: [--fix=lf]
+        exclude_types: [json]
+        exclude: |
+          (?x)(
+            ^data/mini_tokens\.json$|
+            ^data/synth_labels\.json$|
+            ^data/synth_tokens\.json$
+          )
+      - id: check-merge-conflict
+      - id: check-added-large-files
+        # Optionally set a size threshold (in kB). Default is 500kB.
+        # args: ["--maxkb=1024"]
+      - id: detect-private-key
       - id: check-yaml
-      - id: check-ast
-      - id: check-case-conflict
 
   - repo: https://github.com/astral-sh/ruff-pre-commit
     rev: v0.12.11
@@ -23,8 +43,15 @@ repos:
 
   - repo: local
     hooks:
-    - id: no-bom
-      name: Forbid UTF-8 BOM in text files
-      entry: python scripts/check_no_bom.py
-      language: system
-      files: \.(md|ps1|py|txt|ya?ml)$
+      - id: forbid-utf8-bom
+        name: Forbid UTF-8 BOM in text files
+        entry: python scripts/check_no_bom.py
+        language: system
+        pass_filenames: true
+        types: [text]
+        exclude: |
+          (?x)(
+            ^data/mini_tokens\.json$|
+            ^data/synth_labels\.json$|
+            ^data/synth_tokens\.json$
+          )
