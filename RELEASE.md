@@ -1,6 +1,6 @@
 # Releases
 
-**Goal:** Create a clean, tagged zip and record its **own** hash + provenance under `release/`.
+**Goal:** Create a clean, tagged zip and record its **own** hash + provenance under `dist/`.
 **Do _not_ modify `data/HASHES.txt`** (that file lists only the four dataset artifacts).
 
 > Windows PowerShell; run from repo root.
@@ -21,10 +21,10 @@ git tag -l
 ```
 Pick a new tag name (do not re-use an existing one).
 
-## 3) Create the zip (exclude .venv/, experiments/logs/, caches, and .git/)
+## 3) Create the zip (exclude .venv/, experiments/logs/, caches, figures, and .git/)
 ```powershell
 $name   = "log-project-$ver.zip"
-$outdir = "release"
+$outdir = "dist"
 mkdir -Force $outdir | Out-Null
 
 # Create a staging copy excluding heavy/cached folders
@@ -52,8 +52,8 @@ $ts     = Get-Date -AsUTC -Format "yyyy-MM-ddTHH:mm:ssZ"
 $enc    = New-Object System.Text.UTF8Encoding($false)
 $commit = (git rev-parse --short HEAD 2>$null); if (-not $commit) { $commit = "NA" }
 
-if (-not (Test-Path "release\PROVENANCE.txt")) {
-  New-Item -ItemType File -Path "release\PROVENANCE.txt" -Force | Out-Null
+if (-not (Test-Path "dist\PROVENANCE.txt")) {
+  New-Item -ItemType File -Path "dist\PROVENANCE.txt" -Force | Out-Null
 }
 
 $blk = @"
@@ -65,7 +65,7 @@ artifact: $zip
 hash: sha256=$sha
 "@
 
-[IO.File]::AppendAllText("release\PROVENANCE.txt", ($blk -replace "`r`n","`n") + "`n", $enc)
+[IO.File]::AppendAllText("dist\PROVENANCE.txt", ($blk -replace "`r`n","`n") + "`n", $enc)
 Write-Host "Release hash: sha256=$sha"
 ```
 
@@ -73,4 +73,10 @@ Write-Host "Release hash: sha256=$sha"
 ```powershell
 git tag $ver
 git push origin $ver
+```
+
+## 6) Verify outputs
+```powershell
+Get-ChildItem -Recurse dist\ | Select-Object FullName,Length
+Get-Content dist\PROVENANCE.txt
 ```
