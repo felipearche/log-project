@@ -34,17 +34,18 @@ jobs:
         with:
           python-version: ${{ matrix.python-version }}
           cache: pip
-          cache-dependency-path: env/requirements.lock
+          cache-dependency-path: |
+            env/requirements.lock
+            env/dev-requirements.lock
 
       - name: Install runtime deps (hash-locked)
         run: |
           python -m pip install --upgrade pip
           python -m pip install --require-hashes -r env/requirements.lock
 
-      # TEMP until you add env/dev-requirements.lock with --require-hashes
-      - name: Install dev tools (pre-commit, pytest, mypy, coverage)
+      - name: Install dev tools (hash-locked)
         run: |
-          python -m pip install pre-commit pytest pytest-cov mypy
+          python -m pip install --require-hashes -r env/dev-requirements.lock
 
       - name: Pre-commit (lint/format/policy)
         run: python -m pre_commit run --all-files
