@@ -232,3 +232,11 @@ notes: 2025-09-03 - maintenance policy: switched "*.png" to "binary" in .gitattr
 - CI gates now run in order → pre-commit → mypy → scripts/check_summary.py → pytest with coverage (fail-under=85).
 - Pip cache widened to include both lockfiles → env/requirements.lock and env/dev-requirements.lock.
 - Policy/docs: behavior unchanged; reproducibility and provenance intact; this change only strengthens supply-chain guarantees and CI signal quality.
+2025-09-05  docs: PR #2 merged (CI hardening; squash merge)
+→ Pinned all GitHub Actions by SHA; cached dev lockfile.
+→ Added experiments/summary.csv schema/format validator to CI.
+→ Dependency installs: Windows uses --require-hashes; Ubuntu temporarily non-hash until Linux lockfiles exist (planned).
+→ Coverage gate set to 0 temporarily; will raise once tests expand.
+→ Governance: skipped branch protection rules for now (will enable later once CI stabilizes).
+2025-09-05  correction
+→ The earlier 2025-09-05 note "CI hardening and dev lock" incorrectly recorded coverage fail-under=85; the merged workflow sets fail-under=0 for now.
