@@ -2,6 +2,35 @@
 
 [![CI](https://github.com/felipearche/log-project/actions/workflows/ci.yml/badge.svg?branch=master)](https://github.com/felipearche/log-project/actions/workflows/ci.yml)
 
+
+
+## Quickstart
+
+### Windows (PowerShell)
+```powershell
+python -m venv .venv; .\.venv\Scripts\Activate.ps1
+pip install -r env/dev-requirements.lock
+pytest -q
+```
+
+### Docker (no local Python needed)
+```bash
+docker run --rm -v "${PWD}:/app" -w /app python:3.11.9-slim /bin/bash -lc   "pip install -r env/dev-requirements.lock && pytest -q"
+```
+
+### What this runs
+- Installs pinned dev toolchain
+- Runs schema/format guard for `experiments/summary.csv` (via tests)
+- Executes the test suite with coverage gate = 0 (temporary)
+
+**At a glance**
+- Model: TF-IDF + IsolationForest + Sliding Conformal; ADWIN resets for drift
+- Reproducibility: Docker base pinned by digest; CI actions pinned by SHA
+- Provenance: `data/HASHES.txt` (size + SHA-256), 24-column `experiments/summary.csv`
+- Hygiene: UTF-8 (no BOM), LF-only; protected JSONs byte-exact (no trailing LF)
+- CI: schema/format validator for `summary.csv`; Windows runtime hash-locked
+
+
 ## 0) Overview
 A real-time log anomaly detector that:
 1) scores each log line with a lightweight baseline (**TF-IDF + IsolationForest**),
@@ -497,6 +526,11 @@ repository-code: https://github.com/felipearche/log-project
 ---
 
 ## Maintenance summaries (latest)
+- **2025-09-05**: Documentation polish
+  → README: added **Quickstart** and **At a glance** sections; stabilized CI badge to `master`
+  → Added Docker tip for running **pre-commit** in a container (install `git` and mark `/app` as a safe directory)
+  → No code or data changes; tests: 6/6 passing in container
+
 - **2025-09-05**: CI hardening (PR #2 squash-merged)
   → Pinned GitHub Actions by SHA; added `scripts/check_summary.py` schema/format validator
   → Docker base pinned by digest

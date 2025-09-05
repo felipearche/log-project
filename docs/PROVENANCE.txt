@@ -240,3 +240,8 @@ notes: 2025-09-03 - maintenance policy: switched "*.png" to "binary" in .gitattr
 → Governance: skipped branch protection rules for now (will enable later once CI stabilizes).
 2025-09-05  correction
 → The earlier 2025-09-05 note "CI hardening and dev lock" incorrectly recorded coverage fail-under=85; the merged workflow sets fail-under=0 for now.
+2025-09-05  CI alignment (labels + Windows runtime hashes)
+→ CI: Windows runtime now installs from env/requirements.txt (hash-locked via inline hashes).
+→ CI: corrected step label for Ubuntu dev tools to 'hash-locked' (env/dev-requirements.lock contains hashes).
+Rationale: make workflow labels and behavior match reality; keep Ubuntu runtime non-hash until Linux hashes lock is generated.
+2025-09-05  docs: README Quickstart + At a glance; CI badge stabilized to master; added Docker pre-commit note (install git + set safe.directory=/app). No code/data changes; tests: 6 passed in python:3.11.9-slim container.
