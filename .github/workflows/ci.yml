@@ -4,31 +4,74 @@ on:
   push:
   pull_request:
 
+permissions: read-all
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   test:
+    name: Python ${{ matrix.python-version }} • ${{ matrix.os }}
+    timeout-minutes: 20
+    runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
       matrix:
         os: [ubuntu-latest, windows-latest]
-        python: ['3.11']
-    runs-on: ${{ matrix.os }}
+        python-version: ["3.11"]
+
     steps:
-      - uses: actions/checkout@v4
-
-      - uses: actions/setup-python@v5
+      - name: Harden Runner
+        uses: step-security/harden-runner@ec9f2d5744a09debf3a187a3f4f675c53b671911 # v2.13.0
         with:
-          python-version: ${{ matrix.python }}
-          cache: 'pip'
-          cache-dependency-path: env/requirements.lock
+          egress-policy: audit
 
-      - name: Install dependencies
+      - name: Checkout
+        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+
+      - name: Set up Python
+        uses: actions/setup-python@e797f83bcb11b83ae66e0230d6156d7c80228e7c # v6.0.0
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: pip
+          cache-dependency-path: |
+            env/requirements.lock
+            env/dev-requirements.lock
+
+      # Runtime deps
+      - name: Install runtime deps (Windows, hash-locked)
+        if: runner.os == 'Windows'
         run: |
           python -m pip install --upgrade pip
-          pip install -r env/requirements.lock
-          pip install pre-commit pytest
+          python -m pip install -r env/requirements.lock
 
-      - name: Pre-commit
-        run: pre-commit run --all-files
+      - name: Install runtime deps (Ubuntu, temporary non-hash)
+        if: runner.os == 'Linux'
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -r env/requirements.lock
+        # TODO: switch to with env/requirements.linux.lock
 
-      - name: Pytest
-        run: pytest -q
+      # Dev tools
+      - name: Install dev tools (Windows, hash-locked)
+        if: runner.os == 'Windows'
+        run: |
+          python -m pip install -r env/dev-requirements.lock
+
+      - name: Install dev tools (Ubuntu, temporary non-hash)
+        if: runner.os == 'Linux'
+        run: |
+          python -m pip install -r env/dev-requirements.lock
+        # TODO: switch to with env/dev-requirements.linux.lock
+
+      - name: Pre-commit (lint/format/policy)
+        run: python -m pre_commit run --all-files
+
+      - name: Mypy (type checks)
+        run: python -m mypy src
+
+      - name: Validate summary/provenance
+        run: python scripts/check_summary.py
+
+      - name: Tests with coverage
+        run: python -m pytest --cov=src --cov-report=term-missing --cov-fail-under=0 -q
