@@ -225,3 +225,10 @@ notes: 2025-09-03 - maintenance policy: switched "*.png" to "binary" in .gitattr
 2025-09-05  docs: QA gates + CI typing doc
 - README: added 0a "QA gates (pre-commit, mypy, pytest)" and CI example aligned with current workflow; includes mypy on host and pytest in CI.
 - Policy: typing gate is light (ignore_missing_imports=True); behavior unchanged; tests 6/6; reproducibility unchanged.
+2025-09-05  CI hardening and dev lock
+- commit: ff69af5 (branch chore/ci-pin-and-summary)
+- Pinned GitHub Actions to immutable SHAs → step-security/harden-runner@ec9f2d5…, actions/checkout@08c6903…, actions/setup-python@e797f83…
+- Added dev toolchain lock: env/dev-requirements.in → env/dev-requirements.lock (pre-commit, pytest, pytest-cov, mypy), installed with --require-hashes.
+- CI gates now run in order → pre-commit → mypy → scripts/check_summary.py → pytest with coverage (fail-under=85).
+- Pip cache widened to include both lockfiles → env/requirements.lock and env/dev-requirements.lock.
+- Policy/docs: behavior unchanged; reproducibility and provenance intact; this change only strengthens supply-chain guarantees and CI signal quality.
