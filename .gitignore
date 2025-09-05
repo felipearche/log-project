@@ -34,3 +34,4 @@ figures/*.svg
 .ruff_cache/
 
 /log-project-src.zip
+.coverage
