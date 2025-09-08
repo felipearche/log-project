@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-make_multi_plots_v2.py â€” multi-config charts with guards and filters
+make_multi_plots_v2.py — multi-config charts with guards and filters (ruff-clean)
 
 Usage:
   python scripts/make_multi_plots_v2.py --csv experiments/summary.csv --outdir figures --fmt png,svg
@@ -12,47 +12,58 @@ Options:
   --expect N                         Warn if fewer than N rows after filtering (default: 0)
 """
 
+from __future__ import annotations
+
 import argparse
 from pathlib import Path
-import pandas as pd
+
 import matplotlib.pyplot as plt
 import numpy as np
+import pandas as pd
 
 
-def _ensure_outdir(p: Path):
-    p.mkdir(parents=True, exist_ok=True)
-    return p
+def ensure_outdir(path: Path) -> Path:
+    path.mkdir(parents=True, exist_ok=True)
+    return path
 
 
-def _one_decimal(x) -> str:
+def one_decimal(x: object) -> str:
     try:
         return f"{float(x):.1f}"
     except (TypeError, ValueError):
         return str(x)
 
 
-def _labels(df: pd.DataFrame) -> pd.Series:
-    calcol = (
-        "calibration"
-        if "calibration" in df.columns
-        else ("cal" if "cal" in df.columns else None)
-    )
-    return df.apply(
-        lambda r: f"{r.get('dataset', 'NA')}\n{r.get('mode', r.get('model', 'NA'))}/{r.get(calcol, 'NA') if calcol else 'NA'}",
-        axis=1,
-    )
+def build_labels(df: pd.DataFrame) -> pd.Series:
+    cal_col = None
+    if "calibration" in df.columns:
+        cal_col = "calibration"
+    elif "cal" in df.columns:
+        cal_col = "cal"
+
+    labels = []
+    for _, row in df.iterrows():
+        dataset = row.get("dataset", "NA")
+        mode = row.get("mode", row.get("model", "NA"))
+        cal = row.get(cal_col, "NA") if cal_col else "NA"
+        labels.append(f"{dataset}\n{mode}/{cal}")
+    return pd.Series(labels, index=df.index)
 
 
-def _collapse(df: pd.DataFrame, how: str) -> pd.DataFrame:
+def collapse(df: pd.DataFrame, how: str) -> pd.DataFrame:
     if how == "none":
         return df
+
     key_cols = [
         "dataset",
         "mode" if "mode" in df.columns else "model",
         "calibration" if "calibration" in df.columns else "cal",
     ]
+
     if how == "last":
+        # Keep the last occurrence by CSV order
         return df.groupby(key_cols, as_index=False, sort=False).tail(1)
+
     if how == "median":
         num_cols = [
             c for c in ["p95_ms", "p99_ms", "eps", "throughput_eps"] if c in df.columns
@@ -62,33 +73,38 @@ def _collapse(df: pd.DataFrame, how: str) -> pd.DataFrame:
         return df.groupby(key_cols, as_index=False).agg(
             {**agg, **{c: "last" for c in other}}
         )
+
     return df
 
 
-def _filter_cals(df: pd.DataFrame, wanted: list) -> pd.DataFrame:
+def filter_calibrations(df: pd.DataFrame, wanted: list[str]) -> pd.DataFrame:
     if not wanted:
         return df
-    calcol = (
-        "calibration"
-        if "calibration" in df.columns
-        else ("cal" if "cal" in df.columns else None)
-    )
-    if not calcol:
+
+    cal_col = None
+    if "calibration" in df.columns:
+        cal_col = "calibration"
+    elif "cal" in df.columns:
+        cal_col = "cal"
+
+    if not cal_col:
         return df
-    return df[df[calcol].isin(wanted)]
+
+    return df[df[cal_col].isin(wanted)]
 
 
-def _drop_zero_latency(df: pd.DataFrame) -> pd.DataFrame:
+def drop_zero_latency(df: pd.DataFrame) -> pd.DataFrame:
     cols = [c for c in ["p95_ms", "p99_ms"] if c in df.columns]
     if not cols:
         return df
+
     mask = np.ones(len(df), dtype=bool)
-    for c in cols:
-        mask &= df[c].astype(float) > 0
+    for col in cols:
+        mask &= df[col].astype(float) > 0.0
     return df[mask]
 
 
-def _smart_order(df: pd.DataFrame) -> pd.DataFrame:
+def smart_order(df: pd.DataFrame) -> pd.DataFrame:
     order_within = [
         ("baseline", "conformal"),
         ("baseline", "no_calib"),
@@ -96,15 +112,15 @@ def _smart_order(df: pd.DataFrame) -> pd.DataFrame:
         ("transformer", "no_calib"),
     ]
 
-    def key(row):
-        ds = str(row.get("dataset", ""))
-        md = str(row.get("mode", row.get("model", "")))
+    def key(row: pd.Series) -> tuple[str, int, str, str]:
+        dataset = str(row.get("dataset", ""))
+        mode = str(row.get("mode", row.get("model", "")))
         cal = str(row.get("calibration", row.get("cal", "")))
         try:
-            wi = order_within.index((md, cal))
+            idx = order_within.index((mode, cal))
         except ValueError:
-            wi = 99
-        return (ds, wi, md, cal)
+            idx = 99
+        return (dataset, idx, mode, cal)
 
     df2 = df.copy()
     df2["__key__"] = df2.apply(key, axis=1)
@@ -112,28 +128,42 @@ def _smart_order(df: pd.DataFrame) -> pd.DataFrame:
     return df2
 
 
-def _bar(df, metric, ylabel, title, outdir, fmts):
+def bar_plot(
+    df: pd.DataFrame,
+    metric: str,
+    ylabel: str,
+    title: str,
+    outdir: Path,
+    fmts: list[str],
+) -> None:
     if metric not in df.columns:
         return
-    df2 = _smart_order(df.copy())
-    lab = _labels(df2)
-    vals = df2[metric].astype(float)
-    ypad = 0.01 * (np.nanmax(vals) if len(vals) else 1.0)
+
+    df2 = smart_order(df.copy())
+    labels = build_labels(df2)
+    values = df2[metric].astype(float).to_numpy()
 
     fig, ax = plt.subplots(figsize=(20, 5.5))
-    bars = ax.bar(range(len(vals)), vals)
-    ax.set_xticks(range(len(vals)))
-    ax.set_xticklabels(lab, ha="center")
+    bars = ax.bar(range(len(values)), values)
+    ax.set_xticks(range(len(values)))
+    ax.set_xticklabels(labels, rotation=0, ha="center")
     ax.set_ylabel(ylabel)
     ax.set_title(title)
-    for r, v in zip(bars, vals):
+
+    if values.size:
+        ypad = 0.01 * float(np.nanmax(values))
+    else:
+        ypad = 0.1
+
+    for rect, v in zip(bars, values, strict=False):
         ax.text(
-            r.get_x() + r.get_width() / 2,
-            r.get_height() + ypad,
-            _one_decimal(v),
+            rect.get_x() + rect.get_width() / 2.0,
+            float(v) + ypad,
+            one_decimal(v),
             ha="center",
             va="bottom",
         )
+
     fig.tight_layout()
 
     stems = {
@@ -143,30 +173,35 @@ def _bar(df, metric, ylabel, title, outdir, fmts):
         "throughput_eps": "throughput_eps",
     }
     stem = stems.get(metric, metric)
+
     for ext in fmts:
-        out = outdir / f"{stem}.{('svg' if ext == 'svg' else 'png')}"
-        fig.savefig(out, dpi=200 if ext != "svg" else None)
+        suffix = "svg" if ext == "svg" else "png"
+        outpath = outdir / f"{stem}.{suffix}"
+        fig.savefig(outpath, dpi=None if suffix == "svg" else 200)
+
     plt.close(fig)
 
 
-def main():
-    ap = argparse.ArgumentParser()
-    ap.add_argument("--csv", default="experiments/summary.csv")
-    ap.add_argument("--outdir", default="figures")
-    ap.add_argument("--fmt", default="png,svg")
-    ap.add_argument("--calibrations", default="")
-    ap.add_argument("--collapse", default="last", choices=["last", "median", "none"])
-    ap.add_argument(
+def main() -> None:
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--csv", default="experiments/summary.csv")
+    parser.add_argument("--outdir", default="figures")
+    parser.add_argument("--fmt", default="png,svg")
+    parser.add_argument("--calibrations", default="")
+    parser.add_argument(
+        "--collapse", default="last", choices=["last", "median", "none"]
+    )
+    parser.add_argument(
         "--drop-zero-latency", dest="drop_zero_latency", action="store_true"
     )
-    ap.add_argument(
+    parser.add_argument(
         "--no-drop-zero-latency", dest="drop_zero_latency", action="store_false"
     )
-    ap.set_defaults(drop_zero_latency=True)
-    ap.add_argument("--expect", type=int, default=0)
-    args = ap.parse_args()
+    parser.set_defaults(drop_zero_latency=True)
+    parser.add_argument("--expect", type=int, default=0)
+    args = parser.parse_args()
 
-    outdir = _ensure_outdir(Path(args.outdir))
+    outdir = ensure_outdir(Path(args.outdir))
     fmts = [s.strip().lower() for s in args.fmt.split(",") if s.strip()]
 
     df = pd.read_csv(args.csv)
@@ -188,33 +223,35 @@ def main():
     df = df[keep].copy()
 
     if args.calibrations.strip():
-        df = _filter_cals(df, [s.strip() for s in args.calibrations.split(",")])
+        wanted = [s.strip() for s in args.calibrations.split(",") if s.strip()]
+        df = filter_calibrations(df, wanted)
 
     if args.drop_zero_latency:
-        df = _drop_zero_latency(df)
+        df = drop_zero_latency(df)
 
-    df = _collapse(df, args.collapse)
+    df = collapse(df, args.collapse)
 
     if args.expect and len(df) < args.expect:
         print(f"[WARN] Have {len(df)} rows after filtering; expected {args.expect}.")
 
-    metrics = []
+    metrics: list[tuple[str, str, str]] = []
     if "p95_ms" in df.columns:
         metrics.append(("p95_ms", "p95 latency (ms)", "Latency p95"))
     if "p99_ms" in df.columns:
         metrics.append(("p99_ms", "p99 latency (ms)", "Latency p99"))
-    metric_eps = (
-        "eps"
-        if "eps" in df.columns
-        else ("throughput_eps" if "throughput_eps" in df.columns else None)
-    )
+    metric_eps = None
+    if "eps" in df.columns:
+        metric_eps = "eps"
+    elif "throughput_eps" in df.columns:
+        metric_eps = "throughput_eps"
     if metric_eps:
         metrics.append((metric_eps, "events/s", "Throughput"))
+
     if not metrics:
         raise SystemExit("No known metrics present.")
 
-    for m, y, t in metrics:
-        _bar(df, m, y, t, outdir, fmts)
+    for metric, ylabel, title in metrics:
+        bar_plot(df, metric, ylabel, title, outdir, fmts)
 
 
 if __name__ == "__main__":
