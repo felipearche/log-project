@@ -1,247 +1,91 @@
 ---
-timestamp: 2025-08-22
-commit: 1bf3a20
+timestamp: 2025-09-03
+commit: 343115a
 seed: 20250819
 input: dataset=synth_tokens; mode=baseline; calibration=conformal
 cmd: NA (backfilled)
-CSV_ROW: 2025-08-22,1bf3a20,synth_tokens,baseline,conformal,ADWIN,20250819,2000,0,0,1.0000,20.475,28.9968,59.1463,NA,NA,0.01,5000.0,200,0.002,200,auto,20250819,baseline conformal
+CSV_ROW: 2025-09-03,343115a,synth_tokens,baseline,conformal,ADWIN,20250819,2000,0,0,1.0000,9.9565,11.2874,153.346,99.3,NA,0.01,5000,200,0.002,200,auto,20250819,baseline conformal;cpu_sampler=process_avg;energy_na
 ---
-timestamp: 2025-08-22
-commit: 1bf3a20
-seed: 20250819
-input: dataset=synth_tokens; mode=baseline; calibration=no_calib
-cmd: NA (backfilled)
-CSV_ROW: 2025-08-22,1bf3a20,synth_tokens,baseline,no_calib,ADWIN,20250819,2000,0,0,1.0000,19.7118,25.0704,59.0281,NA,NA,,,200,0.002,200,auto,20250819,baseline no-calib
----
-timestamp: 2025-08-24
-commit: 77fbbca
+timestamp: 2025-09-08
+commit: e5e9117
 seed: 20250819
 input: dataset=synth_tokens; mode=baseline; calibration=conformal
 cmd: NA (backfilled)
-CSV_ROW: 2025-08-24,77fbbca,synth_tokens,baseline,conformal,ADWIN,20250819,2000,0,0,1.0000,2.9879,3.2125,371.809,100.5,NA,0.01,5000.0,200,0.002,200,auto,20250819,baseline conformal;cpu_sampler=process_avg;energy_na
+CSV_ROW: 2025-09-08,e5e9117,synth_tokens,baseline,conformal,ADWIN,20250819,2000,0,0,1.0000,7.65388,8.24206,139.999,97.4,NA,0.01,5000,200,0.002,200,auto,20250819,baseline conformal;cpu_sampler=process_avg;energy_na
 ---
-timestamp: 2025-08-24
-commit: 77fbbca
-seed: 20250819
-input: dataset=synth_tokens; mode=baseline; calibration=no_calib
-cmd: NA (backfilled)
-CSV_ROW: 2025-08-24,77fbbca,synth_tokens,baseline,no_calib,ADWIN,20250819,2000,0,0,1.0000,3.0161,3.252,356.272,100.6,NA,,,200,0.002,200,auto,20250819,baseline no-calib;cpu_sampler=process_avg;energy_na
----
-timestamp: 2025-08-24
-commit: 77fbbca
+timestamp: 2025-09-08
+commit: e5e9117
 seed: 20250819
 input: dataset=mini_tokens; mode=baseline; calibration=conformal
 cmd: NA (backfilled)
-CSV_ROW: 2025-08-24,77fbbca,mini_tokens,baseline,conformal,ADWIN,20250819,5,0,0,NA,2.9588,2.9588,330.14,99.9,NA,0.01,5000.0,200,0.002,200,auto,20250819,baseline conformal;cpu_sampler=process_avg;energy_na
+CSV_ROW: 2025-09-08,e5e9117,mini_tokens,baseline,conformal,ADWIN,20250819,5,0,0,NA,7.55385,7.55385,133.869,NA,NA,0.01,5000,200,0.002,200,auto,20250819,baseline conformal;cpu_sampler=process_avg;energy_na
 ---
-timestamp: 2025-08-24
-commit: 77fbbca
-seed: 20250819
-input: dataset=mini_tokens; mode=baseline; calibration=no_calib
-cmd: NA (backfilled)
-CSV_ROW: 2025-08-24,77fbbca,mini_tokens,baseline,no_calib,ADWIN,20250819,5,0,0,NA,2.7333,2.7333,362.874,90.8,NA,,,200,0.002,200,auto,20250819,baseline no-calib;cpu_sampler=process_avg;energy_na
----
-timestamp: 2025-08-25
-commit: 16283bd
-seed: 20250819
-input: dataset=synth_tokens; mode=baseline; calibration=conformal
-cmd: NA (backfilled)
-CSV_ROW: 2025-08-25,16283bd,synth_tokens,baseline,conformal,ADWIN,20250819,2000,0,0,1.0000,8.1592,8.60435,130.723,95.5,NA,0.01,5000.0,200,0.002,200,auto,20250819,baseline conformal;cpu_sampler=process_avg;energy_na
----
-timestamp: 2025-08-25
-commit: 16283bd
-seed: 20250819
-input: dataset=synth_tokens; mode=baseline; calibration=no_calib
-cmd: NA (backfilled)
-CSV_ROW: 2025-08-25,16283bd,synth_tokens,baseline,no_calib,ADWIN,20250819,2000,0,0,1.0000,8.14614,8.7476,131.904,95.5,NA,,,200,0.002,200,auto,20250819,baseline no-calib;cpu_sampler=process_avg;energy_na
----
-timestamp: 2025-08-25
-commit: 16283bd
-seed: 20250819
-input: dataset=mini_tokens; mode=baseline; calibration=conformal
-cmd: NA (backfilled)
-CSV_ROW: 2025-08-25,16283bd,mini_tokens,baseline,conformal,ADWIN,20250819,5,0,0,NA,8.46641,8.46641,104.268,93.0,NA,0.01,5000.0,200,0.002,200,auto,20250819,baseline conformal;cpu_sampler=process_avg;energy_na
----
-timestamp: 2025-08-25
-commit: 16283bd
-seed: 20250819
-input: dataset=mini_tokens; mode=baseline; calibration=no_calib
-cmd: NA (backfilled)
-CSV_ROW: 2025-08-25,16283bd,mini_tokens,baseline,no_calib,ADWIN,20250819,5,0,0,NA,7.50048,7.50048,115.678,91.5,NA,,,200,0.002,200,auto,20250819,baseline no-calib;cpu_sampler=process_avg;energy_na
----
-timestamp: 2025-08-25
-commit: 833f5eb
-seed: 20250819
-input: dataset=synth_tokens; mode=baseline; calibration=conformal
-cmd: NA (backfilled)
-CSV_ROW: 2025-08-25,833f5eb,synth_tokens,baseline,conformal,ADWIN,20250819,2000,0,0,1.0000,7.72907,8.12616,135.917,95,NA,0.01,5000,200,0.002,200,auto,20250819,baseline conformal;cpu_sampler=process_avg;energy_na
----
-timestamp: 2025-08-25
-commit: 833f5eb
-seed: 20250819
-input: dataset=mini_tokens; mode=baseline; calibration=conformal
-cmd: NA (backfilled)
-CSV_ROW: 2025-08-25,833f5eb,mini_tokens,baseline,conformal,ADWIN,20250819,5,0,0,NA,7.37337,7.37337,119,90.1,NA,0.01,5000,200,0.002,200,auto,20250819,baseline conformal;cpu_sampler=process_avg;energy_na
----
-timestamp: 2025-08-25
-commit: 833f5eb
-seed: 20250819
-input: dataset=synth_tokens; mode=baseline; calibration=no_calib
-cmd: NA (backfilled)
-CSV_ROW: 2025-08-25,833f5eb,synth_tokens,baseline,no_calib,ADWIN,20250819,2000,0,0,1.0000,7.98654,8.46099,135.907,95,NA,,,200,0.002,200,auto,20250819,baseline no-calib;cpu_sampler=process_avg;energy_na
----
-timestamp: 2025-08-25
-commit: 833f5eb
-seed: 20250819
-input: dataset=mini_tokens; mode=baseline; calibration=no_calib
-cmd: NA (backfilled)
-CSV_ROW: 2025-08-25,833f5eb,mini_tokens,baseline,no_calib,ADWIN,20250819,5,0,0,NA,7.7078,7.7078,112.845,90.9,NA,,,200,0.002,200,auto,20250819,baseline no-calib;cpu_sampler=process_avg;energy_na
----
-timestamp: 2025-08-25
-commit: 8ddae6b
-seed: 20250819
-input: dataset=synth_tokens; mode=baseline; calibration=conformal
-cmd: NA (backfilled)
-CSV_ROW: 2025-08-25,8ddae6b,synth_tokens,baseline,conformal,ADWIN,20250819,2000,0,0,1.0000,3.58834,3.98174,306.789,94.9,NA,0.01,5000,200,0.002,200,auto,20250819,baseline conformal;cpu_sampler=process_avg;energy_na
----
-timestamp: 2025-08-26
-commit: 78fcdac
-seed: 20250819
-input: dataset=synth_tokens; mode=baseline; calibration=conformal
-cmd: NA (backfilled)
-CSV_ROW: 2025-08-26,78fcdac,synth_tokens,baseline,conformal,ADWIN,20250819,2000,0,0,1.0000,3.42831,3.74482,321.26,95.3,NA,0.01,5000,200,0.002,200,auto,20250819,baseline conformal;cpu_sampler=process_avg;energy_na
----
-timestamp: 2025-08-30
-commit: df14fcd
+timestamp: 2025-09-08
+commit: e5e9117
 seed: 20250819
 input: dataset=synth_tokens; mode=transformer; calibration=conformal
 cmd: NA (backfilled)
-CSV_ROW: 2025-08-30,df14fcd,synth_tokens,transformer,conformal,ADWIN,20250819,2000,0,0,0.9833,0.655757,0.81848,1745.67,99.1,NA,0.01,5000,200,0.002,,,,run;cpu_sampler=process_avg;energy_na
+CSV_ROW: 2025-09-08,e5e9117,synth_tokens,transformer,conformal,ADWIN,20250819,2000,0,0,0.0000,0.000925,0.001315,1.92619e+06,91.3,NA,0.01,5000,200,0.002,NA,NA,NA,transformer conformal;cpu_sampler=process_avg;energy_na
 ---
-timestamp: 2025-08-30
-commit: df14fcd
-seed: 20250819
-input: dataset=synth_tokens; mode=transformer; calibration=no_calib
-cmd: NA (backfilled)
-CSV_ROW: 2025-08-30,df14fcd,synth_tokens,transformer,no_calib,ADWIN,20250819,2000,0,0,0.9833,0.594906,0.694341,1873.8,99.3,NA,,,200,0.002,,,,run;cpu_sampler=process_avg;energy_na
----
-timestamp: 2025-08-30
-commit: df14fcd
+timestamp: 2025-09-08
+commit: e5e9117
 seed: 20250819
 input: dataset=mini_tokens; mode=transformer; calibration=conformal
 cmd: NA (backfilled)
-CSV_ROW: 2025-08-30,df14fcd,mini_tokens,transformer,conformal,ADWIN,20250819,5,0,0,NA,0.614665,0.614665,808.995,0,NA,0.01,5000,200,0.002,,,,run;cpu_sampler=process_avg;energy_na
+CSV_ROW: 2025-09-08,e5e9117,mini_tokens,transformer,conformal,ADWIN,20250819,5,0,0,NA,0.001223,0.001223,797703,NA,NA,0.01,5000,200,0.002,NA,NA,NA,transformer conformal;cpu_sampler=process_avg;energy_na
 ---
-timestamp: 2025-08-30
-commit: df14fcd
+timestamp: 2025-09-08
+commit: e5e9117
 seed: 20250819
-input: dataset=mini_tokens; mode=transformer; calibration=no_calib
+input: dataset=synth_tokens; mode=baseline; calibration=conformal
 cmd: NA (backfilled)
-CSV_ROW: 2025-08-30,df14fcd,mini_tokens,transformer,no_calib,ADWIN,20250819,5,0,0,NA,0.77521,0.77521,714.321,0,NA,,,200,0.002,,,,run;cpu_sampler=process_avg;energy_na
+CSV_ROW: 2025-09-08,e5e9117,synth_tokens,baseline,conformal,ADWIN,20250819,2000,0,0,1.0000,3.53423,3.7775,314.283,97.1,NA,0.01,5000,200,0.002,200,auto,20250819,baseline conformal;cpu_sampler=process_avg;energy_na
 ---
-timestamp: 2025-08-30
-commit: NA
+timestamp: 2025-09-08
+commit: e5e9117
+seed: 20250819
+input: dataset=mini_tokens; mode=baseline; calibration=conformal
+cmd: NA (backfilled)
+CSV_ROW: 2025-09-08,e5e9117,mini_tokens,baseline,conformal,ADWIN,20250819,5,0,0,NA,3.18551,3.18551,315.387,NA,NA,0.01,5000,200,0.002,200,auto,20250819,baseline conformal;cpu_sampler=process_avg;energy_na
+---
+timestamp: 2025-09-08
+commit: e5e9117
+seed: 20250819
+input: dataset=synth_tokens; mode=baseline; calibration=no_calib
+cmd: NA (backfilled)
+CSV_ROW: 2025-09-08,e5e9117,synth_tokens,baseline,no_calib,ADWIN,20250819,2000,0,0,1.0000,3.84308,4.44226,294.539,97,NA,NA,NA,200,0.002,200,auto,20250819,baseline no_calib;cpu_sampler=process_avg;energy_na
+---
+timestamp: 2025-09-08
+commit: e5e9117
+seed: 20250819
+input: dataset=mini_tokens; mode=baseline; calibration=no_calib
+cmd: NA (backfilled)
+CSV_ROW: 2025-09-08,e5e9117,mini_tokens,baseline,no_calib,ADWIN,20250819,5,0,0,NA,3.51166,3.51166,286.892,NA,NA,NA,NA,200,0.002,200,auto,20250819,baseline no_calib;cpu_sampler=process_avg;energy_na
+---
+timestamp: 2025-09-08
+commit: e5e9117
 seed: 20250819
 input: dataset=synth_tokens; mode=transformer; calibration=conformal
 cmd: NA (backfilled)
-CSV_ROW: 2025-08-30,NA,synth_tokens,transformer,conformal,ADWIN,20250819,2000,0,0,0.9833,1.55972,1.85405,731.608,99,NA,0.01,5000,200,0.002,,,,run;cpu_sampler=process_avg;energy_na
+CSV_ROW: 2025-09-08,e5e9117,synth_tokens,transformer,conformal,ADWIN,20250819,2000,0,0,0.0000,0.00034,0.000485,4.65214e+06,92.5,NA,0.01,5000,200,0.002,NA,NA,NA,transformer conformal;cpu_sampler=process_avg;energy_na
 ---
-timestamp: 2025-08-30
-commit: NA
+timestamp: 2025-09-08
+commit: e5e9117
 seed: 20250819
 input: dataset=mini_tokens; mode=transformer; calibration=conformal
 cmd: NA (backfilled)
-CSV_ROW: 2025-08-30,NA,mini_tokens,transformer,conformal,ADWIN,20250819,5,0,0,NA,1.49587,1.49587,454.644,35.1,NA,0.01,5000,200,0.002,,,,run;cpu_sampler=process_avg;energy_na
+CSV_ROW: 2025-09-08,e5e9117,mini_tokens,transformer,conformal,ADWIN,20250819,5,0,0,NA,0.000567,0.000567,1.62866e+06,NA,NA,0.01,5000,200,0.002,NA,NA,NA,transformer conformal;cpu_sampler=process_avg;energy_na
 ---
-timestamp: 2025-08-30
-commit: NA
+timestamp: 2025-09-08
+commit: e5e9117
 seed: 20250819
 input: dataset=synth_tokens; mode=transformer; calibration=no_calib
 cmd: NA (backfilled)
-CSV_ROW: 2025-08-30,NA,synth_tokens,transformer,no_calib,ADWIN,20250819,2000,0,0,0.9833,1.49281,1.66124,782.31,99.3,NA,,,200,0.002,,,,run;cpu_sampler=process_avg;energy_na
+CSV_ROW: 2025-09-08,e5e9117,synth_tokens,transformer,no_calib,ADWIN,20250819,2000,0,0,0.0000,0.000216,0.000391,4.82354e+06,237.7,NA,NA,NA,200,0.002,NA,NA,NA,transformer no_calib;cpu_sampler=process_avg;energy_na
 ---
-timestamp: 2025-08-30
-commit: NA
+timestamp: 2025-09-08
+commit: e5e9117
 seed: 20250819
 input: dataset=mini_tokens; mode=transformer; calibration=no_calib
 cmd: NA (backfilled)
-CSV_ROW: 2025-08-30,NA,mini_tokens,transformer,no_calib,ADWIN,20250819,5,0,0,NA,1.58965,1.58965,427.124,31.5,NA,,,200,0.002,,,,run;cpu_sampler=process_avg;energy_na
----
-timestamp: 2025-08-30
-commit: local
-seed: 20250819
-input: dataset=synth_tokens; mode=baseline; calibration=conformal
-cmd: NA (backfilled)
-CSV_ROW: 2025-08-30,local,synth_tokens,baseline,conformal,ADWIN,20250819,2000,0,0,1.0000,3.75865,4.01352,297.026,97.9,NA,0.01,5000,200,0.002,200,auto,20250819,baseline conformal;cpu_sampler=process_avg;energy_na
----
-timestamp: 2025-08-30
-commit: 17ccad5
-seed: 20250819
-input: dataset=synth_tokens; mode=baseline; calibration=conformal
-cmd: NA (backfilled)
-CSV_ROW: 2025-08-30,17ccad5,synth_tokens,baseline,conformal,ADWIN,20250819,2000,0,0,1.0000,3.18669,3.42367,328.544,100.6,NA,0.01,5000,200,0.002,200,auto,20250819,baseline conformal;cpu_sampler=process_avg;energy_na
-
-notes: 2025-08-31 - Normalized data/HASHES.txt spacing to canonical two spaces; added tests/test_summary_header.py (24-col header guard); verified TPR policy (mini_tokens=NA; synth_tokens=4dp); rebuilt PROVENANCE 1:1 (CSV rows=26; PROVENANCE CSV_ROW=26). Metrics unchanged. | Backfilled energy_Jâ†’NA; CSV_ROW synchronized. | normalized summary.csv EOL to LF (UTF-8, no BOM) | 2025-08-31 - README_TABLE.txt sorted to datasetâ†’modeâ†’calibration; updated scripts/make_readme_table.py to enforce it; presentation-only; metrics unchanged.
-notes: 2025-08-31 - fixed summary.csv line endings; removed malformed/blank rows introduced by earlier literal "\n"; normalized 4 empty commit cells to NA; synced PROVENANCE CSV_ROW; metrics unchanged.
-notes: 2025-09-01 - housekeeping only: removed stray "..." from .gitignore; added *.bak ignore; presentation-only; metrics unchanged.
-notes: 2025-09-01 - removed backup file experiments/summary.csv.bak (ignored); tests: 5 passed (pytest 8.3.3 in Docker); PROVENANCE-summary mapping unchanged (26 rows); metrics unchanged.
-notes: 2025-09-01 - env docs: replaced env/ENV.md with lockfile-aligned version; removed docs/env.txt (stale); presentation-only; metrics unchanged.
-notes: 2025-09-01 - documentation-only: clarified scripts/fix_summary.py is DEV-ONLY helper requiring pandas; outside the reproducible pipeline; metrics unchanged.
-notes: 2025-09-01 - hardening: pinned Docker base to python:3.11.9-alpine; added HASHES format guard test; metrics unchanged.
-notes: 2025-09-01 - tests: 6 passed (pytest 8.3.3 in Docker) including HASHES format guard; reproducibility unchanged.
-notes: 2025-09-01 - hardening/cleanup: pinned Docker base to python:3.11.9-slim; removed stray "\" in scripts/run_with_provenance.ps1; deleted .pytest_cache; removed placeholder "..." from .gitignore; Makefile cleaned; metrics & results unchanged.
-notes: 2025-09-02 - scripts/make_plots.py: expanded one-line exception; normalized comment apostrophe; ruff format; ".ruff_cache/" ignored; CITATION version ensured; tests: 6 passed (pytest 8.3.3 in Docker, python:3.11.9-alpine).
-notes: 2025-09-03 - moved non-artifacts out of data/ (make_synth.pyâ†’scripts/, PROVENANCE.txtâ†’docs/, DATASETS.mdâ†’docs/); updated README and scripts to new paths; added .gitattributes (LF policy; protected JSONs -text) and ".ruff_cache/" to .gitignore; tests passed; provenance/CSV mapping unchanged; metrics unchanged.
-notes: 2025-09-03 - audit: verified HASHES format and contents; 6 tests passing; protected JSON EOF policy enforced; removed BOM from pre-commit config and widened BOM guard to YAML; local .git/hooks/pre-commit had CRLF (non-tracked).
-notes: 2025-09-03 - Green build: fixed mid-token splits; corrected stream summary (TPR 4dp or NA; anomalies column fixed); normalized EOL to LF; widened BOM guard to include YAML/YML; regenerated experiments/summary.csv with labels (synth_tokens); hooks passed; tests: 6 passed (pytest 8.3.3). Metrics unchanged.
-notes: 2025-09-03 - Align Docker base image note:
-  - Actual base image in Dockerfile: python:3.11.9-slim
-  - Corrected prior note to match Dockerfile and ensure audit-grade consistency.
-notes: 2025-09-03 - assets & attributes: normalized 3 SVGs (CRLFâ†’LF, stripped trailing whitespace, UTF-8 no BOM, single trailing LF); updated .gitattributes to mark *.png as binary and normalized it to LF; hooks passed; tests unchanged; metrics unchanged.
-notes: 2025-09-03 - maintenance policy: switched "*.png" to "binary" in .gitattributes; added local "no-bom" pre-commit hook (scripts/check_no_bom.py) covering md/ps1/py/txt/yml/yaml; documented clean packaging via "git archive"; normalized local .git/hooks/pre-commit to LF; re-ran hooks (passed); data/HASHES.txt unchanged (all entries match); protected JSON EOF policy verified.
-2025-09-03  maintenance: added dist/ to .gitignore; release zips via git archive into dist/
-2025-09-03  release: v0.1.1 tagged; CITATION.cff version=0.1.1 date-released=2025-09-03; untracked log-project-src.zip; added dist/ ignore; no data changes; tests=6 passed; HASHES verified.
-2025-09-03  maintenance: standardized packaging dir to dist/; updated release script & README; cleaned caches.
-2025-09-03  provenance: normalized data/HASHES.txt to 3-field canonical format (path  size  SHA256); tests updated to accept legacy 4-field; cryptographic values unchanged.
-2025-09-04  maintenance: CI & docs housekeeping
-- CI: moved workflow to .github/workflows/ci.yml; removed root-level ci.yml.
-- CI: enabled pip cache (actions/setup-python@v5) with cache-dependency-path: env/requirements.lock.
-- README: added protected-JSONs note under "11) Encoding & EOL policy".
-- README: clarified canonical 3-field HASHES format (path  size  SHA256); tests accept legacy 4-field.
-- README: normalized example HASHES entries to 3-field; added CI badge.
-- Policy: documented dist/ as ephemeral (ignored); canonical provenance remains docs/PROVENANCE.txt and data/HASHES.txt.
-2025-09-04  docs: PR #1 merged (docs-only)
-- commit: ec491aa
-- Release docs: standardized dist/ across README and RELEASE; archive now writes to dist/log-project-src.zip; verify commands aligned.
-- README: clarified canonical 3-field HASHES format (path  size  SHA256 â€” two spaces; uppercase 64-hex); added declarative Repository-code line (mirrors CITATION.cff); added pandas note for scripts/dev/fix_summary.py (dev-only).
-- CI: all checks passed; tests: 6 passed; data/HASHES.txt unchanged; metrics unchanged.
-2025-09-04  Docker: pinned base to python@sha256:8fb099199b9f2d70342674bd9dbccd3ed03a258f26bbd1d556822c6dfc60c317
-2025-09-04  deps: added env/requirements.txt with hashes; CI installs with --require-hashes
-2025-09-04  pre-commit: add merge-conflict/large-files/private-key hooks
-2025-09-04  qa: add mypy (light typing gate in CI)
-2025-09-04  qa: mypy-clean Adwin typing and SlidingConformal import pattern in src/stream.py
-2025-09-04  qa: mypy-clean stream.py (ADWIN selection + SlidingConformal import); drop unused ignores
-2025-09-05  Docker: pin base to python@sha256:8fb099199b9f2d70342674bd9dbccd3ed03a258f26bbd1d556822c6dfc60c317
-2025-09-05  docs: QA gates + CI typing doc
-- README: added 0a "QA gates (pre-commit, mypy, pytest)" and CI example aligned with current workflow; includes mypy on host and pytest in CI.
-- Policy: typing gate is light (ignore_missing_imports=True); behavior unchanged; tests 6/6; reproducibility unchanged.
-2025-09-05  CI hardening and dev lock
-- commit: ff69af5 (branch chore/ci-pin-and-summary)
-- Pinned GitHub Actions to immutable SHAs → step-security/harden-runner@ec9f2d5…, actions/checkout@08c6903…, actions/setup-python@e797f83…
-- Added dev toolchain lock: env/dev-requirements.in → env/dev-requirements.lock (pre-commit, pytest, pytest-cov, mypy), installed with --require-hashes.
-- CI gates now run in order → pre-commit → mypy → scripts/check_summary.py → pytest with coverage (fail-under=85).
-- Pip cache widened to include both lockfiles → env/requirements.lock and env/dev-requirements.lock.
-- Policy/docs: behavior unchanged; reproducibility and provenance intact; this change only strengthens supply-chain guarantees and CI signal quality.
-2025-09-05  docs: PR #2 merged (CI hardening; squash merge)
-→ Pinned all GitHub Actions by SHA; cached dev lockfile.
-→ Added experiments/summary.csv schema/format validator to CI.
-→ Dependency installs: Windows uses --require-hashes; Ubuntu temporarily non-hash until Linux lockfiles exist (planned).
-→ Coverage gate set to 0 temporarily; will raise once tests expand.
-→ Governance: skipped branch protection rules for now (will enable later once CI stabilizes).
-2025-09-05  correction
-→ The earlier 2025-09-05 note "CI hardening and dev lock" incorrectly recorded coverage fail-under=85; the merged workflow sets fail-under=0 for now.
-2025-09-05  CI alignment (labels + Windows runtime hashes)
-→ CI: Windows runtime now installs from env/requirements.txt (hash-locked via inline hashes).
-→ CI: corrected step label for Ubuntu dev tools to 'hash-locked' (env/dev-requirements.lock contains hashes).
-Rationale: make workflow labels and behavior match reality; keep Ubuntu runtime non-hash until Linux hashes lock is generated.
-2025-09-05  docs: README Quickstart + At a glance; CI badge stabilized to master; added Docker pre-commit note (install git + set safe.directory=/app). No code/data changes; tests: 6 passed in python:3.11.9-slim container.
+CSV_ROW: 2025-09-08,e5e9117,mini_tokens,transformer,no_calib,ADWIN,20250819,5,0,0,NA,0.000535,0.000535,1.44886e+06,NA,NA,NA,NA,200,0.002,NA,NA,NA,transformer no_calib;cpu_sampler=process_avg;energy_na

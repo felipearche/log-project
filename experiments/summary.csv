@@ -1,2 +1,14 @@
 date,commit,dataset,mode,calibration,drift_detector,seed,events,anomalies,drifts,TPR_at_1pct_FPR,p95_ms,p99_ms,eps,CPU_pct,energy_J,calib_target_fpr,calib_window,warmup,adwin_delta,iso_n_estimators,iso_max_samples,iso_random_state,notes
 2025-09-03,343115a,synth_tokens,baseline,conformal,ADWIN,20250819,2000,0,0,1.0000,9.9565,11.2874,153.346,99.3,NA,0.01,5000,200,0.002,200,auto,20250819,baseline conformal;cpu_sampler=process_avg;energy_na
+2025-09-08,e5e9117,synth_tokens,baseline,conformal,ADWIN,20250819,2000,0,0,1.0000,7.65388,8.24206,139.999,97.4,NA,0.01,5000,200,0.002,200,auto,20250819,baseline conformal;cpu_sampler=process_avg;energy_na
+2025-09-08,e5e9117,mini_tokens,baseline,conformal,ADWIN,20250819,5,0,0,NA,7.55385,7.55385,133.869,NA,NA,0.01,5000,200,0.002,200,auto,20250819,baseline conformal;cpu_sampler=process_avg;energy_na
+2025-09-08,e5e9117,synth_tokens,transformer,conformal,ADWIN,20250819,2000,0,0,0.0000,0.000925,0.001315,1.92619e+06,91.3,NA,0.01,5000,200,0.002,NA,NA,NA,transformer conformal;cpu_sampler=process_avg;energy_na
+2025-09-08,e5e9117,mini_tokens,transformer,conformal,ADWIN,20250819,5,0,0,NA,0.001223,0.001223,797703,NA,NA,0.01,5000,200,0.002,NA,NA,NA,transformer conformal;cpu_sampler=process_avg;energy_na
+2025-09-08,e5e9117,synth_tokens,baseline,conformal,ADWIN,20250819,2000,0,0,1.0000,3.53423,3.7775,314.283,97.1,NA,0.01,5000,200,0.002,200,auto,20250819,baseline conformal;cpu_sampler=process_avg;energy_na
+2025-09-08,e5e9117,mini_tokens,baseline,conformal,ADWIN,20250819,5,0,0,NA,3.18551,3.18551,315.387,NA,NA,0.01,5000,200,0.002,200,auto,20250819,baseline conformal;cpu_sampler=process_avg;energy_na
+2025-09-08,e5e9117,synth_tokens,baseline,no_calib,ADWIN,20250819,2000,0,0,1.0000,3.84308,4.44226,294.539,97,NA,NA,NA,200,0.002,200,auto,20250819,baseline no_calib;cpu_sampler=process_avg;energy_na
+2025-09-08,e5e9117,mini_tokens,baseline,no_calib,ADWIN,20250819,5,0,0,NA,3.51166,3.51166,286.892,NA,NA,NA,NA,200,0.002,200,auto,20250819,baseline no_calib;cpu_sampler=process_avg;energy_na
+2025-09-08,e5e9117,synth_tokens,transformer,conformal,ADWIN,20250819,2000,0,0,0.0000,0.00034,0.000485,4.65214e+06,92.5,NA,0.01,5000,200,0.002,NA,NA,NA,transformer conformal;cpu_sampler=process_avg;energy_na
+2025-09-08,e5e9117,mini_tokens,transformer,conformal,ADWIN,20250819,5,0,0,NA,0.000567,0.000567,1.62866e+06,NA,NA,0.01,5000,200,0.002,NA,NA,NA,transformer conformal;cpu_sampler=process_avg;energy_na
+2025-09-08,e5e9117,synth_tokens,transformer,no_calib,ADWIN,20250819,2000,0,0,0.0000,0.000216,0.000391,4.82354e+06,237.7,NA,NA,NA,200,0.002,NA,NA,NA,transformer no_calib;cpu_sampler=process_avg;energy_na
+2025-09-08,e5e9117,mini_tokens,transformer,no_calib,ADWIN,20250819,5,0,0,NA,0.000535,0.000535,1.44886e+06,NA,NA,NA,NA,200,0.002,NA,NA,NA,transformer no_calib;cpu_sampler=process_avg;energy_na

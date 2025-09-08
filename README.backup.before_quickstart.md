@@ -2,35 +2,6 @@
 
 [![CI](https://github.com/felipearche/log-project/actions/workflows/ci.yml/badge.svg?branch=master)](https://github.com/felipearche/log-project/actions/workflows/ci.yml)
 
-
-
-## Quickstart
-
-### Windows (PowerShell)
-```powershell
-python -m venv .venv; .\.venv\Scripts\Activate.ps1
-pip install -r env/dev-requirements.lock
-pytest -q
-```
-
-### Docker (no local Python needed)
-```bash
-docker run --rm -v "${PWD}:/app" -w /app python:3.11.9-slim /bin/bash -lc   "pip install -r env/dev-requirements.lock && pytest -q"
-```
-
-### What this runs
-- Installs pinned dev toolchain
-- Runs schema/format guard for `experiments/summary.csv` (via tests)
-- Executes the test suite with coverage gate = 0 (temporary)
-
-**At a glance**
-- Model: TF-IDF + IsolationForest + Sliding Conformal; ADWIN resets for drift
-- Reproducibility: Docker base pinned by digest; CI actions pinned by SHA
-- Provenance: `data/HASHES.txt` (size + SHA-256), 24-column `experiments/summary.csv`
-- Hygiene: UTF-8 (no BOM), LF-only; protected JSONs byte-exact (no trailing LF)
-- CI: schema/format validator for `summary.csv`; Windows runtime hash-locked
-
-
 ## 0) Overview
 A real-time log anomaly detector that:
 1) scores each log line with a lightweight baseline (**TF-IDF + IsolationForest**),
@@ -38,7 +9,7 @@ A real-time log anomaly detector that:
 3) adapts to **drift** using **ADWIN** and **resets the calibrator on detected changes**.
 
 Every run appends **one canonical row** to `experiments/summary.csv` (24-column schema).
-Reproducibility pillars: **pinned environment** (`env/requirements.lock`), **Docker parity**, **commit capture** (`COMMIT` env → git short SHA → NA fallback), **UTF-8/LF policy**, and **strict provenance** (one block per CSV row).
+Reproducibility pillars: **pinned environment** (`env/requirements.lock`), **Docker parity**, **commit capture** (`COMMIT` env`git` short SHA`NA` fallback), **UTF-8/LF policy**, and **strict provenance** (one block per CSV row).
 
 > Portability: always mount with `-v "${PWD}:/app"` (quoted) so it works even if your path contains spaces.
 > TPR formatting: for new rows, record `TPR_at_1pct_FPR` with **four decimals** (e.g., `1.0000`); leave older rows unchanged; use **literal `NA`** for unlabeled datasets.
@@ -93,9 +64,9 @@ docker run --rm -v "${PWD}:/app" -e COMMIT=$env:COMMIT log-project:latest `
 
 # No-calib ablation (fixed threshold)
 docker run --rm -v "${PWD}:/app" -e COMMIT=$env:COMMIT log-project:latest `
- python -m src.stream --mode baseline --data data/synth_tokens.json --labels data/synth_labels.json --no-calib
+ python -m src.stream --mode baseline --data data/synth_tokens.json --labels data/synth_labels.json --no_calib
 docker run --rm -v "${PWD}:/app" -e COMMIT=$env:COMMIT log-project:latest `
- python -m src.stream --mode baseline --data data/mini_tokens.json --no-calib
+ python -m src.stream --mode baseline --data data/mini_tokens.json --no_calib
 ```
 
 Each command emits exactly one `CSV_ROW:` and a matching provenance block.
@@ -114,9 +85,9 @@ docker run --rm -v "${PWD}:/app" -e COMMIT=$env:COMMIT log-project:latest `
 
 # No-calib ablation (fixed threshold)
 docker run --rm -v "${PWD}:/app" -e COMMIT=$env:COMMIT log-project:latest `
- python -m src.stream --mode transformer --data data/synth_tokens.json --labels data/synth_labels.json --no-calib
+ python -m src.stream --mode transformer --data data/synth_tokens.json --labels data/synth_labels.json --no_calib
 docker run --rm -v "${PWD}:/app" -e COMMIT=$env:COMMIT log-project:latest `
- python -m src.stream --mode transformer --data data/mini_tokens.json --no-calib
+ python -m src.stream --mode transformer --data data/mini_tokens.json --no_calib
 ```
 
 ## 3) Results
@@ -154,27 +125,6 @@ Embed examples (the plotting script writes to `figures/`):
 
 ---
 
-### 3.3 Multi‑config figures (recommended)
-
-Use the duplicate‑aware plotter to create **one‑metric‑per‑figure** charts that compare all runs.
-
-**Calibrated‑only (recommended for README):**
-```powershell
-python scripts/make_multi_plots_v2.py --csv experiments/summary.csv --outdir figures --fmt png,svg --calibrations conformal --expect 4
-```
-
-**Full ablation set (calibrated + no‑calib):**
-```powershell
-python scripts/make_multi_plots_v2.py --csv experiments/summary.csv --outdir figures\ablations --fmt png,svg --expect 8
-```
-
-Notes:
-- The plotter collapses duplicate (dataset, mode, calibration) combos (default: **last**; use `--collapse median` to aggregate repeats).
-- Rows with `p95_ms==0` or `p99_ms==0` are dropped by default (`--no-drop-zero-latency` to keep them).
-- X‑labels are `dataset` on line 1 and `mode/calibration` on line 2.
-- Output files: `figures/latency_p95_ms.(png|svg)`, `figures/latency_p99_ms.(png|svg)`, `figures/throughput_eps.(png|svg)`.
-
-
 ## 4) Datasets and hashes (canonical)
 Track every dataset in three places:
 
@@ -192,10 +142,10 @@ docker run --rm -v "${PWD}:/app" log-project:latest python scripts/hash_files.py
 
 **Example entries (update if files change):**
 ```
-data/synth_tokens.json  137400  8AF36305BB4FA61486322BFAFE148F6481C7FF1772C081F3E9590FB5C79E6600
-data/mini_tokens.json   533     3CA2BCE42228159B81E5B2255B6BC352819B22FFA74BBD4F78AC82F00A2E1263
-data/synth_labels.json  6000    814DA8A6BAB57EC08702DDC0EFFAC7AFDC88868B4C2EE4C6087C735FB22EDADA
-data/raw/mini.log       310     F5953777A9A84819D55964E5772792CE8819A3FED1E0365FA279EB53F6496FB4
+data/synth_tokens.json 137400 8AF36305BB4FA61486322BFAFE148F6481C7FF1772C081F3E9590FB5C79E6600
+data/mini_tokens.json 533 3CA2BCE42228159B81E5B2255B6BC352819B22FFA74BBD4F78AC82F00A2E1263
+data/synth_labels.json 6000 814DA8A6BAB57EC08702DDC0EFFAC7AFDC88868B4C2EE4C6087C735FB22EDADA
+data/raw/mini.log 310 F5953777A9A84819D55964E5772792CE8819A3FED1E0365FA279EB53F6496FB4
 ```
 
 ---
@@ -206,7 +156,7 @@ data/raw/mini.log       310     F5953777A9A84819D55964E5772792CE8819A3FED1E0365F
 
 We enforce a 1:1 mapping between rows in `experiments/summary.csv` and blocks in `docs/PROVENANCE.txt`.
 
-Each block includes: ISO date, commit short SHA, seed, input dataset, exact Docker command (with `--labels` for `synth_tokens` and `--no-calib` for ablations), and the **full `CSV_ROW:`**. All text files are **UTF-8 (no BOM)** with **LF** line endings.
+Each block includes: ISO date, commit short SHA, seed, input dataset, exact Docker command (with `--labels` for `synth_tokens` and `--no_calib` for ablations), and the **full `CSV_ROW:`**. All text files are **UTF-8 (no BOM)** with **LF** line endings.
 
 **Rebuild provenance:**
 ```powershell
@@ -249,7 +199,7 @@ date,commit,dataset,mode,calibration,drift_detector,seed,events,anomalies,drifts
 --alpha 0.01 # default 1% (alpha)
 --window 5000 # sliding window size
 --warmup 200 # warmup events
---no-calib # disable conformal (ablation)
+--no_calib # disable conformal (ablation)
 --adwin-delta 0.002 # drift sensitivity
 --save-scores PATH # per-event scores CSV (optional)
 --summary-out experiments/summary.csv
@@ -452,7 +402,7 @@ python==3.11.9; numpy==1.26.4; scikit-learn==1.5.2; matplotlib==3.9.2; psutil==7
 1. Implement under `src/` (e.g., `src/detectors/my_detector.py`).
 2. Register CLI options in `src/stream.py`.
 3. Include any new hyperparams in the summary CSV and provenance block.
-4. Add tests in `tests/` and update CLI flags if needed.
+4. Add tests in `tests/` and update 7 flags if needed.
 
 **Add a drift detector**
 - Ensure a **reset hook** is called to flush conformal history on drift.
@@ -462,7 +412,6 @@ python==3.11.9; numpy==1.26.4; scikit-learn==1.5.2; matplotlib==3.9.2; psutil==7
 ## 20) CI suggestion (GitHub Actions)
 
 ```yaml
-# NOTE: For production, pin actions by SHA (e.g., actions/checkout@<SHA>)
 name: CI
 
 on:
@@ -548,11 +497,6 @@ repository-code: https://github.com/felipearche/log-project
 ---
 
 ## Maintenance summaries (latest)
-- **2025-09-05**: Documentation polish
-  → README: added **Quickstart** and **At a glance** sections; stabilized CI badge to `master`
-  → Added Docker tip for running **pre-commit** in a container (install `git` and mark `/app` as a safe directory)
-  → No code or data changes; tests: 6/6 passing in container
-
 - **2025-09-05**: CI hardening (PR #2 squash-merged)
   → Pinned GitHub Actions by SHA; added `scripts/check_summary.py` schema/format validator
   → Docker base pinned by digest
