@@ -1,3 +1,14 @@
+# --- Repo-root detection (robust) ---
+if ($PSCommandPath) {
+  $ScriptDir = Split-Path -Parent $PSCommandPath
+} elseif ($MyInvocation.MyCommand.Path) {
+  $ScriptDir = Split-Path -Parent $MyInvocation.MyCommand.Path
+} else {
+  # Fallback: assume current dir is repo root and 'scripts' lives under it
+  $ScriptDir = Join-Path (Resolve-Path .) 'scripts'
+}
+$RepoRoot = Split-Path -Parent $ScriptDir
+# -----------------------------------
 param(
   [string]$CsvPath = "experiments\summary.csv",
   [string]$OutPath = "docs\PROVENANCE.txt"
