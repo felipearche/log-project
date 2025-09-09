@@ -22,16 +22,16 @@ docker run --rm -v "${PWD}:/app" -w /app python:3.11.9-slim /bin/bash -lc   "pip
 ```
 
 ### What this runs
-- Installs pinned dev toolchain
+- Installs pinned dev toolchain.
 - Runs schema/format guard for `experiments/summary.csv` (via tests)
 - Executes the test suite with coverage gate = 0 (temporary)
 
 **At a glance**
-- Model: TF-IDF + IsolationForest + Sliding Conformal; ADWIN resets for drift
-- Reproducibility: Docker base pinned by digest; CI actions pinned by SHA
+- Model: TF-IDF + IsolationForest + Sliding Conformal; ADWIN resets for drift.
+- Reproducibility: Docker base pinned by digest; CI actions pinned by SHA.
 - Provenance: `data/HASHES.txt` (size + SHA-256), 24-column `experiments/summary.csv`
 - Hygiene: UTF-8 (no BOM), LF-only; protected JSONs byte-exact (no trailing LF)
-- CI: schema/format validator for `summary.csv`; Windows runtime hash-locked
+- CI: schema/format validator for `summary.csv`; Windows runtime hash-locked.
 
 
 ## 0) Overview
@@ -169,16 +169,16 @@ Embed examples (the plotting script writes to `figures/`):
 
 ---
 
-### 3.3 Multi‑config figures (recommended)
+### 3.3 Multi-config figures (recommended)
 
-Use the duplicate‑aware plotter to create **one‑metric‑per‑figure** charts that compare all runs.
+Use the duplicate-aware plotter to create **one-metric-per-figure** charts that compare all runs.
 
-**Calibrated‑only (recommended for README):**
+**Calibrated-only (recommended for README):**
 ```powershell
 python scripts/make_multi_plots_v2.py --csv experiments/summary.csv --outdir figures --fmt png,svg --calibrations conformal --expect 4
 ```
 
-**Full ablation set (calibrated + no‑calib):**
+**Full ablation set (calibrated + no-calib):**
 ```powershell
 python scripts/make_multi_plots_v2.py --csv experiments/summary.csv --outdir figures\ablations --fmt png,svg --expect 8
 ```
@@ -186,7 +186,7 @@ python scripts/make_multi_plots_v2.py --csv experiments/summary.csv --outdir fig
 Notes:
 - The plotter collapses duplicate (dataset, mode, calibration) combos (default: **last**; use `--collapse median` to aggregate repeats).
 - Rows with `p95_ms==0` or `p99_ms==0` are dropped by default (`--no-drop-zero-latency` to keep them).
-- X‑labels are `dataset` on line 1 and `mode/calibration` on line 2.
+- X-labels are `dataset` on line 1 and `mode/calibration` on line 2.
 - Output files: `figures/latency_p95_ms.(png|svg)`, `figures/latency_p99_ms.(png|svg)`, `figures/throughput_eps.(png|svg)`.
 
 
@@ -277,7 +277,7 @@ For unlabeled datasets, `TPR_at_1pct_FPR` is the literal `NA`. CPU metric: `CPU_
 ---
 
 ## 8) Tokenizer (deterministic)
-- Lowercase
+- Lowercase.
 - Special tokens: `<hex>` (`0x[0-9A-Fa-f]+`), `<ip>` (IPv4), `<num>` (`\d+`)
 - Encoding: **UTF-8 (no BOM)**; input logs and token JSON are UTF-8.
 
@@ -350,9 +350,9 @@ fsck.txt
 
 ## 12) Testing
 Covers:
-- Tokenizer masking and lowercase
+- Tokenizer masking and lowercase.
 - Summary schema (24 columns; p95_ms ≤ p99_ms)
-- Calibration docs / ASCII
+- Calibration docs / ASCII.
 - Drift conformal reset (smoke)
 - Determinism (smoke)
 
@@ -563,7 +563,7 @@ repository-code: https://github.com/felipearche/log-project
 ---
 
 ## Maintenance summaries (latest)
-- **2025-09-05**: Documentation polish
+- **2025-09-05**: Documentation polish.
   → README: added **Quickstart** and **At a glance** sections; stabilized CI badge to `master`
   → Added Docker tip for running **pre-commit** in a container (install `git` and mark `/app` as a safe directory)
   → No code or data changes; tests: 6/6 passing in container
@@ -583,13 +583,13 @@ repository-code: https://github.com/felipearche/log-project
 
 - **2025-09-03**: Repository hygiene and provenance scope - Moved non-artifacts out of `data/` (scripts`scripts/`, docs`docs/`); updated references to `docs/PROVENANCE.txt`; added `.gitattributes` (LF policy; keep protected JSONs byte-exact); ignored `.ruff_cache/` in `.gitignore`. Provenance 1:1 mapping unchanged; metrics unchanged.
 
-- **2025-09-03**: **Assets and attributes**
+- **2025-09-03**: **Assets and attributes**.
  - Normalized 3 SVGs in `figures/` (CRLF→LF; stripped trailing whitespace; UTF-8 no BOM; single final LF).
  - Updated `.gitattributes` to mark `*.png` as **binary** (prevents EOL normalization and diffs on images); normalized `.gitattributes` to **LF**.
  - Added a dated PROVENANCE note recording the actual Docker base image and the above maintenance.
  - Hooks: all passing; tests: unchanged; metrics/results: unchanged.
 
-- **2025-09-03** (IST): **Green build** and repo hygiene
+- **2025-09-03** (IST): **Green build** and repo hygiene.
  - Fixed mid-token splits in `src/stream.py`, `src/calibration.py`, `src/log_tokenize.py`, and `scripts/make_plots.py`.
  - Corrected summary writing in `src/stream.py`: **TPR** now formatted to **4 decimals or `NA`**; **anomalies** column now records `n_anom` (previously mis-written).
  - Enforced **LF** line endings across the tree; removed **UTF-8 BOM** from `.pre-commit-config.yaml`; widened local **BOM guard** to include `ya?ml`.
