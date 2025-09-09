@@ -544,6 +544,15 @@ Other common issues:
 
 ---
 
+
+## 22a) Known limitations & reproducibility caveats
+
+- **Latency/throughput vary with host load.** Results depend on background processes and CPU frequency scaling. For fair comparisons, run on an idle machine and consider repeating a run a few times and reporting the median.
+- **Temporary miscalibration under extreme drift.** Sliding Conformal targets 1% FPR assuming the calibration window reflects recent data. When ADWIN triggers, the calibrator resets; transient windows may differ until enough post-reset data accumulates.
+- **Determinism.** Seeds are fixed, but low-level BLAS threads and OS scheduling can cause tiny numeric jitter. We round TPR to 4 decimals and latency to 1 decimal to keep summaries stable; throughput (eps) can still vary slightly.
+- **Energy metric.** `energy_J` is currently `NA` on this hardware; include it if you run on a machine with supported power telemetry.
+
+
 ## 22) License and citation
 
 This project is licensed under the **MIT License**. See [LICENSE](LICENSE).
@@ -552,6 +561,19 @@ This project is licensed under the **MIT License**. See [LICENSE](LICENSE).
 Felipe Arche. *log-project: Streaming, Drift-Aware Log Anomaly Detection (Calibrated, Reproducible).* 2025. Git repository.
 
 See also `CITATION.cff` for a machine-readable citation.
+**BibTeX:**
+
+```bibtex
+@misc{arche2025logproject,
+  title   = {log-project: Streaming, Drift-Aware Log Anomaly Detection (Calibrated, Reproducible)},
+  author  = {Felipe Arche},
+  year    = {2025},
+  howpublished = {GitHub repository},
+  url     = {https://github.com/felipearche/log-project},
+  note    = {Version 0.1.1 or later}
+}
+```
+
 
 ### Repository link
 Repository-code: https://github.com/felipearche/log-project (also set in CITATION.cff)
@@ -610,3 +632,83 @@ git archive --format=zip -o dist/log-project-src.zip HEAD
 
 Policy recap: UTF-8 **without BOM**, **LF-only** line endings; a single final LF on text files.
 Exceptions: `data/mini_tokens.json`, `data/synth_labels.json`, `data/synth_tokens.json` must **not** end with a newline.
+
+---
+
+## Appendix A — Reproducibility checklist (one glance)
+
+- **Environment.** Use Python 3.11; prefer Docker for parity.
+- **Install dev tools.**
+  ```powershell
+  pre-commit install
+  pip install -r env/dev-requirements.lock
+  ```
+- **QA gates.**
+  ```powershell
+  pre-commit run -a
+  mypy .
+  pytest -q
+  ```
+- **Artifacts integrity.**
+  ```powershell
+  python scripts/audit_repo.py
+  # Validates: protected JSONs (no final LF), data/HASHES.txt (size+SHA-256),
+  # 24-col experiments/summary.csv, PROVENANCE block count, CI/citation guards.
+  ```
+- **Provenance sync.**
+  ```powershell
+  Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass -Force
+  .\scripts
+ebuild_provenance.ps1
+  python scriptsudit_repo.py
+  ```
+- **Figures (PNG preferred).** Regenerate locally and commit PNGs; keep SVGs uncommitted unless necessary.
+
+## Appendix B — Troubleshooting
+
+- **CRLF or BOM detected.** Run:
+  ```powershell
+  pwsh -NoProfile -File .\scriptsudit_and_fix.ps1
+  # Re-run audit to confirm:
+  python scriptsudit_repo.py
+  ```
+- **“Found X CSV_ROW but Y rows in summary.”** Rebuild provenance:
+  ```powershell
+  .\scripts
+ebuild_provenance.ps1
+  ```
+- **Docker volume with spaces in path.** Always mount with quotes:
+  ```powershell
+  docker run --rm -v "${PWD}:/app" -w /app python:3.11.9-slim ...
+  ```
+- **ExecutionPolicy blocks scripts.** Use a process-scoped bypass:
+  ```powershell
+  Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass -Force
+  ```
+
+## Appendix C — Support matrix
+
+| OS                | Python | Notes                                                  |
+|-------------------|--------|--------------------------------------------------------|
+| Windows 10/11     | 3.11   | Primary dev target; PowerShell commands documented.   |
+| Ubuntu 22.04 LTS  | 3.11   | CI target; parity with Windows via Docker.            |
+
+## Appendix D — Release packaging checklist
+
+1. `pre-commit run -a`, `mypy .`, `pytest -q` — all green.
+2. `python scripts/audit_repo.py` — **All checks passed.**
+3. Rebuild provenance; confirm `CSV_ROW:` count == data rows.
+4. Regenerate figures; commit **PNGs only**.
+5. Update `CITATION.cff` if version/date changed.
+6. Tag release and (if applicable) `git archive` into `dist/` (ignored by Git).
+
+## Appendix E — FAQ (short)
+
+**Q. Why are protected JSONs missing a final newline?**
+A. They are byte-for-byte tracked to support SHA-256 integrity verification via `data/HASHES.txt`.
+
+**Q. Why do you pin actions and environments?**
+A. To guarantee audit-grade reproducibility and stable CI behavior across time.
+
+**Q. My throughput numbers differ slightly.**
+A. Host load and OS scheduling can introduce jitter; repeat runs and report the median.
