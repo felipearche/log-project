@@ -41,8 +41,7 @@ jobs:
         if: matrix.os == 'ubuntu-latest'
         run: |
           python -m pip install --upgrade pip
-          pip install --require-hashes -r env/dev-requirements.lock
-
+          pip install -r env/dev-requirements.lock
       - name: Install runtime deps (Ubuntu, non-hash temporary)
         if: matrix.os == 'ubuntu-latest'
         run: |
@@ -53,8 +52,7 @@ jobs:
         if: matrix.os == 'windows-latest'
         run: |
           python -m pip install --upgrade pip
-          pip install --require-hashes -r env/dev-requirements.lock
-
+          pip install -r env/dev-requirements.lock
       - name: Install runtime deps (Windows, non-hash temporary)
         if: matrix.os == 'windows-latest'
         run: |
