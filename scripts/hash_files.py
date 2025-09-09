@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 import hashlib
 import os
-import datetime
 
 FILES = [
     "data/synth_tokens.json",
@@ -20,17 +19,17 @@ def sha256(path: str) -> str:
 
 
 def main() -> None:
-    today = datetime.date.today().strftime("%Y-%m-%d")
     lines = []
     for p in FILES:
-        b = os.path.getsize(p)
-        s = sha256(p)
-        lines.append(f"{today}  {p}  {b}  sha256={s}")
+        size = os.path.getsize(p)
+        digest = sha256(p)
+        # Canonical 3-field format: path␠␠size␠␠SHA256 (uppercase), LF
+        lines.append(f"{p}  {size}  {digest}")
     data = "\n".join(lines) + "\n"
     os.makedirs("data", exist_ok=True)
     with open("data/HASHES.txt", "w", encoding="utf-8", newline="\n") as f:
         f.write(data)
-    print("Wrote data/HASHES.txt")
+    print("Wrote data/HASHES.txt (3-field canonical format)")
 
 
 if __name__ == "__main__":
