@@ -6,6 +6,9 @@
 
 ## Quickstart
 
+
+> For a deeper walkthrough and troubleshooting, see **[docs/HOWTO.md](docs/HOWTO.md)**.
+
 ### Windows (PowerShell)
 ```powershell
 python -m venv .venv; .\.venv\Scripts\Activate.ps1
@@ -122,6 +125,16 @@ docker run --rm -v "${PWD}:/app" -e COMMIT=$env:COMMIT log-project:latest `
 ## 3) Results
 
 ### 3.1 Table
+
+**Calibrated-only snapshot (from `README_TABLE.txt`):**
+
+| dataset | mode | calibration | TPR@1%FPR | p95_ms | p99_ms | eps |
+|---|---|---|---|---|---|---|
+| synth_tokens | baseline | conformal | 1.0000 | 3.2 | 3.4 | 328.5 |
+| synth_tokens | transformer | conformal | 0.9833 | 1.6 | 1.9 | 731.6 |
+| mini_tokens | baseline | conformal | NA | 7.4 | 7.4 | 119.0 |
+| mini_tokens | transformer | conformal | NA | 1.5 | 1.5 | 454.6 |
+
 - Canonical table file: `README_TABLE.txt` (generated below).
 
 ```powershell
