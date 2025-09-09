@@ -137,6 +137,8 @@ $content = (Get-Content README_TABLE.txt -Raw) -replace "\bnan\b","NA"
 > The generator shows the **latest row per (dataset, mode, calibration)**. TPR is formatted to **4 decimals**; p95/p99/eps to **1 decimal**; any textual `nan` is rendered as **NA**.
 
 ### 3.2 Figures
+> **Note:** SVGs are generated but not committed; prefer **PNG** in the repo; run `git clean -fdx` before packaging.
+
 
 ```powershell
 docker run --rm -v "${PWD}:/app" -e COMMIT=$env:COMMIT log-project:latest `
