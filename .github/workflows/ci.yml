@@ -8,10 +8,6 @@ on:
 permissions:
   contents: read
 
-concurrency:
-  group: ci-${{ github.workflow }}-${{ matrix.os }}-${{ github.ref }}
-  cancel-in-progress: true
-
 jobs:
   test:
     name: Tests (${{ matrix.os }} | Py${{ matrix.python-version }})
@@ -22,6 +18,9 @@ jobs:
       matrix:
         os: [ubuntu-latest, windows-latest]
         python-version: ["3.11"]
+    concurrency:
+      group: ci-${{ github.workflow }}-${{ matrix.os }}-${{ github.ref }}
+      cancel-in-progress: true
 
     steps:
       - name: Checkout
