@@ -1,5 +1,5 @@
 # HOWTO — Figures & Provenance
-_Last updated: 2025-09-08 23:22:41_
+_Last updated: 2025-09-11_
 
 This HOWTO documents how to regenerate the **multi‑config figures** and maintain a strict **1:1 paper trail** between `experiments/summary.csv` and `docs/PROVENANCE.txt`.
 
@@ -57,7 +57,7 @@ docker run --rm -v "${PWD}:/app" -e COMMIT=$env:COMMIT log-project:latest `
 **Sanity check (rows):**
 ```powershell
 $rows = (Get-Content .\experiments\summary.csv | Select-Object -Skip 1).Count
-"Rows (excluding header): $rows"   # expect â‰¥ 8
+"Rows (excluding header): $rows"   # expect ≥ 8
 ```
 
 ---
@@ -72,12 +72,21 @@ python scripts\make_multi_plots_v2.py --csv experiments\summary.csv --outdir fig
 
 ### Full ablation set (calibrated + no‑calib)
 ```powershell
-python scripts\make_multi_plots_v2.py --csv experiments\summary.csv --outdir figuresblations --fmt png,svg --expect 8
+python scripts\make_multi_plots_v2.py --csv experiments\summary.csv --outdir figures\ablations --fmt png,svg --expect 8
 ```
 
+### Docker/Linux (inside container)
+```bash
+python scripts/make_multi_plots_v2.py --csv experiments/summary.csv --outdir figures --fmt png,svg --calibrations conformal --expect 4
+python scripts/make_multi_plots_v2.py --csv experiments/summary.csv --outdir figures/ablations --fmt png,svg --expect 8
+```
+
+> **Note:** Use `/` slashes on Linux/Docker; using `\` will create a literal folder named `figures\ablations`.
+
+
 **Notes**
-- Collapses duplicate (dataset, mode, calibration) combos (default: **last**) â†’ use `--collapse median` to aggregate repeats.
-- Drops rows with `p95_ms==0` or `p99_ms==0` by default â†’ pass `--no-drop-zero-latency` to keep them.
+- Collapses duplicate (dataset, mode, calibration) combos (default: **last**) → use `--collapse median` to aggregate repeats.
+- Drops rows with `p95_ms==0` or `p99_ms==0` by default → pass `--no-drop-zero-latency` to keep them.
 - X‑labels are `dataset` on line 1 and `mode/calibration` on line 2.
 - Output files: `figures/latency_p95_ms.(png|svg)`, `figures/latency_p99_ms.(png|svg)`, `figures/throughput_eps.(png|svg)`.
 
@@ -109,7 +118,7 @@ pre-commit run -a
 mypy src
 pytest -q
 
-git add experiments\summary.csv figures\ docs\ scriptsgit commit -m "experiments: add full grid; figures: multi-config; provenance: rebuild 1:1"
+git add experiments\summary.csv figures\ docs\ git commit -m "experiments: add full grid; figures: multi-config; provenance: rebuild 1:1"
 git push
 ```
 
@@ -119,3 +128,55 @@ git push
 - **PowerShell policy**: use `-ExecutionPolicy Bypass` or `Set-ExecutionPolicy -Scope Process Bypass` for one-shot runs; `Unblock-File` if needed.
 - **SVGs modified by hooks**: run `git add -A` then `pre-commit run -a` again (hooks normalize line endings/whitespace).
 - **Mixed OS environments**: prefer LF line endings; the repo enforces UTF‑8 (no BOM), LF‑only.
+
+## 7) Refreshing lockfiles (hash-locked installs)
+
+This project uses **hash-locked** dependency installs for reproducibility. Never hand-edit `*.lock`.
+Regenerate them from the `*.in` specs with `pip-tools`.
+
+### Windows (PowerShell)
+
+```powershell
+# (Optional) Create/activate your venv here
+
+# Pin toolchain versions for deterministic output
+python -m pip install --upgrade "pip==24.2" "pip-tools==7.4.1"
+
+# Runtime lock
+pip-compile env/requirements.in --generate-hashes -o env/requirements.lock
+
+# Dev tools lock
+pip-compile env/dev-requirements.in --generate-hashes -o env/dev-requirements.lock
+
+# (Optional) IDE mirror for convenience
+Copy-Item env\requirements.lock env\requirements.txt -Force
+```
+
+### Linux / Docker (inside container)
+
+```bash
+# Launch a pinned Python container with your repo mounted at /app
+docker run --rm -it -v "${PWD}:/app" -w /app python:3.11.9-slim bash
+
+# Inside the container
+python -m pip install --upgrade "pip==24.2" "pip-tools==7.4.1"
+pip-compile env/requirements.in --generate-hashes -o env/requirements.lock
+pip-compile env/dev-requirements.in --generate-hashes -o env/dev-requirements.lock
+exit
+```
+
+### After updating locks
+
+```powershell
+pre-commit run --all-files
+mypy src
+pytest -q
+
+git add env/requirements.lock env/dev-requirements.lock env/requirements.txt
+git commit -m "deps: refresh lockfiles with pip-tools 7.4.1; reproducible, hash-locked"
+git push
+```
+
+**Notes**
+- Regenerate locks on the same platform you intend to install them on (Windows vs Linux). For Linux CI, prefer regenerating inside Docker as shown above.
+- If figures or metrics change, update `figures/` and run `scripts/rebuild_provenance.ps1` so `docs/PROVENANCE.txt` stays 1:1 with `experiments/summary.csv`.
