@@ -1,8 +1,9 @@
 import sys
-import numpy
-import sklearn
+
 import matplotlib
+import numpy
 import psutil
+import sklearn
 
 print("python==" + sys.version.split()[0])
 print("numpy==" + numpy.__version__)

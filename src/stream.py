@@ -120,9 +120,7 @@ def resolve_commit() -> str:
         return env.strip()
     try:
         out = (
-            subprocess.check_output(
-                ["git", "rev-parse", "--short", "HEAD"], stderr=subprocess.DEVNULL
-            )
+            subprocess.check_output(["git", "rev-parse", "--short", "HEAD"], stderr=subprocess.DEVNULL)
             .decode("utf-8")
             .strip()
         )
@@ -145,9 +143,7 @@ def perc(samples: list[float], p: float) -> float:
     return float(ys[max(0, min(k, len(ys) - 1))])
 
 
-def tpr_at_fpr(
-    scores: list[float], labels: list[int] | None, target_fpr: float = 0.01
-) -> tuple[float, float]:
+def tpr_at_fpr(scores: list[float], labels: list[int] | None, target_fpr: float = 0.01) -> tuple[float, float]:
     if labels is None or len(scores) != len(labels):
         return float("nan"), float("nan")
     neg = [s for s, y in zip(scores, labels, strict=False) if int(y) == 0]
@@ -178,9 +174,7 @@ class BaselineScorer:
         min_df: int = 1,
     ):
         if not SKLEARN_AVAILABLE:
-            raise SystemExit(
-                "Missing dependency 'scikit-learn'. Install with: pip install scikit-learn"
-            )
+            raise SystemExit("Missing dependency 'scikit-learn'. Install with: pip install scikit-learn")
         self.vec = TfidfVectorizer(min_df=min_df, max_features=50000)
         X = self.vec.fit_transform(texts)
         self.n_estimators = 200
@@ -277,9 +271,7 @@ def main() -> None:
     ap.add_argument("--summary-out", dest="summary_out", default="experiments/summary.csv")
     ap.add_argument("--seed", type=int, default=20250819)
     ap.add_argument("--labels", default="", help="Optional labels JSON path (list[int])")
-    ap.add_argument(
-        "--alpha", type=float, default=0.01, help="target FPR for conformal calibration"
-    )
+    ap.add_argument("--alpha", type=float, default=0.01, help="target FPR for conformal calibration")
     ap.add_argument("--window", type=int, default=5000, help="sliding conformal window size")
     ap.add_argument("--warmup", type=int, default=200, help="samples before thresholding counts")
     ap.add_argument(

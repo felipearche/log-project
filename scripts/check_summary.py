@@ -55,15 +55,10 @@ def main() -> None:
                 if "synth_tokens" in ds and "." in tpr:
                     frac = tpr.split(".", 1)[1]
                     if len(frac) != 4:
-                        bad_tpr.append(
-                            f"line {i}: TPR for synth_tokens must have 4 decimals (got {tpr})"
-                        )
+                        bad_tpr.append(f"line {i}: TPR for synth_tokens must have 4 decimals (got {tpr})")
 
     if bad_p:
-        sys.exit(
-            "ERROR: p95_ms > p99_ms or non-numeric at lines "
-            + ", ".join(map(str, bad_p))
-        )
+        sys.exit("ERROR: p95_ms > p99_ms or non-numeric at lines " + ", ".join(map(str, bad_p)))
     if bad_tpr:
         sys.exit("ERROR: TPR policy violations: " + "; ".join(bad_tpr))
 

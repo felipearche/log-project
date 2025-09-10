@@ -1,9 +1,8 @@
 #!/usr/bin/env python3
-import re
-import json
 import argparse
+import json
 import os
-from typing import List
+import re
 
 NUM_RE = re.compile(r"\d+")
 HEX_RE = re.compile(r"0x[0-9A-Fa-f]+")
@@ -19,8 +18,8 @@ def normalize_text(line: str) -> str:
 
 
 def to_sequences(in_path: str, out_path: str, max_lines: int = 200000) -> None:
-    seqs: List[List[str]] = []
-    with open(in_path, "r", encoding="utf-8", errors="strict") as f:
+    seqs: list[list[str]] = []
+    with open(in_path, encoding="utf-8", errors="strict") as f:
         for i, raw in enumerate(f, 1):
             if i > max_lines:
                 break

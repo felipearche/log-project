@@ -2,7 +2,6 @@ import argparse
 import json
 import os
 import random
-from typing import List, Tuple
 
 TEMPLATES = [
     "serviceA INFO user <num> connected from <hex>",
@@ -19,12 +18,12 @@ ANOMALIES = [
 ]
 
 
-def tok(s: str) -> List[str]:
+def tok(s: str) -> list[str]:
     """Lowercase + whitespace split (keeps <num>/<ip>/<hex> placeholders)."""
     return s.lower().strip().split()
 
 
-def generate(n: int, anom_ratio: float, seed: int) -> Tuple[List[List[str]], List[int]]:
+def generate(n: int, anom_ratio: float, seed: int) -> tuple[list[list[str]], list[int]]:
     """
     Generate exactly k anomalies and n-k normal sequences, then shuffle.
     Returns (tokens, labels) where labels are 1 for anomaly, 0 for normal.
@@ -57,9 +56,7 @@ def generate(n: int, anom_ratio: float, seed: int) -> Tuple[List[List[str]], Lis
 def main() -> None:
     ap = argparse.ArgumentParser(description="Deterministic synthetic log generator")
     ap.add_argument("--n", type=int, default=2000, help="number of sequences")
-    ap.add_argument(
-        "--anom_ratio", type=float, default=0.03, help="fraction of anomalies (0..1)"
-    )
+    ap.add_argument("--anom_ratio", type=float, default=0.03, help="fraction of anomalies (0..1)")
     ap.add_argument("--seed", type=int, default=20250819, help="PRNG seed")
     ap.add_argument(
         "--tokens_out",
@@ -91,10 +88,7 @@ def main() -> None:
     # Console summary
     total = len(labels)
     anoms = sum(labels)
-    print(
-        f"wrote: {args.tokens_out} (n={total}, anomalies={anoms}, "
-        f"anom_ratio~={anoms / total if total else 0:.4f})"
-    )
+    print(f"wrote: {args.tokens_out} (n={total}, anomalies={anoms}, anom_ratio~={anoms / total if total else 0:.4f})")
     print(f"wrote: {args.labels_out}")
 
 

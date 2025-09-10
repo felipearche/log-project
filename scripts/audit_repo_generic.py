@@ -208,16 +208,12 @@ def check_hashes():
     if not hf.exists():
         warn("data/HASHES.txt not found (skip).")
         return
-    lines = [
-        ln for ln in hf.read_text(encoding="utf-8", errors="replace").splitlines() if ln.strip()
-    ]
+    lines = [ln for ln in hf.read_text(encoding="utf-8", errors="replace").splitlines() if ln.strip()]
     exp = re.compile(r"^(.+?)  (\d+)  ([0-9A-F]{64})$")
     for i, ln in enumerate(lines, 1):
         m = exp.match(ln)
         if not m:
-            fail(
-                f"HASHES format error on line {i} (expect 'pathâ â sizeâ â SHA256' with uppercase hex)."
-            )
+            fail(f"HASHES format error on line {i} (expect 'pathâ â sizeâ â SHA256' with uppercase hex).")
         rel, size_s, hexx = m.groups()
         p = REPO / rel
         if not p.exists():
@@ -254,9 +250,7 @@ def check_readme_style():
     # Images
     svgs = list(REPO.rglob("*.svg"))
     if svgs:
-        warn(
-            f"SVGs committed ({len(svgs)}). If your policy is 'prefer PNG', consider removing committed SVGs."
-        )
+        warn(f"SVGs committed ({len(svgs)}). If your policy is 'prefer PNG', consider removing committed SVGs.")
     pngs = list(REPO.rglob("*.png"))
     if pngs:
         ok(f"PNG figures present ({len(pngs)}).")

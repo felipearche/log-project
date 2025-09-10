@@ -19,8 +19,8 @@ Rules:
 """
 
 import csv
-from pathlib import Path
 from collections import OrderedDict
+from pathlib import Path
 
 SRC = Path("experiments/summary.csv")
 OUT = Path("README_TABLE.txt")
@@ -84,7 +84,7 @@ def main():
         raise SystemExit("ERROR: no data rows in summary.csv")
 
     # Group by (dataset, mode, calibration), keep latest (last occurrence)
-    keyed: "OrderedDict[tuple[str,str,str], dict]" = OrderedDict()
+    keyed: OrderedDict[tuple[str, str, str], dict] = OrderedDict()
     for row in rows:
         key = (row.get("dataset", ""), row.get("mode", ""), row.get("calibration", ""))
         keyed[key] = row  # overwrite => last one wins

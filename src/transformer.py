@@ -3,13 +3,12 @@
 
 from __future__ import annotations
 
-from typing import Iterable, List, Deque
-from collections import deque
 import hashlib
 import math
+from collections import deque
+from collections.abc import Iterable
 
 import numpy as np
-
 
 __all__ = ["TransformerScorer"]
 
@@ -55,7 +54,7 @@ class TransformerScorer:
         self.window = int(window)
         self.decay = float(decay)
         self.seed = int(seed)
-        self._buf: Deque[np.ndarray] = deque(maxlen=self.window)
+        self._buf: deque[np.ndarray] = deque(maxlen=self.window)
 
     # ---- Public API (used by stream.py) ------------------------------------
 
@@ -76,7 +75,7 @@ class TransformerScorer:
 
     # ---- Internals ----------------------------------------------------------
 
-    def _score(self, tokens: List[str]) -> float:
+    def _score(self, tokens: list[str]) -> float:
         if not tokens:
             return 0.0
         if not self._buf:
@@ -109,9 +108,7 @@ class TransformerScorer:
         if n == 0:
             return self._unit(np.zeros(self.embed_dim, dtype=np.float32))
         # Right side of deque is most recent; assign ages 1..n (oldest->newest)
-        weights = np.array(
-            [self.decay ** (n - i) for i in range(1, n + 1)], dtype=np.float32
-        )
+        weights = np.array([self.decay ** (n - i) for i in range(1, n + 1)], dtype=np.float32)
         weights_sum = float(weights.sum())
         if weights_sum <= 0.0 or not math.isfinite(weights_sum):
             weights = np.ones(n, dtype=np.float32) / float(n)

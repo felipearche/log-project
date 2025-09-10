@@ -147,9 +147,7 @@ def check_hashes() -> None:
     for i, ln in enumerate(lines, 1):
         m = exp_three_fields.match(ln)
         if not m:
-            fail(
-                f"HASHES format error on line {i}: expected 'pathÃ¢ÂÂ Ã¢ÂÂ sizeÃ¢ÂÂ Ã¢ÂÂ SHA256' with uppercase hex."
-            )
+            fail(f"HASHES format error on line {i}: expected 'pathÃ¢ÂÂ Ã¢ÂÂ sizeÃ¢ÂÂ Ã¢ÂÂ SHA256' with uppercase hex.")
         assert m is not None
         rel_path, size_s, hexx = m.groups()
         f = path(rel_path)
@@ -191,9 +189,7 @@ def check_provenance_blocks() -> None:
     txt = b.decode("utf-8")
     blocks = len(re.findall(r"^CSV_ROW:", txt, flags=re.M))
     if data_rows and blocks < data_rows:
-        fail(
-            f"docs/PROVENANCE.txt: found {blocks} CSV_ROW blocks, but {data_rows} data rows in summary."
-        )
+        fail(f"docs/PROVENANCE.txt: found {blocks} CSV_ROW blocks, but {data_rows} data rows in summary.")
     ok(f"docs/PROVENANCE.txt: CSV_ROW blocks present (>= {data_rows} data rows).")
 
 

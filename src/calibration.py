@@ -7,7 +7,7 @@ Sliding-window conformal calibration for streaming anomaly scores.
 """
 
 from collections import deque
-from typing import Iterable, Deque, List
+from collections.abc import Iterable
 
 
 class SlidingConformal:
@@ -23,7 +23,7 @@ class SlidingConformal:
         if window <= 0:
             raise ValueError("window must be > 0")
         self.alpha = float(alpha)
-        self._buf: Deque[float] = deque(maxlen=int(window))
+        self._buf: deque[float] = deque(maxlen=int(window))
 
     def update(self, score: float) -> None:
         try:
@@ -48,5 +48,5 @@ class SlidingConformal:
         if n == 0:
             return float("inf")  # no anomalies until warmup filled
         k = max(1, int(round((1.0 - self.alpha) * n)))
-        arr: List[float] = sorted(self._buf)
+        arr: list[float] = sorted(self._buf)
         return arr[k - 1]

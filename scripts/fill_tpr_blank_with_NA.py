@@ -1,9 +1,9 @@
-import sys
 import csv
 import io
+import sys
 
 p = sys.argv[1] if len(sys.argv) > 1 else "experiments/summary.csv"
-with open(p, "r", encoding="utf-8") as f:
+with open(p, encoding="utf-8") as f:
     rows = list(csv.reader(f))
 if not rows:
     sys.exit(0)

@@ -32,8 +32,6 @@ def test_p95_le_p99_and_tpr_policy():
         ds = row[ds_i]
         tpr = row[tpr_i]
         if ds == "synth_tokens":
-            assert re.fullmatch(r"\d+\.\d{4}", tpr), (
-                f"Row {i}: synth_tokens TPR should be 4 decimals, got {tpr!r}"
-            )
+            assert re.fullmatch(r"\d+\.\d{4}", tpr), f"Row {i}: synth_tokens TPR should be 4 decimals, got {tpr!r}"
         elif ds == "mini_tokens":
             assert tpr == "NA", f"Row {i}: mini_tokens TPR should be NA, got {tpr!r}"
