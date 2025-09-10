@@ -1,0 +1,17 @@
+# Ruff configuration for log-project
+# Style and lint settings are pinned so local runs match CI.
+# Docs: https://docs.astral.sh/ruff/
+target-version = "py311"
+line-length = 100
+fix = true
+
+[lint]
+# E,F,W: pycodestyle/pyflakes; I: import sorting; UP: pyupgrade; B: bugbear; C4: comprehensions; A: builtins shadowing.
+select = ["E", "F", "W", "I", "UP", "B", "C4", "A"]
+# Add ignores here if you need to suppress a rule project-wide.
+ignore = []
+
+[format]
+# Keep repo-wide style consistent.
+quote-style = "double"
+indent-style = "space"
