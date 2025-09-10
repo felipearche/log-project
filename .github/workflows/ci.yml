@@ -13,6 +13,7 @@ jobs:
     name: Tests (${{ matrix.os }} | Py${{ matrix.python-version }})
     runs-on: ${{ matrix.os }}
     timeout-minutes: 20
+    # Matrix-aware concurrency must be at the *job* level
     concurrency:
       group: ci-${{ github.workflow }}-${{ matrix.os }}-${{ github.ref }}
       cancel-in-progress: true
@@ -24,15 +25,13 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8
-        with:
-          fetch-depth: 1
+        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8  # v4.1.6
 
       - name: Set up Python
-        uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065
+        uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065  # v5.1.0
         with:
           python-version: ${{ matrix.python-version }}
-          cache: 'pip'
+          cache: pip
           cache-dependency-path: |
             env/requirements.lock
             env/dev-requirements.lock
