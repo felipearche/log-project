@@ -13,19 +13,14 @@ jobs:
     name: Tests (${{ matrix.os }} | Py${{ matrix.python-version }})
     runs-on: ${{ matrix.os }}
     timeout-minutes: 20
+    concurrency:
+      group: ci-${{ github.workflow }}-${{ matrix.os }}-${{ github.ref }}
+      cancel-in-progress: true
     strategy:
       fail-fast: false
       matrix:
         os: [ubuntu-latest, windows-latest]
         python-version: ["3.11"]
-
-    # matrix is defined here, so this is valid:
-    concurrency:
-      group: ci-${{ github.workflow }}-${{ matrix.os }}-${{ github.ref }}
-      cancel-in-progress: true
-
-    env:
-      PIP_DEFAULT_TIMEOUT: "300"
 
     steps:
       - name: Checkout
@@ -37,76 +32,17 @@ jobs:
         uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065
         with:
           python-version: ${{ matrix.python-version }}
-          cache: pip
+          cache: 'pip'
           cache-dependency-path: |
-            env/requirements.in
-            env/dev-requirements.in
             env/requirements.lock
             env/dev-requirements.lock
 
-      # ---------- Linux path: compile Linux-native locks (with fallback) ----------
-      - name: Install pip-tools (Linux)
-        if: runner.os == 'Linux'
-        run: python -m pip install --upgrade "pip==24.2" "pip-tools==7.4.1"
-
-      - name: Ensure *.in exist (derive from *.lock if missing) (Linux)
-        if: runner.os == 'Linux'
-        shell: bash
-        run: |
-          python - <<'PY'
-          import pathlib, re
-          env = pathlib.Path('env')
-          env.mkdir(exist_ok=True)
-          def dehash(lock_path: str, out_path: str) -> None:
-            p = pathlib.Path(lock_path)
-            if not p.exists():
-              return
-            t = p.read_text(encoding='utf-8')
-            lines, buf = [], []
-            for raw in t.splitlines():
-              s = raw.rstrip()
-              if not s or s.lstrip().startswith('#') or s.lstrip().startswith('--'):
-                continue
-              buf.append(s)
-              if s.endswith('\'):
-                continue
-              joined = ' '.join(x.rstrip('\').strip() for x in buf)
-              joined = re.sub(r'\s*--hash=sha256:[0-9A-Fa-f]{64}', '', joined)
-              joined = joined.strip()
-              if joined:
-                lines.append(joined)
-              buf = []
-            pathlib.Path(out_path).write_text('\n'.join(lines) + '\n', encoding='utf-8')
-          if not (env/'requirements.in').exists() and (env/'requirements.lock').exists():
-            dehash(str(env/'requirements.lock'), str(env/'requirements.in'))
-          if not (env/'dev-requirements.in').exists() and (env/'dev-requirements.lock').exists():
-            dehash(str(env/'dev-requirements.lock'), str(env/'dev-requirements.in'))
-          PY
-
-      - name: Compile Linux lockfiles (Linux)
-        if: runner.os == 'Linux'
-        run: |
-          pip-compile env/requirements.in --generate-hashes -o env/requirements.linux.lock
-          pip-compile env/dev-requirements.in --generate-hashes -o env/dev-requirements.linux.lock
-
-      - name: Install dev toolchain (Linux)
-        if: runner.os == 'Linux'
-        run: python -m pip install -r env/dev-requirements.linux.lock
-
-      - name: Install runtime deps (Linux)
-        if: runner.os == 'Linux'
-        run: python -m pip install -r env/requirements.linux.lock
-
-      # ---------- Windows path: keep using committed hash-locked files ----------
-      - name: Install dev toolchain (Windows)
-        if: runner.os == 'Windows'
+      - name: Install dev toolchain
         run: python -m pip install -r env/dev-requirements.lock
 
-      - name: Install runtime deps (Windows)
-        if: runner.os == 'Windows'
+      - name: Install runtime deps
         run: python -m pip install -r env/requirements.lock
 
-      # ---------- Gates ----------
       - name: pre-commit (repo hygiene)
         run: python -m pre_commit run -a
 
