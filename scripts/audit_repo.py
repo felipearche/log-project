@@ -1,3 +1,4 @@
+# ruff: noqa: E501
 #!/usr/bin/env python3
 """
 Audit the repository for provenance, hygiene, and reproducibility guarantees.
@@ -7,7 +8,7 @@ Run from repo root:  python scripts/audit_repo.py
 """
 
 from __future__ import annotations
-from typing import NoReturn
+
 import csv
 import hashlib
 import io
@@ -15,6 +16,7 @@ import json
 import pathlib
 import re
 import sys
+from typing import NoReturn
 
 REPO_ROOT = pathlib.Path.cwd()
 
@@ -146,7 +148,7 @@ def check_hashes() -> None:
         m = exp_three_fields.match(ln)
         if not m:
             fail(
-                f"HASHES format error on line {i}: expected 'pathâ â sizeâ â SHA256' with uppercase hex."
+                f"HASHES format error on line {i}: expected 'pathÃ¢ÂÂ Ã¢ÂÂ sizeÃ¢ÂÂ Ã¢ÂÂ SHA256' with uppercase hex."
             )
         assert m is not None
         rel_path, size_s, hexx = m.groups()
@@ -176,9 +178,7 @@ def check_summary_csv() -> None:
     start_idx = detect_summary_header(rows)
     for i, row in enumerate(rows[start_idx:], start_idx + 1):
         if len(row) != 24:
-            fail(
-                f"Row {i} in experiments/summary.csv does not have 24 columns (has {len(row)})."
-            )
+            fail(f"Row {i} in experiments/summary.csv does not have 24 columns (has {len(row)}).")
     ok("experiments/summary.csv: 24 columns per data row.")
 
 
@@ -200,10 +200,7 @@ def check_provenance_blocks() -> None:
 def check_editorconfig() -> None:
     p = path(EDITORCONFIG)
     txt = read_bytes(p).decode("utf-8")
-    if (
-        "insert_final_newline = false" not in txt
-        and "insert_final_newline=false" not in txt
-    ):
+    if "insert_final_newline = false" not in txt and "insert_final_newline=false" not in txt:
         warn(".editorconfig: missing insert_final_newline=false for protected JSONs.")
     if "end_of_line = lf" not in txt and "end_of_line=lf" not in txt:
         warn(".editorconfig: missing end_of_line=lf (LF-only policy).")

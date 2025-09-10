@@ -1,6 +1,6 @@
-# -*- coding: utf-8 -*-
+# ruff: noqa: E501
 """
-make_multi_plots_v2.py â€” multi-config charts with guards and filters (ruff-clean)
+make_multi_plots_v2.py Ã¢â‚¬â€ multi-config charts with guards and filters (ruff-clean)
 
 Usage:
   python scripts/make_multi_plots_v2.py --csv experiments/summary.csv --outdir figures --fmt png,svg
@@ -29,7 +29,7 @@ def ensure_outdir(path: Path) -> Path:
 
 def one_decimal(x: object) -> str:
     try:
-        return f"{float(x):.1f}"  # type: ignore[arg-type]  # pandas/numpy object→float at runtime
+        return f"{float(x):.1f}"  # type: ignore[arg-type]  # pandas/numpy objectâ†’float at runtime
     except (TypeError, ValueError):
         return str(x)
 
@@ -65,14 +65,10 @@ def collapse(df: pd.DataFrame, how: str) -> pd.DataFrame:
         return df.groupby(key_cols, as_index=False, sort=False).tail(1)
 
     if how == "median":
-        num_cols = [
-            c for c in ["p95_ms", "p99_ms", "eps", "throughput_eps"] if c in df.columns
-        ]
-        agg = {c: "median" for c in num_cols}
+        num_cols = [c for c in ["p95_ms", "p99_ms", "eps", "throughput_eps"] if c in df.columns]
+        agg = dict.fromkeys(num_cols, "median")
         other = [c for c in df.columns if c not in key_cols + num_cols]
-        return df.groupby(key_cols, as_index=False).agg(
-            {**agg, **{c: "last" for c in other}}
-        )
+        return df.groupby(key_cols, as_index=False).agg({**agg, **dict.fromkeys(other, "last")})
 
     return df
 
@@ -188,15 +184,9 @@ def main() -> None:
     parser.add_argument("--outdir", default="figures")
     parser.add_argument("--fmt", default="png,svg")
     parser.add_argument("--calibrations", default="")
-    parser.add_argument(
-        "--collapse", default="last", choices=["last", "median", "none"]
-    )
-    parser.add_argument(
-        "--drop-zero-latency", dest="drop_zero_latency", action="store_true"
-    )
-    parser.add_argument(
-        "--no-drop-zero-latency", dest="drop_zero_latency", action="store_false"
-    )
+    parser.add_argument("--collapse", default="last", choices=["last", "median", "none"])
+    parser.add_argument("--drop-zero-latency", dest="drop_zero_latency", action="store_true")
+    parser.add_argument("--no-drop-zero-latency", dest="drop_zero_latency", action="store_false")
     parser.set_defaults(drop_zero_latency=True)
     parser.add_argument("--expect", type=int, default=0)
     args = parser.parse_args()

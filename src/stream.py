@@ -1,3 +1,4 @@
+# ruff: noqa: E501
 #!/usr/bin/env python3
 import argparse
 import json
@@ -149,8 +150,8 @@ def tpr_at_fpr(
 ) -> tuple[float, float]:
     if labels is None or len(scores) != len(labels):
         return float("nan"), float("nan")
-    neg = [s for s, y in zip(scores, labels) if int(y) == 0]
-    pos = [s for s, y in zip(scores, labels) if int(y) == 1]
+    neg = [s for s, y in zip(scores, labels, strict=False) if int(y) == 0]
+    pos = [s for s, y in zip(scores, labels, strict=False) if int(y) == 1]
     if not neg or not pos:
         return float("nan"), float("nan")
     neg_sorted = sorted(neg)
@@ -260,9 +261,7 @@ def emit_summary_row(
 
 
 def main() -> None:
-    ap = argparse.ArgumentParser(
-        description="Stream log tokens and compute anomaly metrics"
-    )
+    ap = argparse.ArgumentParser(description="Stream log tokens and compute anomaly metrics")
     ap.add_argument(
         "--data",
         default="data/synth_tokens.json",
@@ -275,22 +274,14 @@ def main() -> None:
         default=0,
         help="sleep per event (ms) to simulate streaming",
     )
-    ap.add_argument(
-        "--summary-out", dest="summary_out", default="experiments/summary.csv"
-    )
+    ap.add_argument("--summary-out", dest="summary_out", default="experiments/summary.csv")
     ap.add_argument("--seed", type=int, default=20250819)
-    ap.add_argument(
-        "--labels", default="", help="Optional labels JSON path (list[int])"
-    )
+    ap.add_argument("--labels", default="", help="Optional labels JSON path (list[int])")
     ap.add_argument(
         "--alpha", type=float, default=0.01, help="target FPR for conformal calibration"
     )
-    ap.add_argument(
-        "--window", type=int, default=5000, help="sliding conformal window size"
-    )
-    ap.add_argument(
-        "--warmup", type=int, default=200, help="samples before thresholding counts"
-    )
+    ap.add_argument("--window", type=int, default=5000, help="sliding conformal window size")
+    ap.add_argument("--warmup", type=int, default=200, help="samples before thresholding counts")
     ap.add_argument(
         "--no-calib",
         dest="no_calib",
@@ -303,15 +294,9 @@ def main() -> None:
         default=0.002,
         help="ADWIN delta (drift sensitivity)",
     )
-    ap.add_argument(
-        "--contam", type=float, default=0.01, help="IsolationForest contamination"
-    )
-    ap.add_argument(
-        "--tfidf-min-df", type=int, default=1, help="TfidfVectorizer min_df"
-    )
-    ap.add_argument(
-        "--save-scores", default="", help="Optional path to save per-event scores CSV"
-    )
+    ap.add_argument("--contam", type=float, default=0.01, help="IsolationForest contamination")
+    ap.add_argument("--tfidf-min-df", type=int, default=1, help="TfidfVectorizer min_df")
+    ap.add_argument("--save-scores", default="", help="Optional path to save per-event scores CSV")
     args = ap.parse_args()
 
     random.seed(args.seed)
@@ -340,7 +325,7 @@ def main() -> None:
     labels: list[int] | None = None
     if args.labels:
         try:
-            with open(args.labels, "r", encoding="utf-8") as f:
+            with open(args.labels, encoding="utf-8") as f:
                 labels = json.load(f)
         except Exception:
             labels = None
@@ -386,9 +371,7 @@ def main() -> None:
             is_anom = len(scores) >= args.warmup and s > thr
 
         drift.update(s)
-        if getattr(drift, "drift_detected", False) or getattr(
-            drift, "change_detected", False
-        ):
+        if getattr(drift, "drift_detected", False) or getattr(drift, "change_detected", False):
             n_drift += 1
             calib.reset()  # reset calibration on drift
 
@@ -406,9 +389,7 @@ def main() -> None:
     tpr1 = float("nan")
     if labels is not None and len(y_true) == len(scores):
         tpr1, _thr = tpr_at_fpr(scores, y_true, target_fpr=0.01)
-    tpr_str = (
-        f"{tpr1:.4f}" if (isinstance(tpr1, float) and not math.isnan(tpr1)) else "NA"
-    )
+    tpr_str = f"{tpr1:.4f}" if (isinstance(tpr1, float) and not math.isnan(tpr1)) else "NA"
 
     cpu_pct_val = _mean(cpu_samples) if cpu_samples else float("nan")
     cpu_field: float | str = "NA" if math.isnan(cpu_pct_val) else round(cpu_pct_val, 1)
@@ -434,15 +415,9 @@ def main() -> None:
         calib_window=(calib.window if not args.no_calib else "NA"),
         warmup=args.warmup,
         adwin_delta=args.adwin_delta,
-        iso_n_estimators=(
-            getattr(iso_model, "n_estimators", "NA") if iso_model else "NA"
-        ),
-        iso_max_samples=(
-            getattr(iso_model, "max_samples", "NA") if iso_model else "NA"
-        ),
-        iso_random_state=(
-            getattr(iso_model, "random_state", "NA") if iso_model else "NA"
-        ),
+        iso_n_estimators=(getattr(iso_model, "n_estimators", "NA") if iso_model else "NA"),
+        iso_max_samples=(getattr(iso_model, "max_samples", "NA") if iso_model else "NA"),
+        iso_random_state=(getattr(iso_model, "random_state", "NA") if iso_model else "NA"),
         notes=notes,
         summary_out=args.summary_out,
     )

@@ -1,3 +1,4 @@
+# ruff: noqa: E501
 #!/usr/bin/env python3
 """
 Generic repo audit (read-only). Safe to run on any project.
@@ -12,10 +13,11 @@ Exit code: 0 on success, nonzero on hard failures.
 """
 
 from __future__ import annotations
-import sys
-import re
+
 import hashlib
 import pathlib
+import re
+import sys
 
 REPO = pathlib.Path.cwd()
 
@@ -124,13 +126,9 @@ def check_editorconfig_gitattributes():
         else:
             warn(".editorconfig may not enforce LF.")
         if "insert_final_newline" in txt:
-            ok(
-                ".editorconfig sets insert_final_newline (verify protected files as needed)."
-            )
+            ok(".editorconfig sets insert_final_newline (verify protected files as needed).")
         else:
-            warn(
-                ".editorconfig missing insert_final_newline rules (consider per-file exceptions)."
-            )
+            warn(".editorconfig missing insert_final_newline rules (consider per-file exceptions).")
     else:
         warn(".editorconfig missing.")
     if ga.exists():
@@ -211,16 +209,14 @@ def check_hashes():
         warn("data/HASHES.txt not found (skip).")
         return
     lines = [
-        ln
-        for ln in hf.read_text(encoding="utf-8", errors="replace").splitlines()
-        if ln.strip()
+        ln for ln in hf.read_text(encoding="utf-8", errors="replace").splitlines() if ln.strip()
     ]
     exp = re.compile(r"^(.+?)  (\d+)  ([0-9A-F]{64})$")
     for i, ln in enumerate(lines, 1):
         m = exp.match(ln)
         if not m:
             fail(
-                f"HASHES format error on line {i} (expect 'path␠␠size␠␠SHA256' with uppercase hex)."
+                f"HASHES format error on line {i} (expect 'pathâ â sizeâ â SHA256' with uppercase hex)."
             )
         rel, size_s, hexx = m.groups()
         p = REPO / rel
@@ -244,16 +240,14 @@ def check_readme_style():
     txt = rd.read_text(encoding="utf-8", errors="replace")
     # Heuristics
     bullet_lines = [ln for ln in txt.splitlines() if ln.strip().startswith(("-", "*"))]
-    no_period = [
-        ln for ln in bullet_lines if not ln.rstrip().endswith((".", ":", ";", ")", "`"))
-    ]
+    no_period = [ln for ln in bullet_lines if not ln.rstrip().endswith((".", ":", ";", ")", "`"))]
     if no_period:
         warn(f"README: {len(no_period)} bullet(s) might not end with a period (style).")
     if "&" in txt:
         warn("README: found '&' in prose; prefer 'and'.")
-    if "→" in txt and "(->" not in txt:
-        warn("README: uses '→' without ASCII fallback '(->)' nearby.")
-    if "—" in txt:
+    if "â†’" in txt and "(->" not in txt:
+        warn("README: uses 'â†’' without ASCII fallback '(->)' nearby.")
+    if "â€”" in txt:
         ok("README: uses long dashes; ensure consistency.")
     if re.search(r"--no[_-]calib", txt):
         ok("README: mentions '--no-calib' flag.")
