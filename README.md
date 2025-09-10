@@ -557,7 +557,7 @@ Other common issues:
 ---
 
 
-## 22) Known limitations & reproducibility caveats
+## 22) Known limitations and reproducibility caveats
 
 - **Latency/throughput vary with host load.** Results depend on background processes and CPU frequency scaling. For fair comparisons, run on an idle machine and consider repeating a run a few times and reporting the median.
 - **Temporary miscalibration under extreme drift.** Sliding Conformal targets 1% FPR assuming the calibration window reflects recent data. When ADWIN triggers, the calibrator resets; transient windows may differ until enough post-reset data accumulates.
