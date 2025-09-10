@@ -23,14 +23,14 @@ docker run --rm -v "${PWD}:/app" -w /app python:3.11.9-slim /bin/bash -lc   "pip
 
 ### What this runs
 - Installs pinned dev toolchain.
-- Runs schema/format guard for `experiments/summary.csv` (via tests)
-- Executes the test suite with coverage gate = 0 (temporary)
+- Runs schema/format guard for `experiments/summary.csv` (via tests).
+- Executes the test suite with coverage gate = 0 (temporary).
 
 **At a glance**
 - Model: TF-IDF + IsolationForest + Sliding Conformal; ADWIN resets for drift.
 - Reproducibility: Docker base pinned by digest; CI actions pinned by SHA.
-- Provenance: `data/HASHES.txt` (size + SHA-256), 24-column `experiments/summary.csv`
-- Hygiene: UTF-8 (no BOM), LF-only; protected JSONs byte-exact (no trailing LF)
+- Provenance: `data/HASHES.txt` (size + SHA-256), 24-column `experiments/summary.csv`.
+- Hygiene: UTF-8 (no BOM), LF-only; protected JSONs byte-exact (no trailing LF).
 - CI: schema/format validator for `summary.csv`; Windows runtime hash-locked.
 
 
@@ -54,7 +54,7 @@ Reproducibility pillars: **pinned environment** (`env/requirements.lock`), **Doc
 - mypy: light typing gate via mypy.ini (Python 3.11, ignore_missing_imports = True, warn_unused_ignores = True). CI runs "mypy src".
 - pytest: 6 tests covering tokenizer masks, summary schema (24 cols), calibration docs/ASCII, ADWIN→conformal reset, determinism, and smoke.
 
-> Policy: run all three locally before pushing: pre-commit run -a → mypy src → pytest -q.
+> Policy: run all three locally before pushing: pre-commit run --all-files → mypy src → pytest -q.
 
 ---
 
@@ -171,7 +171,9 @@ Embed examples (the plotting script writes to `figures/`):
 
 ### 3.3 Multi-config figures (recommended)
 
-Use the duplicate-aware plotter to create **one-metric-per-figure** charts that compare all runs.
+Use the duplicate-aware plotter to create **one-metric-per-figure** charts that compare all runs **without** duplicating identical configs.
+
+**Windows (PowerShell)**
 
 **Calibrated-only (recommended for README):**
 ```powershell
@@ -183,12 +185,23 @@ python scripts/make_multi_plots_v2.py --csv experiments/summary.csv --outdir fig
 python scripts/make_multi_plots_v2.py --csv experiments/summary.csv --outdir figures\ablations --fmt png,svg --expect 8
 ```
 
+**Docker/Linux (inside container or native shell)**
+
+**Calibrated-only (recommended for README):**
+```bash
+python scripts/make_multi_plots_v2.py --csv experiments/summary.csv --outdir figures --fmt png,svg --calibrations conformal --expect 4
+```
+
+**Full ablation set (calibrated + no-calib):**
+```bash
+python scripts/make_multi_plots_v2.py --csv experiments/summary.csv --outdir figures/ablations --fmt png,svg --expect 8
+```
+
 Notes:
 - The plotter collapses duplicate (dataset, mode, calibration) combos (default: **last**; use `--collapse median` to aggregate repeats).
 - Rows with `p95_ms==0` or `p99_ms==0` are dropped by default (`--no-drop-zero-latency` to keep them).
 - X-labels are `dataset` on line 1 and `mode/calibration` on line 2.
 - Output files: `figures/latency_p95_ms.(png|svg)`, `figures/latency_p99_ms.(png|svg)`, `figures/throughput_eps.(png|svg)`.
-
 
 ## 4) Datasets and hashes (canonical)
 Track every dataset in three places:
@@ -516,7 +529,7 @@ jobs:
  - name: Run pre-commit
  run: |
  pre-commit --version
- pre-commit run -a
+ pre-commit run --all-files
 
  - name: Type check (mypy)
  run: |
@@ -545,7 +558,7 @@ Other common issues:
 ---
 
 
-## 22a) Known limitations & reproducibility caveats
+## 22) Known limitations & reproducibility caveats
 
 - **Latency/throughput vary with host load.** Results depend on background processes and CPU frequency scaling. For fair comparisons, run on an idle machine and consider repeating a run a few times and reporting the median.
 - **Temporary miscalibration under extreme drift.** Sliding Conformal targets 1% FPR assuming the calibration window reflects recent data. When ADWIN triggers, the calibrator resets; transient windows may differ until enough post-reset data accumulates.
@@ -553,7 +566,7 @@ Other common issues:
 - **Energy metric.** `energy_J` is currently `NA` on this hardware; include it if you run on a machine with supported power telemetry.
 
 
-## 22) License and citation
+## 23) License and citation
 
 This project is licensed under the **MIT License**. See [LICENSE](LICENSE).
 
@@ -603,7 +616,7 @@ repository-code: https://github.com/felipearche/log-project
 
 - **2025-08-30**: TPR formatting policy enforced - `TPR_at_1pct_FPR` is four decimals for `synth_tokens` (e.g., `1.0000`) and the literal `NA` for `mini_tokens`. See the experiment schema and the table generator script.; Provenance 1:1 rebuilt - `docs/PROVENANCE.txt` now has exactly one `CSV_ROW:` per row in `experiments/summary.csv` (counts match). A `notes:` line was added to the latest block documenting this maintenance.; README table regenerated - `README_TABLE.txt` reflects the latest row per (dataset, mode, calibration) with canonical formatting (TPR 4dp, p95/p99/eps 1dp, `NA` where applicable).
 
-- **2025-09-03**: Repository hygiene and provenance scope - Moved non-artifacts out of `data/` (scripts`scripts/`, docs`docs/`); updated references to `docs/PROVENANCE.txt`; added `.gitattributes` (LF policy; keep protected JSONs byte-exact); ignored `.ruff_cache/` in `.gitignore`. Provenance 1:1 mapping unchanged; metrics unchanged.
+- **2025-09-03**: Repository hygiene and provenance scope - Moved non-artifacts out of `data/` (`scripts/`, `docs/`); updated references to `docs/PROVENANCE.txt`; added `.gitattributes` (LF policy; keep protected JSONs byte-exact); ignored `.ruff_cache/` in `.gitignore`. Provenance 1:1 mapping unchanged; metrics unchanged.
 
 - **2025-09-03**: **Assets and attributes**.
  - Normalized 3 SVGs in `figures/` (CRLF→LF; stripped trailing whitespace; UTF-8 no BOM; single final LF).
@@ -622,13 +635,46 @@ repository-code: https://github.com/felipearche/log-project
 
 ## Release Packaging (Reproducible)
 
-To produce a clean source archive (no caches, no `.git`):
 
+### Clean release ZIP (no `.git`)
+
+To produce a lightweight source archive that excludes `.git` and untracked files, use `git archive`. This includes only files committed to the repository.
+
+**Windows PowerShell**
 ```powershell
-# ensure dist/ exists
+# From repo root on the branch or tag you want to release
+git status
+pre-commit run --all-files
+pytest
+mypy
+
 mkdir dist 2>$null
-git archive --format=zip -o dist/log-project-src.zip HEAD
+git archive --format=zip --output=dist/log-project-src.zip HEAD
+
+# Or archive a specific tag for reproducibility:
+# git archive --format=zip --output=dist/log-project-v0.1.1.zip v0.1.1
 ```
+
+**Bash**
+```bash
+# From repo root on the branch or tag you want to release
+git status
+pre-commit run --all-files
+pytest
+mypy
+
+mkdir -p dist
+git archive --format=zip --output=dist/log-project-src.zip HEAD
+
+# Or archive a specific tag for reproducibility:
+# git archive --format=zip --output=dist/log-project-v0.1.1.zip v0.1.1
+```
+
+Notes:
+- The archive does not include `.git/` or untracked files.
+- If you need generated assets in the ZIP, commit them first or package them separately.
+- After cloning, run `pre-commit install` to enable local hooks.
+
 
 Policy recap: UTF-8 **without BOM**, **LF-only** line endings; a single final LF on text files.
 Exceptions: `data/mini_tokens.json`, `data/synth_labels.json`, `data/synth_tokens.json` must **not** end with a newline.
@@ -645,7 +691,7 @@ Exceptions: `data/mini_tokens.json`, `data/synth_labels.json`, `data/synth_token
   ```
 - **QA gates.**
   ```powershell
-  pre-commit run -a
+  pre-commit run --all-files
   mypy .
   pytest -q
   ```
@@ -658,9 +704,8 @@ Exceptions: `data/mini_tokens.json`, `data/synth_labels.json`, `data/synth_token
 - **Provenance sync.**
   ```powershell
   Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass -Force
-  .\scripts
-ebuild_provenance.ps1
-  python scriptsudit_repo.py
+  .\scripts\rebuild_provenance.ps1
+  python scripts\audit_repo.py
   ```
 - **Figures (PNG preferred).** Regenerate locally and commit PNGs; keep SVGs uncommitted unless necessary.
 
@@ -668,14 +713,13 @@ ebuild_provenance.ps1
 
 - **CRLF or BOM detected.** Run:
   ```powershell
-  pwsh -NoProfile -File .\scriptsudit_and_fix.ps1
+  pwsh -NoProfile -File .\scripts\audit_and_fix.ps1
   # Re-run audit to confirm:
-  python scriptsudit_repo.py
+  python scripts\audit_repo.py
   ```
 - **“Found X CSV_ROW but Y rows in summary.”** Rebuild provenance:
   ```powershell
-  .\scripts
-ebuild_provenance.ps1
+  .\scripts\rebuild_provenance.ps1
   ```
 - **Docker volume with spaces in path.** Always mount with quotes:
   ```powershell
@@ -695,7 +739,7 @@ ebuild_provenance.ps1
 
 ## Appendix D — Release packaging checklist
 
-1. `pre-commit run -a`, `mypy .`, `pytest -q` — all green.
+1. `pre-commit run --all-files`, `mypy .`, `pytest -q` — all green.
 2. `python scripts/audit_repo.py` — **All checks passed.**
 3. Rebuild provenance; confirm `CSV_ROW:` count == data rows.
 4. Regenerate figures; commit **PNGs only**.

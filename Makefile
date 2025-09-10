@@ -11,3 +11,8 @@ hashes:
 	$(PY) scripts/hash_files.py
 
 all: tokenize baseline
+.PHONY: release-zip
+release-zip:
+	@git clean -fdx
+	@mkdir -p dist
+	@git archive --format=zip -o dist/log-project-src.zip HEAD
