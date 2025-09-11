@@ -24,3 +24,4 @@
 
 2025-09-11 | date=2025-09-08 | commit=e5e9117 | dataset=mini_tokens | mode=transformer | calibration=no_calib | drift_detector=ADWIN | seed=20250819 | events=5 | anomalies=0 | drifts=0 | TPR_at_1pct_FPR=NA | p95_ms=0.000535 | p99_ms=0.000535 | eps=1.44886e+06 | CPU_pct=NA | energy_J=NA | calib_target_fpr=NA | calib_window=NA | warmup=200 | adwin_delta=0.002 | iso_n_estimators=NA | iso_max_samples=NA | iso_random_state=NA | notes=transformer no_calib;cpu_sampler=process_avg;energy_na
 
+[2025-09-11 18:03:00 IST] Normalize text (UTF-8 no BOM, LF). Enforce -text for protected JSONs in .gitattributes; *.png binary. Scripts added under scripts/maintenance/.
