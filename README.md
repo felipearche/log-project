@@ -51,7 +51,7 @@ Reproducibility pillars: **pinned environment** (`env/requirements.lock`), **Doc
 
 - pre-commit: trailing whitespace, end-of-file, mixed line endings, merge conflicts, added large files, private keys, YAML syntax, ruff + ruff format, BOM guard (UTF-8, no BOM).
 - mypy: light typing gate via mypy.ini (Python 3.11, ignore_missing_imports = True, warn_unused_ignores = True). CI runs "mypy src".
-- pytest: 7 tests covering tokenizer masks, summary schema (24 cols), calibration docs/ASCII, ADWINâ†’conformal reset, determinism, and smoke.
+- pytest: 6 tests (+ conftest helper) covering tokenizer masks, summary schema (24 cols), calibration docs/ASCII, ADWINâ†’conformal reset, determinism, and smoke.
 
 > Policy: run all three locally before pushing: pre-commit run --all-files â†’ mypy src â†’ pytest -q.
 
