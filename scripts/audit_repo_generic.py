@@ -241,9 +241,9 @@ def check_readme_style():
         warn(f"README: {len(no_period)} bullet(s) might not end with a period (style).")
     if "&" in txt:
         warn("README: found '&' in prose; prefer 'and'.")
-    if "â†’" in txt and "(->" not in txt:
-        warn("README: uses 'â†’' without ASCII fallback '(->)' nearby.")
-    if "â€”" in txt:
+    if "→" in txt and "(->" not in txt:
+        warn("README: uses '→' without ASCII fallback '(->)' nearby.")
+    if "—" in txt:
         ok("README: uses long dashes; ensure consistency.")
     if re.search(r"--no[_-]calib", txt):
         ok("README: mentions '--no-calib' flag.")

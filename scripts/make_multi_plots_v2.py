@@ -1,6 +1,6 @@
 # ruff: noqa: E501
 """
-make_multi_plots_v2.py Ã¢â‚¬â€ multi-config charts with guards and filters (ruff-clean)
+make_multi_plots_v2.py — multi-config charts with guards and filters (ruff-clean)
 
 Usage:
   python scripts/make_multi_plots_v2.py --csv experiments/summary.csv --outdir figures --fmt png,svg
@@ -29,7 +29,7 @@ def ensure_outdir(path: Path) -> Path:
 
 def one_decimal(x: object) -> str:
     try:
-        return f"{float(x):.1f}"  # type: ignore[arg-type]  # pandas/numpy objectâ†’float at runtime
+        return f"{float(x):.1f}"  # type: ignore[arg-type]  # pandas/numpy object→float at runtime
     except (TypeError, ValueError):
         return str(x)
 
