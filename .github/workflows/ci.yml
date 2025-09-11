@@ -11,7 +11,7 @@ permissions:
 
 jobs:
   test:
-    name: Test (${{ matrix.os }} / py${{ matrix.python-version }})
+    name: Test (${{ matrix.os }} / py3.11)
     runs-on: ${{ matrix.os }}
     timeout-minutes: 30
     concurrency:
