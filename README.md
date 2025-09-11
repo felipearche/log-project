@@ -1,4 +1,4 @@
-﻿# log-project Streaming, Drift-Aware Log Anomaly Detection (Calibrated, Reproducible)
+# log-project Streaming, Drift-Aware Log Anomaly Detection (Calibrated, Reproducible)
 
 [![CI](https://github.com/felipearche/log-project/actions/workflows/ci.yml/badge.svg?branch=master&event=push)](https://github.com/felipearche/log-project/actions/workflows/ci.yml)
 
