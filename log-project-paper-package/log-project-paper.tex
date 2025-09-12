@@ -1,0 +1,74 @@
+
+\documentclass[11pt,twocolumn]{article}
+
+\usepackage{times}
+
+\usepackage{balance}
+\usepackage[margin=1in]{geometry}
+\usepackage{microtype}
+\usepackage{booktabs}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage{cite}
+
+\title{Streaming, Drift-Aware Log Anomaly Detection with Calibration and Provenance}
+\author{Felipe Fernández-Arche Pineda}
+\date{\today}
+
+% Tighter floats for a compact 5–6 page fit
+\setlength{\textfloatsep}{8pt plus 1pt minus 2pt}
+\setlength{\floatsep}{8pt plus 1pt minus 2pt}
+\begin{document}
+\maketitle
+
+\begin{abstract}
+I built a lightweight, streaming-first log anomaly detector that stays reliable under concept drift. The system combines TF-IDF + Isolation Forest for a fast baseline with a compact transformer scorer for semantic signals. ADWIN handles drift; conformal prediction keeps the false positive rate on target. On the v0.1.2 (Paper) snapshot I see mean TPR@1%FPR ≈ 0.571 (best 1.000), p95 ≈ 3.02 ms, p99 ≈ 3.23 ms, and throughput ≈ 1175287 events/sec.
+\end{abstract}
+
+\section{Introduction}
+In production, logs shift. New releases land, traffic patterns change, and what looked rare last week becomes routine.
+Batch models drift out of tune and alert budgets get blown. I wanted a baseline that is fast, calibrated, and easy to reason about.
+
+My design goals were: short feedback loops, a clean provenance trail, and guardrails around false positives.
+I kept the implementation small so it fits into CI and is simple to audit later.
+
+\section{Method}
+\textbf{Ingestion and features.} I tokenize and normalize logs into a stable vocabulary, producing (i) sparse TF-IDF vectors and (ii) token sequences for a tiny transformer scorer.
+
+\textbf{Scoring.} Baseline: TF-IDF $\rightarrow$ Isolation Forest (predictable, cold-start friendly). The transformer adds semantic sensitivity; it is lazily imported in the streaming app.
+
+\textbf{Drift and calibration.} I monitor score distributions with ADWIN. On a drift event the app resets the model and optionally re-fits on a short buffer.
+For thresholds, I use conformal quantiles to target a fixed FPR (e.g., 1\%).
+
+\textbf{Metrics.} Primary: TPR@1\%FPR. Systems: p95/p99 latency (ms) and throughput (events/sec).
+
+\section{Experiments}
+Each run logs to \texttt{experiments/summary.csv} with a matching block in \texttt{docs/PROVENANCE.txt}.
+
+
+\input{results_table.tex}
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=.8\linewidth]{tpr_by_model.png}
+\caption{Mean TPR@1\%FPR by group.}
+\label{fig:tpr}
+\end{figure}
+
+
+\section{Reproducibility}
+Release: v0.1.2 (Paper). Encoding/EOL: UTF-8 (no BOM), LF. Provenance: 1:1 summary.csv $\leftrightarrow$ PROVENANCE.txt.
+CI: pre-commit, mypy, CSV/provenance checker, pytest (Ubuntu + Windows, Python 3.11). Packaging: clean \texttt{git archive}; binary assets marked.
+
+\section{Limitations}
+Conformal guarantees assume exchangeability; severe non-stationarity still hurts.
+The transformer costs more CPU, so I keep it small and watch p95/p99 latency.
+
+\section{Conclusion}
+Small, fast, and auditable beats clever but fragile. The release gives a clean baseline to build on; next steps are richer tokenization,
+adaptive windows, and transformer fine-tuning if latency budgets allow.
+
+\balance
+\bibliographystyle{abbrv}
+\bibliography{refs}
+\end{document}
