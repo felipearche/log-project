@@ -1,58 +1,43 @@
-[CmdletBinding()]
-param(
-  [Parameter()]
-  [string]$CsvPath = "experiments\summary.csv",
-  [Parameter()]
-  [string]$ProvenancePath = "docs\PROVENANCE.txt"
-)
+# Rebuild docs\PROVENANCE.txt with explicit CSV_ROW blocks (1:1 with experiments\summary.csv)
+# PowerShell 5.1-safe; writes UTF-8 (no BOM), LF-only.
+# Usage:  Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass -Force
+#         .\scripts\rebuild_provenance.ps1
 
-$ErrorActionPreference = "Stop"
-Set-StrictMode -Version Latest
+# 0) Find repo root
+try { $repo = (git rev-parse --show-toplevel) 2>$null } catch { $repo = "" }
+if (-not $repo -or -not (Test-Path $repo)) { $repo = (Get-Location).Path }
+Set-Location $repo
 
-# Resolve repo root assuming this script lives in "<repo>\scripts"
-$repoRoot = (Get-Item $PSScriptRoot).Parent.FullName
-Set-Location $repoRoot
+# 1) Load CSV
+$csvPath = Join-Path $repo "experiments\summary.csv"
+if (-not (Test-Path $csvPath)) { throw "Missing $csvPath" }
+$rows = Import-Csv -LiteralPath $csvPath
+if (-not $rows -or $rows.Count -eq 0) { throw "No data rows in $csvPath" }
 
-# Resolve absolute paths
-$CsvAbs  = Convert-Path (Join-Path $repoRoot $CsvPath)
-$ProvAbs = Join-Path $repoRoot $ProvenancePath
+# Preserve header order as in the CSV
+$headers = @()
+foreach ($p in $rows[0].PSObject.Properties) { $headers += $p.Name }
 
-if (-not (Test-Path $CsvAbs)) {
-  throw "CSV not found at '$CsvAbs'."
-}
-
-# Import the CSV
-$rows = Import-Csv -Path $CsvAbs
-
-# Build provenance content: one block per row, flattened key=value pairs.
-# Date prefix is today's date (yyyy-MM-dd) to keep a chronological paper trail.
-$nl = "`n"
-$content = New-Object System.Text.StringBuilder
-
+# 2) Build explicit blocks
+$lines = New-Object System.Collections.Generic.List[string]
+$rowNum = 1
 foreach ($row in $rows) {
-  $date = (Get-Date).ToString('yyyy-MM-dd')
-  $pairs = @()
-  foreach ($prop in $row.PSObject.Properties) {
-    $name = $prop.Name
-    $val  = [string]$prop.Value
-    if ($null -eq $val) { $val = "" }
-    # Flatten any line breaks inside values
-    $val = $val -replace "(\r\n|\r|\n)", " "
-    $pairs += ("{0}={1}" -f $name, $val)
-  }
-  $line = "$date | " + ($pairs -join " | ")
-  [void]$content.Append($line + $nl + $nl)  # blank line between blocks
+    $lines.Add("CSV_ROW: $rowNum")
+    foreach ($h in $headers) {
+        $v = $row.$h
+        if ($null -eq $v) { $v = "" }
+        # normalize embedded newlines to spaces to keep one key=value per line
+        $v = ($v -replace "`r","" -replace "`n"," ")
+        $lines.Add("$h=$v")
+    }
+    $lines.Add("")  # blank line between blocks
+    $rowNum += 1
 }
 
-# Ensure target directory exists
-$provDir = Split-Path -Parent $ProvAbs
-if (-not (Test-Path $provDir)) {
-  New-Item -ItemType Directory -Force -Path $provDir | Out-Null
-}
-
-# Normalize to LF and write UTF-8 (no BOM)
+# 3) Write UTF-8 (no BOM), LF-only with single final LF
+$text = [string]::Join("`n", $lines)
+if (-not $text.EndsWith("`n")) { $text += "`n" }
 $utf8NoBom = New-Object System.Text.UTF8Encoding($false)
-$bytes = $utf8NoBom.GetBytes(($content.ToString()).Replace("`r`n","`n").Replace("`r","`n"))
-[IO.File]::WriteAllBytes($ProvAbs, $bytes)
-
-Write-Host "Wrote provenance to $ProvenancePath" -ForegroundColor Green
+$outPath = Join-Path $repo "docs\PROVENANCE.txt"
+[System.IO.File]::WriteAllText($outPath, $text, $utf8NoBom)
+Write-Host ("Wrote PROVENANCE to {0} with {1} rows × {2} fields." -f $outPath, $rows.Count, $headers.Count)

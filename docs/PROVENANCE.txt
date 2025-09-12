@@ -1,25 +1,337 @@
-2025-09-11 | date=2025-09-03 | commit=343115a | dataset=synth_tokens | mode=baseline | calibration=conformal | drift_detector=ADWIN | seed=20250819 | events=2000 | anomalies=0 | drifts=0 | TPR_at_1pct_FPR=1.0000 | p95_ms=9.9565 | p99_ms=11.2874 | eps=153.346 | CPU_pct=99.3 | energy_J=NA | calib_target_fpr=0.01 | calib_window=5000 | warmup=200 | adwin_delta=0.002 | iso_n_estimators=200 | iso_max_samples=auto | iso_random_state=20250819 | notes=baseline conformal;cpu_sampler=process_avg;energy_na
+CSV_ROW: 1
+date=2025-09-03
+commit=343115a
+dataset=synth_tokens
+mode=baseline
+calibration=conformal
+drift_detector=ADWIN
+seed=20250819
+events=2000
+anomalies=0
+drifts=0
+TPR_at_1pct_FPR=1.0000
+p95_ms=9.9565
+p99_ms=11.2874
+eps=153.346
+CPU_pct=99.3
+energy_J=NA
+calib_target_fpr=0.01
+calib_window=5000
+warmup=200
+adwin_delta=0.002
+iso_n_estimators=200
+iso_max_samples=auto
+iso_random_state=20250819
+notes=baseline conformal;cpu_sampler=process_avg;energy_na
 
-2025-09-11 | date=2025-09-08 | commit=e5e9117 | dataset=synth_tokens | mode=baseline | calibration=conformal | drift_detector=ADWIN | seed=20250819 | events=2000 | anomalies=0 | drifts=0 | TPR_at_1pct_FPR=1.0000 | p95_ms=7.65388 | p99_ms=8.24206 | eps=139.999 | CPU_pct=97.4 | energy_J=NA | calib_target_fpr=0.01 | calib_window=5000 | warmup=200 | adwin_delta=0.002 | iso_n_estimators=200 | iso_max_samples=auto | iso_random_state=20250819 | notes=baseline conformal;cpu_sampler=process_avg;energy_na
+CSV_ROW: 2
+date=2025-09-08
+commit=e5e9117
+dataset=synth_tokens
+mode=baseline
+calibration=conformal
+drift_detector=ADWIN
+seed=20250819
+events=2000
+anomalies=0
+drifts=0
+TPR_at_1pct_FPR=1.0000
+p95_ms=7.65388
+p99_ms=8.24206
+eps=139.999
+CPU_pct=97.4
+energy_J=NA
+calib_target_fpr=0.01
+calib_window=5000
+warmup=200
+adwin_delta=0.002
+iso_n_estimators=200
+iso_max_samples=auto
+iso_random_state=20250819
+notes=baseline conformal;cpu_sampler=process_avg;energy_na
 
-2025-09-11 | date=2025-09-08 | commit=e5e9117 | dataset=mini_tokens | mode=baseline | calibration=conformal | drift_detector=ADWIN | seed=20250819 | events=5 | anomalies=0 | drifts=0 | TPR_at_1pct_FPR=NA | p95_ms=7.55385 | p99_ms=7.55385 | eps=133.869 | CPU_pct=NA | energy_J=NA | calib_target_fpr=0.01 | calib_window=5000 | warmup=200 | adwin_delta=0.002 | iso_n_estimators=200 | iso_max_samples=auto | iso_random_state=20250819 | notes=baseline conformal;cpu_sampler=process_avg;energy_na
+CSV_ROW: 3
+date=2025-09-08
+commit=e5e9117
+dataset=mini_tokens
+mode=baseline
+calibration=conformal
+drift_detector=ADWIN
+seed=20250819
+events=5
+anomalies=0
+drifts=0
+TPR_at_1pct_FPR=NA
+p95_ms=7.55385
+p99_ms=7.55385
+eps=133.869
+CPU_pct=NA
+energy_J=NA
+calib_target_fpr=0.01
+calib_window=5000
+warmup=200
+adwin_delta=0.002
+iso_n_estimators=200
+iso_max_samples=auto
+iso_random_state=20250819
+notes=baseline conformal;cpu_sampler=process_avg;energy_na
 
-2025-09-11 | date=2025-09-08 | commit=e5e9117 | dataset=synth_tokens | mode=transformer | calibration=conformal | drift_detector=ADWIN | seed=20250819 | events=2000 | anomalies=0 | drifts=0 | TPR_at_1pct_FPR=0.0000 | p95_ms=0.000925 | p99_ms=0.001315 | eps=1.92619e+06 | CPU_pct=91.3 | energy_J=NA | calib_target_fpr=0.01 | calib_window=5000 | warmup=200 | adwin_delta=0.002 | iso_n_estimators=NA | iso_max_samples=NA | iso_random_state=NA | notes=transformer conformal;cpu_sampler=process_avg;energy_na
+CSV_ROW: 4
+date=2025-09-08
+commit=e5e9117
+dataset=synth_tokens
+mode=transformer
+calibration=conformal
+drift_detector=ADWIN
+seed=20250819
+events=2000
+anomalies=0
+drifts=0
+TPR_at_1pct_FPR=0.0000
+p95_ms=0.000925
+p99_ms=0.001315
+eps=1.92619e+06
+CPU_pct=91.3
+energy_J=NA
+calib_target_fpr=0.01
+calib_window=5000
+warmup=200
+adwin_delta=0.002
+iso_n_estimators=NA
+iso_max_samples=NA
+iso_random_state=NA
+notes=transformer conformal;cpu_sampler=process_avg;energy_na
 
-2025-09-11 | date=2025-09-08 | commit=e5e9117 | dataset=mini_tokens | mode=transformer | calibration=conformal | drift_detector=ADWIN | seed=20250819 | events=5 | anomalies=0 | drifts=0 | TPR_at_1pct_FPR=NA | p95_ms=0.001223 | p99_ms=0.001223 | eps=797703 | CPU_pct=NA | energy_J=NA | calib_target_fpr=0.01 | calib_window=5000 | warmup=200 | adwin_delta=0.002 | iso_n_estimators=NA | iso_max_samples=NA | iso_random_state=NA | notes=transformer conformal;cpu_sampler=process_avg;energy_na
+CSV_ROW: 5
+date=2025-09-08
+commit=e5e9117
+dataset=mini_tokens
+mode=transformer
+calibration=conformal
+drift_detector=ADWIN
+seed=20250819
+events=5
+anomalies=0
+drifts=0
+TPR_at_1pct_FPR=NA
+p95_ms=0.001223
+p99_ms=0.001223
+eps=797703
+CPU_pct=NA
+energy_J=NA
+calib_target_fpr=0.01
+calib_window=5000
+warmup=200
+adwin_delta=0.002
+iso_n_estimators=NA
+iso_max_samples=NA
+iso_random_state=NA
+notes=transformer conformal;cpu_sampler=process_avg;energy_na
 
-2025-09-11 | date=2025-09-08 | commit=e5e9117 | dataset=synth_tokens | mode=baseline | calibration=conformal | drift_detector=ADWIN | seed=20250819 | events=2000 | anomalies=0 | drifts=0 | TPR_at_1pct_FPR=1.0000 | p95_ms=3.53423 | p99_ms=3.7775 | eps=314.283 | CPU_pct=97.1 | energy_J=NA | calib_target_fpr=0.01 | calib_window=5000 | warmup=200 | adwin_delta=0.002 | iso_n_estimators=200 | iso_max_samples=auto | iso_random_state=20250819 | notes=baseline conformal;cpu_sampler=process_avg;energy_na
+CSV_ROW: 6
+date=2025-09-08
+commit=e5e9117
+dataset=synth_tokens
+mode=baseline
+calibration=conformal
+drift_detector=ADWIN
+seed=20250819
+events=2000
+anomalies=0
+drifts=0
+TPR_at_1pct_FPR=1.0000
+p95_ms=3.53423
+p99_ms=3.7775
+eps=314.283
+CPU_pct=97.1
+energy_J=NA
+calib_target_fpr=0.01
+calib_window=5000
+warmup=200
+adwin_delta=0.002
+iso_n_estimators=200
+iso_max_samples=auto
+iso_random_state=20250819
+notes=baseline conformal;cpu_sampler=process_avg;energy_na
 
-2025-09-11 | date=2025-09-08 | commit=e5e9117 | dataset=mini_tokens | mode=baseline | calibration=conformal | drift_detector=ADWIN | seed=20250819 | events=5 | anomalies=0 | drifts=0 | TPR_at_1pct_FPR=NA | p95_ms=3.18551 | p99_ms=3.18551 | eps=315.387 | CPU_pct=NA | energy_J=NA | calib_target_fpr=0.01 | calib_window=5000 | warmup=200 | adwin_delta=0.002 | iso_n_estimators=200 | iso_max_samples=auto | iso_random_state=20250819 | notes=baseline conformal;cpu_sampler=process_avg;energy_na
+CSV_ROW: 7
+date=2025-09-08
+commit=e5e9117
+dataset=mini_tokens
+mode=baseline
+calibration=conformal
+drift_detector=ADWIN
+seed=20250819
+events=5
+anomalies=0
+drifts=0
+TPR_at_1pct_FPR=NA
+p95_ms=3.18551
+p99_ms=3.18551
+eps=315.387
+CPU_pct=NA
+energy_J=NA
+calib_target_fpr=0.01
+calib_window=5000
+warmup=200
+adwin_delta=0.002
+iso_n_estimators=200
+iso_max_samples=auto
+iso_random_state=20250819
+notes=baseline conformal;cpu_sampler=process_avg;energy_na
 
-2025-09-11 | date=2025-09-08 | commit=e5e9117 | dataset=synth_tokens | mode=baseline | calibration=no_calib | drift_detector=ADWIN | seed=20250819 | events=2000 | anomalies=0 | drifts=0 | TPR_at_1pct_FPR=1.0000 | p95_ms=3.84308 | p99_ms=4.44226 | eps=294.539 | CPU_pct=97 | energy_J=NA | calib_target_fpr=NA | calib_window=NA | warmup=200 | adwin_delta=0.002 | iso_n_estimators=200 | iso_max_samples=auto | iso_random_state=20250819 | notes=baseline no_calib;cpu_sampler=process_avg;energy_na
+CSV_ROW: 8
+date=2025-09-08
+commit=e5e9117
+dataset=synth_tokens
+mode=baseline
+calibration=no_calib
+drift_detector=ADWIN
+seed=20250819
+events=2000
+anomalies=0
+drifts=0
+TPR_at_1pct_FPR=1.0000
+p95_ms=3.84308
+p99_ms=4.44226
+eps=294.539
+CPU_pct=97
+energy_J=NA
+calib_target_fpr=NA
+calib_window=NA
+warmup=200
+adwin_delta=0.002
+iso_n_estimators=200
+iso_max_samples=auto
+iso_random_state=20250819
+notes=baseline no_calib;cpu_sampler=process_avg;energy_na
 
-2025-09-11 | date=2025-09-08 | commit=e5e9117 | dataset=mini_tokens | mode=baseline | calibration=no_calib | drift_detector=ADWIN | seed=20250819 | events=5 | anomalies=0 | drifts=0 | TPR_at_1pct_FPR=NA | p95_ms=3.51166 | p99_ms=3.51166 | eps=286.892 | CPU_pct=NA | energy_J=NA | calib_target_fpr=NA | calib_window=NA | warmup=200 | adwin_delta=0.002 | iso_n_estimators=200 | iso_max_samples=auto | iso_random_state=20250819 | notes=baseline no_calib;cpu_sampler=process_avg;energy_na
+CSV_ROW: 9
+date=2025-09-08
+commit=e5e9117
+dataset=mini_tokens
+mode=baseline
+calibration=no_calib
+drift_detector=ADWIN
+seed=20250819
+events=5
+anomalies=0
+drifts=0
+TPR_at_1pct_FPR=NA
+p95_ms=3.51166
+p99_ms=3.51166
+eps=286.892
+CPU_pct=NA
+energy_J=NA
+calib_target_fpr=NA
+calib_window=NA
+warmup=200
+adwin_delta=0.002
+iso_n_estimators=200
+iso_max_samples=auto
+iso_random_state=20250819
+notes=baseline no_calib;cpu_sampler=process_avg;energy_na
 
-2025-09-11 | date=2025-09-08 | commit=e5e9117 | dataset=synth_tokens | mode=transformer | calibration=conformal | drift_detector=ADWIN | seed=20250819 | events=2000 | anomalies=0 | drifts=0 | TPR_at_1pct_FPR=0.0000 | p95_ms=0.00034 | p99_ms=0.000485 | eps=4.65214e+06 | CPU_pct=92.5 | energy_J=NA | calib_target_fpr=0.01 | calib_window=5000 | warmup=200 | adwin_delta=0.002 | iso_n_estimators=NA | iso_max_samples=NA | iso_random_state=NA | notes=transformer conformal;cpu_sampler=process_avg;energy_na
+CSV_ROW: 10
+date=2025-09-08
+commit=e5e9117
+dataset=synth_tokens
+mode=transformer
+calibration=conformal
+drift_detector=ADWIN
+seed=20250819
+events=2000
+anomalies=0
+drifts=0
+TPR_at_1pct_FPR=0.0000
+p95_ms=0.00034
+p99_ms=0.000485
+eps=4.65214e+06
+CPU_pct=92.5
+energy_J=NA
+calib_target_fpr=0.01
+calib_window=5000
+warmup=200
+adwin_delta=0.002
+iso_n_estimators=NA
+iso_max_samples=NA
+iso_random_state=NA
+notes=transformer conformal;cpu_sampler=process_avg;energy_na
 
-2025-09-11 | date=2025-09-08 | commit=e5e9117 | dataset=mini_tokens | mode=transformer | calibration=conformal | drift_detector=ADWIN | seed=20250819 | events=5 | anomalies=0 | drifts=0 | TPR_at_1pct_FPR=NA | p95_ms=0.000567 | p99_ms=0.000567 | eps=1.62866e+06 | CPU_pct=NA | energy_J=NA | calib_target_fpr=0.01 | calib_window=5000 | warmup=200 | adwin_delta=0.002 | iso_n_estimators=NA | iso_max_samples=NA | iso_random_state=NA | notes=transformer conformal;cpu_sampler=process_avg;energy_na
+CSV_ROW: 11
+date=2025-09-08
+commit=e5e9117
+dataset=mini_tokens
+mode=transformer
+calibration=conformal
+drift_detector=ADWIN
+seed=20250819
+events=5
+anomalies=0
+drifts=0
+TPR_at_1pct_FPR=NA
+p95_ms=0.000567
+p99_ms=0.000567
+eps=1.62866e+06
+CPU_pct=NA
+energy_J=NA
+calib_target_fpr=0.01
+calib_window=5000
+warmup=200
+adwin_delta=0.002
+iso_n_estimators=NA
+iso_max_samples=NA
+iso_random_state=NA
+notes=transformer conformal;cpu_sampler=process_avg;energy_na
 
-2025-09-11 | date=2025-09-08 | commit=e5e9117 | dataset=synth_tokens | mode=transformer | calibration=no_calib | drift_detector=ADWIN | seed=20250819 | events=2000 | anomalies=0 | drifts=0 | TPR_at_1pct_FPR=0.0000 | p95_ms=0.000216 | p99_ms=0.000391 | eps=4.82354e+06 | CPU_pct=237.7 | energy_J=NA | calib_target_fpr=NA | calib_window=NA | warmup=200 | adwin_delta=0.002 | iso_n_estimators=NA | iso_max_samples=NA | iso_random_state=NA | notes=transformer no_calib;cpu_sampler=process_avg;energy_na
+CSV_ROW: 12
+date=2025-09-08
+commit=e5e9117
+dataset=synth_tokens
+mode=transformer
+calibration=no_calib
+drift_detector=ADWIN
+seed=20250819
+events=2000
+anomalies=0
+drifts=0
+TPR_at_1pct_FPR=0.0000
+p95_ms=0.000216
+p99_ms=0.000391
+eps=4.82354e+06
+CPU_pct=237.7
+energy_J=NA
+calib_target_fpr=NA
+calib_window=NA
+warmup=200
+adwin_delta=0.002
+iso_n_estimators=NA
+iso_max_samples=NA
+iso_random_state=NA
+notes=transformer no_calib;cpu_sampler=process_avg;energy_na
 
-2025-09-11 | date=2025-09-08 | commit=e5e9117 | dataset=mini_tokens | mode=transformer | calibration=no_calib | drift_detector=ADWIN | seed=20250819 | events=5 | anomalies=0 | drifts=0 | TPR_at_1pct_FPR=NA | p95_ms=0.000535 | p99_ms=0.000535 | eps=1.44886e+06 | CPU_pct=NA | energy_J=NA | calib_target_fpr=NA | calib_window=NA | warmup=200 | adwin_delta=0.002 | iso_n_estimators=NA | iso_max_samples=NA | iso_random_state=NA | notes=transformer no_calib;cpu_sampler=process_avg;energy_na
+CSV_ROW: 13
+date=2025-09-08
+commit=e5e9117
+dataset=mini_tokens
+mode=transformer
+calibration=no_calib
+drift_detector=ADWIN
+seed=20250819
+events=5
+anomalies=0
+drifts=0
+TPR_at_1pct_FPR=NA
+p95_ms=0.000535
+p99_ms=0.000535
+eps=1.44886e+06
+CPU_pct=NA
+energy_J=NA
+calib_target_fpr=NA
+calib_window=NA
+warmup=200
+adwin_delta=0.002
+iso_n_estimators=NA
+iso_max_samples=NA
+iso_random_state=NA
+notes=transformer no_calib;cpu_sampler=process_avg;energy_na
