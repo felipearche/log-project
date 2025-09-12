@@ -1,6 +1,6 @@
 # log-project Streaming, Drift-Aware Log Anomaly Detection (Calibrated, Reproducible)
 
-[![CI](https://github.com/felipearche/log-project/actions/workflows/ci.yml/badge.svg?branch=master&event=push)](https://github.com/felipearche/log-project/actions/workflows/ci.yml)
+[![CI](https://github.com/felipearche/log-project/actions/workflows/ci.yml/badge.svg?branch=master&event=push)](https://github.com/felipearche/log-project/actions/workflows/ci.yml) [![Release](https://img.shields.io/github/v/release/felipearche/log-project?include_prereleases&sort=semver)](https://github.com/felipearche/log-project/releases/latest)
 
 
 ## Quickstart
@@ -363,7 +363,7 @@ fsck.txt
 ## 12) Testing
 Covers:
 - Tokenizer masking and lowercase.
-- Summary schema (24 columns; p95_ms â‰¤ p99_ms)
+- Summary schema (24 columns; p95_ms <= p99_ms)
 - Calibration docs / ASCII.
 - Drift conformal reset (smoke)
 - Determinism (smoke)
@@ -680,7 +680,7 @@ Exceptions: `data/mini_tokens.json`, `data/synth_labels.json`, `data/synth_token
 
 ---
 
-## Appendix A — Reproducibility checklist (one glance)
+## Appendix A - Reproducibility checklist (one glance)
 
 - **Environment.** Use Python 3.11; prefer Docker for parity.
 - **Install dev tools.**
@@ -708,7 +708,7 @@ Exceptions: `data/mini_tokens.json`, `data/synth_labels.json`, `data/synth_token
   ```
 - **Figures (PNG preferred).** Regenerate locally and commit PNGs; keep SVGs uncommitted unless necessary.
 
-## Appendix B — Troubleshooting
+## Appendix B - Troubleshooting
 
 - **CRLF or BOM detected.** Run:
   ```powershell
@@ -716,7 +716,7 @@ Exceptions: `data/mini_tokens.json`, `data/synth_labels.json`, `data/synth_token
   # Re-run audit to confirm:
   python scripts\audit_repo.py
   ```
-- **“Found X CSV_ROW but Y rows in summary.”** Rebuild provenance:
+- **"Found X CSV_ROW but Y rows in summary."** Rebuild provenance:
   ```powershell
   .\scripts\rebuild_provenance.ps1
   ```
@@ -729,23 +729,23 @@ Exceptions: `data/mini_tokens.json`, `data/synth_labels.json`, `data/synth_token
   Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass -Force
   ```
 
-## Appendix C — Support matrix
+## Appendix C - Support matrix
 
 | OS                | Python | Notes                                                  |
 |-------------------|--------|--------------------------------------------------------|
 | Windows 10/11     | 3.11   | Primary dev target; PowerShell commands documented.   |
 | Ubuntu 22.04 LTS  | 3.11   | CI target; parity with Windows via Docker.            |
 
-## Appendix D — Release packaging checklist
+## Appendix D - Release packaging checklist
 
-1. `pre-commit run --all-files`, `mypy .`, `pytest -q` — all green.
-2. `python scripts/audit_repo.py` — **All checks passed.**
+1. `pre-commit run --all-files`, `mypy .`, `pytest -q` - all green.
+2. `python scripts/audit_repo.py` - **All checks passed.**
 3. Rebuild provenance; confirm `CSV_ROW:` count == data rows.
 4. Regenerate figures; commit **PNGs only**.
 5. Update `CITATION.cff` if version/date changed.
 6. Tag release and (if applicable) `git archive` into `dist/` (ignored by Git).
 
-## Appendix E — FAQ (short)
+## Appendix E - FAQ (short)
 
 **Q. Why are protected JSONs missing a final newline?**
 A. They are byte-for-byte tracked to support SHA-256 integrity verification via `data/HASHES.txt`.
