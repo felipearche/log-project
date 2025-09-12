@@ -2,14 +2,14 @@ cff-version: 1.2.0
 message: If you use this software, please cite it as below.
 title: 'log-project: Streaming, Drift-Aware Log Anomaly Detection (Calibrated, Reproducible)'
 type: software
-version: 0.1.1
+version: 0.1.2
 date-released: '2025-09-03'
 repository-code: https://github.com/felipearche/log-project
 license: MIT
-abstract: 'A streaming log anomaly detector that scores each log line (TF‑IDF + IsolationForest),
-  targets a 1% false‑positive rate via Sliding Conformal calibration, and adapts to distribution
+abstract: 'A streaming log anomaly detector that scores each log line (TFâ€‘IDF + IsolationForest),
+  targets a 1% falseâ€‘positive rate via Sliding Conformal calibration, and adapts to distribution
   drift with ADWIN-triggered recalibration. The project emphasizes strict, auditable reproducibility:
-  UTF‑8/LF policy, byte‑exact protected JSONs, canonical data/HASHES.txt, 24‑column experiments/summary.csv,
+  UTFâ€‘8/LF policy, byteâ€‘exact protected JSONs, canonical data/HASHES.txt, 24â€‘column experiments/summary.csv,
   and CI-pinned environments.'
 keywords:
 - log anomaly detection
@@ -17,7 +17,7 @@ keywords:
 - conformal prediction
 - ADWIN
 - reproducibility
-- TF‑IDF
+- TFâ€‘IDF
 - IsolationForest
 - Python
 authors:
@@ -29,6 +29,6 @@ preferred-citation:
   authors:
   - given-names: Felipe
     family-names: Arche
-  version: 0.1.1
+  version: 0.1.2
   date-released: '2025-09-03'
   url: https://github.com/felipearche/log-project
