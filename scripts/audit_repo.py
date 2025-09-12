@@ -147,7 +147,7 @@ def check_hashes() -> None:
     for i, ln in enumerate(lines, 1):
         m = exp_three_fields.match(ln)
         if not m:
-            fail(f"HASHES format error on line {i}: expected 'pathÃ¢ÂÂ Ã¢ÂÂ sizeÃ¢ÂÂ Ã¢ÂÂ SHA256' with uppercase hex.")
+            fail(f"HASHES format error on line {i}: expected 'path  size  SHA256' with uppercase hex.")
         assert m is not None
         rel_path, size_s, hexx = m.groups()
         f = path(rel_path)
