@@ -49,7 +49,7 @@ Reproducibility pillars: **pinned environment** (`env/requirements.lock`), **Doc
 
 ## 0a) QA gates (pre-commit, mypy, pytest)
 
-- pre-commit: ruff-check and ruff-format (housekeeping hooks can be enabled later if needed).
+- pre-commit: ruff-check, ruff-format, and housekeeping hooks (LF/BOM/EOF guards, YAML/conflict/private-key/large-file checks; protected JSONs excluded from EOF-fixer).
 - mypy: light typing gate via mypy.ini (Python 3.11, ignore_missing_imports = True, warn_unused_ignores = True). CI runs "mypy src".
 - pytest: 6 tests (+ conftest helper) covering tokenizer masks, summary schema (24 cols), calibration docs/ASCII, ADWIN→conformal reset, determinism, and smoke.
 
