@@ -53,3 +53,4 @@ figures/*.svg
 *.xdv
 *.bcf
 *.run.xml
+paper-repo/
