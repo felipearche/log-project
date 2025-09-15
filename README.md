@@ -36,7 +36,7 @@ A real-time log anomaly detector that:
 3) adapts to **drift** using **ADWIN** and **resets the calibrator on detected changes**.
 
 Every run appends **one canonical row** to `experiments/summary.csv` (24-column schema).
-Reproducibility pillars: **pinned environment** (`env/requirements.lock`), **Docker parity**, **commit capture** (`COMMIT` env → git short SHA → NA fallback), **UTF-8/LF policy**, and **strict provenance** (one block per CSV row).
+Reproducibility pillars: **pinned environment** (`env/requirements.lock`), **Docker parity**, **commit capture** (`COMMIT` env â†’ git short SHA â†’ NA fallback), **UTF-8/LF policy**, and **strict provenance** (one block per CSV row).
 
 > Portability: always mount with `-v "${PWD}:/app"` (quoted) so it works even if your path contains spaces.
 > TPR formatting: for new rows, record `TPR_at_1pct_FPR` with **four decimals** (e.g., `1.0000`); leave older rows unchanged; use **literal `NA`** for unlabeled datasets.
@@ -49,7 +49,7 @@ Reproducibility pillars: **pinned environment** (`env/requirements.lock`), **Doc
 - mypy: light typing gate via mypy.ini (Python 3.11, ignore_missing_imports = True, warn_unused_ignores = True). CI runs "mypy src".
 - pytest: tests cover data integrity, drift resets, determinism, and smoke; see CI for the current count.
 
-> Policy: run all three locally before pushing: pre-commit run --all-files → mypy src → pytest -q.
+> Policy: run all three locally before pushing: pre-commit run --all-files â†’ mypy src â†’ pytest -q.
 
 ---
 
@@ -121,7 +121,7 @@ docker run --rm -v "${PWD}:/app" -e COMMIT=$env:COMMIT log-project:latest `
 
 ### 3.1 Table
 
-**Calibrated-only snapshot (from `README_TABLE.txt`):**
+**Calibrated-only snapshot (subset of `README_TABLE.txt`):**
 
 | dataset | mode | calibration | TPR@1%FPR | p95_ms | p99_ms | eps |
 |---|---|---|---|---|---|---|
@@ -136,7 +136,7 @@ docker run --rm -v "${PWD}:/app" -e COMMIT=$env:COMMIT log-project:latest `
 docker run --rm -v "${PWD}:/app" -e COMMIT=$env:COMMIT log-project:latest `
  python scripts/make_readme_table.py --csv experiments/summary.csv --out README_TABLE.txt
 
-# (Optional) normalize "nan" → "NA" if any appear in the Markdown table output
+# (Optional) normalize "nan" â†’ "NA" if any appear in the Markdown table output
 $utf8NoBom = New-Object System.Text.UTF8Encoding($false)
 $content = (Get-Content README_TABLE.txt -Raw) -replace "\bnan\b","NA"
 [IO.File]::WriteAllText("README_TABLE.txt", $content + "`n", $utf8NoBom)
@@ -206,7 +206,7 @@ Track every dataset in three places:
 3. `docs/PROVENANCE.txt` one block per run, containing the **verbatim** `CSV_ROW:`.
 
 - **Scope clarification (2025-09-03):** `data/` now contains **artifact data only**.
- Non-artifacts were relocated (`data/make_synth.py` → `scripts/`, `data/PROVENANCE.txt` → `docs/PROVENANCE.txt`, `data/DATASETS.md` → `docs/DATASETS.md`). `data/HASHES.txt` covers only artifact JSON/log files; docs/scripts are excluded.
+ Non-artifacts were relocated (`data/make_synth.py` â†’ `scripts/`, `data/PROVENANCE.txt` â†’ `docs/PROVENANCE.txt`, `data/DATASETS.md` â†’ `docs/DATASETS.md`). `data/HASHES.txt` covers only artifact JSON/log files; docs/scripts are excluded.
 
 **Regenerate hashes (preferred):**
 ```powershell
@@ -279,7 +279,7 @@ date,commit,dataset,mode,calibration,drift_detector,seed,events,anomalies,drifts
 --seed 20250819
 --sleep_ms 0
 ```
-**Drift handling:** On ADWIN change → increment drift count, call `calib.reset()`, continue.
+**Drift handling:** On ADWIN change â†’ increment drift count, call `calib.reset()`, continue.
 For unlabeled datasets, `TPR_at_1pct_FPR` is the literal `NA`. CPU metric: `CPU_pct` is the mean **process** CPU%.
 
 ---
@@ -417,11 +417,11 @@ Verify: one new CSV row + matching provenance block.
 ---
 
 ## 15) Metrics (definitions)
-- **TPR_at_1pct_FPR** → TPR computed at the score threshold set by the 99th percentile of negatives (target FPR=1%).
-- **p95_ms**, **p99_ms** → end-to-end per-event latency percentiles.
-- **eps** → throughput, events per second.
-- **CPU_pct** → process average CPU% during the run.
-- **drifts** → ADWIN change detections (each triggers `calib.reset()`).
+- **TPR_at_1pct_FPR** â†’ TPR computed at the score threshold set by the 99th percentile of negatives (target FPR=1%).
+- **p95_ms**, **p99_ms** â†’ end-to-end per-event latency percentiles.
+- **eps** â†’ throughput, events per second.
+- **CPU_pct** â†’ process average CPU% during the run.
+- **drifts** â†’ ADWIN change detections (each triggers `calib.reset()`).
 
 ---
 
@@ -544,11 +544,11 @@ jobs:
 - **`AttributeError: "SlidingConformal" object has no attribute "size"`:** Update to the latest code (the calibrator implements `size()` for compatibility with `src/stream.py`).
 
 Other common issues:
-- **Docker mount issues on Windows** → Always quote the mount: `-v "${PWD}:/app"`.
-- **Table shows `nan`** → Regenerate the table (see 3.1); the generator renders textual `nan` as `NA`.
-- **TPR formatting varies (`1` vs `1.0000`)** → Use `scripts/normalize_tpr_lastrow.py` after runs; don't rewrite historical rows.
-- **CRLF→LF / missing final newline** `scripts/normalize_line_endings.ps1` fixes this across the repo.
-- **PowerShell 5.1 vs 7** → Scripts are 5.1-compatible; prefer **pwsh 7+** for consistency.
+- **Docker mount issues on Windows** â†’ Always quote the mount: `-v "${PWD}:/app"`.
+- **Table shows `nan`** â†’ Regenerate the table (see 3.1); the generator renders textual `nan` as `NA`.
+- **TPR formatting varies (`1` vs `1.0000`)** â†’ Use `scripts/normalize_tpr_lastrow.py` after runs; don't rewrite historical rows.
+- **CRLFâ†’LF / missing final newline** `scripts/normalize_line_endings.ps1` fixes this across the repo.
+- **PowerShell 5.1 vs 7** â†’ Scripts are 5.1-compatible; prefer **pwsh 7+** for consistency.
 
 ---
 
@@ -594,18 +594,18 @@ repository-code: https://github.com/felipearche/log-project
 
 ## Maintenance summaries (latest)
 - **2025-09-05**: Documentation polish.
-  → README: added **Quickstart** and **At a glance** sections; stabilized CI badge to `master`
-  → Added Docker tip for running **pre-commit** in a container (install `git` and mark `/app` as a safe directory)
-  → No code or data changes; tests: 6/6 passing in container
+  â†’ README: added **Quickstart** and **At a glance** sections; stabilized CI badge to `master`
+  â†’ Added Docker tip for running **pre-commit** in a container (install `git` and mark `/app` as a safe directory)
+  â†’ No code or data changes; tests: 6/6 passing in container
 
 - **2025-09-05**: CI hardening (PR #2 squash-merged)
-  → Pinned GitHub Actions by SHA; added `scripts/check_summary.py` schema/format validator
-  → Docker base pinned by digest
-  → Coverage gate set to 0 temporarily (will raise after more tests)
-  → Runtime installs: Windows now uses hash-locked `env/requirements.txt`; Ubuntu uses non-hash `env/requirements.lock` until Linux hashes lock is generated
-  → Dev tools installs are hash-locked via `env/dev-requirements.lock` on both OSes
-  → Branch protection rules intentionally disabled for now; will re-enable later
-  → PROVENANCE updated with PR #2 entry and a correction clarifying coverage=0
+  â†’ Pinned GitHub Actions by SHA; added `scripts/check_summary.py` schema/format validator
+  â†’ Docker base pinned by digest
+  â†’ Coverage gate set to 0 temporarily (will raise after more tests)
+  â†’ Runtime installs: Windows now uses hash-locked `env/requirements.txt`; Ubuntu uses non-hash `env/requirements.lock` until Linux hashes lock is generated
+  â†’ Dev tools installs are hash-locked via `env/dev-requirements.lock` on both OSes
+  â†’ Branch protection rules intentionally disabled for now; will re-enable later
+  â†’ PROVENANCE updated with PR #2 entry and a correction clarifying coverage=0
 
 - **2025-08-31**: Encoding/EOL compliance - Added a single trailing LF to `scripts/make_release.ps1` to conform to the repo policy (UTF8 no BOM, LF, single trailing newline). See 11 for the policy and normalization script.; CPU_pct backfill (historic) - Backfilled two early `CPU_pct` blanks to the literal `NA` in `experiments/summary.csv` for full-column coverage and clarity. Immediately rebuilt `docs/PROVENANCE.txt` to preserve the strict 1:1 mapping with `CSV_ROW:` lines (postcheck: CSV rows=26; PROVENANCE CSV_ROW=26).; Tests - Post-change test suite: 4 passed.
 
@@ -614,7 +614,7 @@ repository-code: https://github.com/felipearche/log-project
 - **2025-09-03**: Repository hygiene and provenance scope - Moved non-artifacts out of `data/` (`scripts/`, `docs/`); updated references to `docs/PROVENANCE.txt`; added `.gitattributes` (LF policy; keep protected JSONs byte-exact); ignored `.ruff_cache/` in `.gitignore`. Provenance 1:1 mapping unchanged; metrics unchanged.
 
 - **2025-09-03**: **Assets and attributes**.
- - Normalized 3 SVGs in `figures/` (CRLF→LF; stripped trailing whitespace; UTF-8 no BOM; single final LF).
+ - Normalized 3 SVGs in `figures/` (CRLFâ†’LF; stripped trailing whitespace; UTF-8 no BOM; single final LF).
  - Updated `.gitattributes` to mark `*.png` as **binary** (prevents EOL normalization and diffs on images); normalized `.gitattributes` to **LF**.
  - Added a dated PROVENANCE note recording the actual Docker base image and the above maintenance.
  - Hooks: all passing; tests: unchanged; metrics/results: unchanged.
