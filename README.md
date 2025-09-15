@@ -3,36 +3,32 @@
 [![CI](https://github.com/felipearche/log-project/actions/workflows/ci.yml/badge.svg?branch=master&event=push)](https://github.com/felipearche/log-project/actions/workflows/ci.yml) [![Release](https://img.shields.io/github/v/release/felipearche/log-project?include_prereleases&sort=semver)](https://github.com/felipearche/log-project/releases/latest)
 
 
-## Quickstart
+## Quickstart (Docker-first, recommended)
 
+**No local Python required.** This mirrors CI for exact parity.
 
-> For a deeper walkthrough and troubleshooting, see **[docs/HOWTO.md](docs/HOWTO.md)**.
-
-### Windows (PowerShell)
+**Windows (PowerShell)**
 ```powershell
-python -m venv .venv; .\.venv\Scripts\Activate.ps1
+docker run --rm -v "${PWD}:/app" -w /app python:3.11.9-slim /bin/bash -lc `
+  "pip install -r env/dev-requirements.lock && pytest -q"
+```
+
+**Linux/macOS (bash/zsh)**
+```bash
+docker run --rm -v "${PWD}:/app" -w /app python:3.11.9-slim /bin/bash -lc \
+  "pip install -r env/dev-requirements.lock && pytest -q"
+```
+
+<details>
+<summary><strong>Optional: local venv (Windows/PowerShell)</strong></summary>
+
+```powershell
+py -3.11 -m venv .venv
+.\.venv\Scripts\Activate.ps1
 pip install -r env/dev-requirements.lock
 pytest -q
 ```
-
-### Docker (no local Python needed)
-```bash
-docker run --rm -v "${PWD}:/app" -w /app python:3.11.9-slim /bin/bash -lc   "pip install -r env/dev-requirements.lock && pytest -q"
-```
-
-### What this runs
-- Installs pinned dev toolchain.
-- Runs schema/format guard for `experiments/summary.csv` (via tests).
-- Executes the test suite with coverage gate = 0 (temporary).
-
-**At a glance**
-- Model: TF-IDF + IsolationForest + Sliding Conformal; ADWIN resets for drift.
-- Reproducibility: Docker base pinned by digest; CI actions pinned by SHA.
-- Provenance: `data/HASHES.txt` (size + SHA-256), 24-column `experiments/summary.csv`.
-- Hygiene: UTF-8 (no BOM), LF-only; protected JSONs byte-exact (no trailing LF).
-- CI: schema/format validator for `summary.csv`; Windows runtime hash-locked.
-
-
+</details>
 ## 0) Overview
 A real-time log anomaly detector that:
 1) scores each log line with a lightweight baseline (**TF-IDF + IsolationForest**),
@@ -51,7 +47,7 @@ Reproducibility pillars: **pinned environment** (`env/requirements.lock`), **Doc
 
 - pre-commit: ruff-check, ruff-format, and housekeeping hooks (LF/BOM/EOF guards, YAML/conflict/private-key/large-file checks; protected JSONs excluded from EOF-fixer).
 - mypy: light typing gate via mypy.ini (Python 3.11, ignore_missing_imports = True, warn_unused_ignores = True). CI runs "mypy src".
-- pytest: 6 tests (+ conftest helper) covering tokenizer masks, summary schema (24 cols), calibration docs/ASCII, ADWIN→conformal reset, determinism, and smoke.
+- pytest: tests cover data integrity, drift resets, determinism, and smoke; see CI for the current count.
 
 > Policy: run all three locally before pushing: pre-commit run --all-files → mypy src → pytest -q.
 
