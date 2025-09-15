@@ -54,3 +54,5 @@ figures/*.svg
 *.bcf
 *.run.xml
 paper-repo/
+
+log-project-paper-package/
