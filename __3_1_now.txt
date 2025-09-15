@@ -1,0 +1,24 @@
+### 3.1 Table
+
+**Calibrated-only snapshot (from `README_TABLE.txt`):**
+
+| dataset | mode | calibration | TPR@1%FPR | p95_ms | p99_ms | eps |
+|---|---|---|---|---|---|---|
+| synth_tokens | baseline | conformal | 1.0000 | 3.2 | 3.4 | 328.5 |
+| synth_tokens | transformer | conformal | 0.9833 | 1.6 | 1.9 | 731.6 |
+| mini_tokens | baseline | conformal | NA | 7.4 | 7.4 | 119.0 |
+| mini_tokens | transformer | conformal | NA | 1.5 | 1.5 | 454.6 |
+
+- Canonical table file: `README_TABLE.txt` (generated below).
+
+```powershell
+docker run --rm -v "${PWD}:/app" -e COMMIT=$env:COMMIT log-project:latest `
+ python scripts/make_readme_table.py --csv experiments/summary.csv --out README_TABLE.txt
+
+# (Optional) normalize "nan" → "NA" if any appear in the Markdown table output
+$utf8NoBom = New-Object System.Text.UTF8Encoding($false)
+$content = (Get-Content README_TABLE.txt -Raw) -replace "\bnan\b","NA"
+[IO.File]::WriteAllText("README_TABLE.txt", $content + "`n", $utf8NoBom)
+```
+
+> The generator shows the **latest row per (dataset, mode, calibration)**. TPR is formatted to **4 decimals**; p95/p99/eps to **1 decimal**; any textual `nan` is rendered as **NA**.
