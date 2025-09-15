@@ -53,6 +53,42 @@ figures/*.svg
 *.xdv
 *.bcf
 *.run.xml
-paper-repo/
+# disabled: paper-repo/
 
 log-project-paper-package/
+# LaTeX build in paper-repo (keep repo clean)
+# disabled: paper-repo/*.aux
+# disabled: paper-repo/*.bbl
+# disabled: paper-repo/*.blg
+# disabled: paper-repo/*.log
+# disabled: paper-repo/*.out
+# disabled: paper-repo/*.toc
+# disabled: paper-repo/*.lof
+# disabled: paper-repo/*.lot
+# disabled: paper-repo/*.synctex.gz
+# disabled: paper-repo/*.fls
+# disabled: paper-repo/*.fdb_latexmk
+# disabled: paper-repo/*.bcf
+# disabled: paper-repo/*.run.xml
+# disabled: paper-repo/*.xdv
+# disabled: paper-repo/*.nav
+# disabled: paper-repo/*.snm
+# disabled: paper-repo/*.vrb
+# LaTeX build in paper-repo (keep repo clean)
+paper-repo/*.aux
+paper-repo/*.bbl
+paper-repo/*.blg
+paper-repo/*.log
+paper-repo/*.out
+paper-repo/*.toc
+paper-repo/*.lof
+paper-repo/*.lot
+paper-repo/*.synctex.gz
+paper-repo/*.fls
+paper-repo/*.fdb_latexmk
+paper-repo/*.bcf
+paper-repo/*.run.xml
+paper-repo/*.xdv
+paper-repo/*.nav
+paper-repo/*.snm
+paper-repo/*.vrb
