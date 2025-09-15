@@ -647,7 +647,7 @@ mkdir dist 2>$null
 git archive --format=zip --output=dist/log-project-src.zip HEAD
 
 # Or archive a specific tag for reproducibility:
-# git archive --format=zip --output=dist/log-project-v0.1.1.zip v0.1.1
+# git archive --format=zip --output=dist/log-project-<TAG>.zip <TAG>
 ```
 
 **Bash**
@@ -662,7 +662,7 @@ mkdir -p dist
 git archive --format=zip --output=dist/log-project-src.zip HEAD
 
 # Or archive a specific tag for reproducibility:
-# git archive --format=zip --output=dist/log-project-v0.1.1.zip v0.1.1
+# git archive --format=zip --output=dist/log-project-<TAG>.zip <TAG>
 ```
 
 Notes:
