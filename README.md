@@ -125,10 +125,10 @@ docker run --rm -v "${PWD}:/app" -e COMMIT=$env:COMMIT log-project:latest `
 
 | dataset | mode | calibration | TPR@1%FPR | p95_ms | p99_ms | eps |
 |---|---|---|---|---|---|---|
-| synth_tokens | baseline | conformal | 1.0000 | 3.2 | 3.4 | 328.5 |
-| synth_tokens | transformer | conformal | 0.9833 | 1.6 | 1.9 | 731.6 |
-| mini_tokens | baseline | conformal | NA | 7.4 | 7.4 | 119.0 |
-| mini_tokens | transformer | conformal | NA | 1.5 | 1.5 | 454.6 |
+| synth_tokens | baseline | conformal | 1.0000 | 3.5 | 3.8 | 314.3 |
+| synth_tokens | transformer | conformal | 0.0000 | 0.0 | 0.0 | 4652140.0 |
+| mini_tokens | baseline | conformal | NA | 3.2 | 3.2 | 315.4 |
+| mini_tokens | transformer | conformal | NA | 0.0 | 0.0 | 1628660.0 |
 
 - Canonical table file: `README_TABLE.txt` (generated below).
 
