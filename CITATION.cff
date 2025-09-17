@@ -1,1 +1,35 @@
-cff-version: 1.2.0message: If you use this software, please cite it as below.title: 'log-project: Streaming, Drift-Aware Log Anomaly Detection (Calibrated, Reproducible)'type: softwareversion: 0.1.3date-released: '2025-09-17'repository-code: https://github.com/felipearche/log-projectlicense: MITabstract: 'A streaming log anomaly detector that scores each log line (TF-IDF + IsolationForest),  targets a 1% false-positive rate via Sliding Conformal calibration, and adapts to distribution  drift with ADWIN-triggered recalibration. The project emphasizes strict, auditable reproducibility:  UTF-8/LF policy, byte-exact protected JSONs, canonical data/HASHES.txt, 24-column experiments/summary.csv,  and CI-pinned environments.'keywords:- log anomaly detection- streaming- conformal prediction- ADWIN- reproducibility- TF-IDF- IsolationForest- Pythonauthors:- given-names: Felipe  family-names: Archepreferred-citation:  type: software  title: log-project  authors:  - given-names: Felipe    family-names: Arche  version: 0.1.3  date-released: '2025-09-17'  url: https://github.com/felipearche/log-project
+cff-version: 1.2.0
+message: If you use this software, please cite it as below.
+title: 'log-project: Streaming, Drift-Aware Log Anomaly Detection (Calibrated, Reproducible)'
+type: software
+version: 0.1.3
+date-released: '2025-09-17'
+repository-code: https://github.com/felipearche/log-project
+license: MIT
+abstract: >
+  A streaming log anomaly detector that scores each log line (TF-IDF + IsolationForest),
+  targets a 1% false-positive rate via Sliding Conformal calibration, and adapts to
+  distribution drift with ADWIN-triggered recalibration. The project emphasizes strict,
+  auditable reproducibility: UTF-8/LF policy, byte-exact protected JSONs, canonical
+  data/HASHES.txt, 24-column experiments/summary.csv, and CI-pinned environments.
+keywords:
+  - log anomaly detection
+  - streaming
+  - conformal prediction
+  - ADWIN
+  - reproducibility
+  - TF-IDF
+  - IsolationForest
+  - Python
+authors:
+  - given-names: Felipe
+    family-names: Arche
+preferred-citation:
+  type: software
+  title: log-project
+  authors:
+    - given-names: Felipe
+      family-names: Arche
+  version: 0.1.3
+  date-released: '2025-09-17'
+  url: https://github.com/felipearche/log-project
