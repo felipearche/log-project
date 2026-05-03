@@ -89,11 +89,11 @@ We maintain a fixed-size ring buffer storing the last $W$ scores. At each time s
 
 The transformer encoder is intentionally tiny (few heads, few layers) and trained once offline on generic logs to learn token co-occurrence structure. In streaming mode we freeze weights and only update the calibrator. This keeps memory and CPU predictable while capturing patterns (e.g., templated vs.\ free-form lines) that sparse methods miss.
 
-\textbf{Feature extraction.} Each line is tokenized; dynamic substrings (e.g., numbers, UUID-like, hex) are masked to reduce spurious novelty. We build TF--IDF $n$-gram features~\cite{salton1988tfidf}. 
+\textbf{Feature extraction.} Each line is tokenized; dynamic substrings (e.g., numbers, UUID-like, hex) are masked to reduce spurious novelty. We build TF--IDF $n$-gram features~\cite{salton1988tfidf}.
 
-\textbf{Base detectors.} (i) TF--IDF + Isolation Forest (unsupervised, low memory); (ii) a tiny transformer scorer that drops into the same calibration/drift hooks. Scores from either act as nonconformity. 
+\textbf{Base detectors.} (i) TF--IDF + Isolation Forest (unsupervised, low memory); (ii) a tiny transformer scorer that drops into the same calibration/drift hooks. Scores from either act as nonconformity.
 
-\textbf{Sliding Conformal.} Maintain a buffer of size $W$ with scores assumed exchangeable over short windows. After warmup, threshold by the $(1-\alpha)$ empirical quantile. 
+\textbf{Sliding Conformal.} Maintain a buffer of size $W$ with scores assumed exchangeable over short windows. After warmup, threshold by the $(1-\alpha)$ empirical quantile.
 
 \textbf{Drift handling.} ADWIN maintains an adaptive window and signals a change when subwindows differ ~\cite{bifet2007adwin}. On alarm, clear the calibration buffer (and optionally reinit $f$) to quickly realign thresholds.
 \section{Algorithm (Streaming Loop)}
@@ -126,7 +126,7 @@ docker run --rm -v "${PWD}:/app" -e COMMIT=$env:COMMIT log-project:latest \\   p
 Figures \path{latency_p95 (ms)_ms.png}, \path{latency_p99 (ms)_ms.png}, and \path{throughput_eps.png} are reused verbatim from the repository.
 \section{Datasets and Metrics}
 
-\paragraph{Datasets.} We use two repository-hosted tokenized datasets included under \texttt{data/} in the release and mirrored in CI: 
+\paragraph{Datasets.} We use two repository-hosted tokenized datasets included under \texttt{data/} in the release and mirrored in CI:
 \texttt{synth\_tokens} (labeled, for TPR estimation) and \texttt{mini\_tokens}  (unlabeled, sized for smoketests and performance measurements). Both are small by design so that results are reproducible on commodity laptops and in CI.
 \paragraph{Metrics.} We report (a) \textbf{latency} p95 (ms) and p99 (ms) in milliseconds measured end-to-end per line; (b) \textbf{throughput} in processed events per second (\emph{eps}); and (c) \textbf{TPR@1\%FPR} when labels are available. Calibration uses a sliding window of recent scores of size $W$ and the empirical $(1{-}\alpha)$ quantile as threshold; unless otherwise stated we target $\alpha{=}0.01$. Drift is monitored with ADWIN; upon a change signal the calibration buffer is reset so thresholds adapt quickly without manual retuning.
 \paragraph{Provenance.} Each run appends a single row (24 fields) to \texttt{experiments/summary.csv} (commit, config, $W$, $\alpha$, ADWIN $\delta$, latency stats, eps, etc.) and a matching block to \texttt{docs/PROVENANCE.txt}. Plots and README tables are generated directly from the CSV to avoid manual transcription.
@@ -147,16 +147,16 @@ We include simple ablations/sensitivity checks; derivative plots are kept under 
 \resizebox{\linewidth}{!}{%
 \begin{tabular}{llllrrr}
 \toprule
-dataset & mode & calibration & TPR@1\%FPR & p95 (ms) & p99 (ms) & eps \\ 
+dataset & mode & calibration & TPR@1\%FPR & p95 (ms) & p99 (ms) & eps \\
 \midrule
-\texttt{synth\_tokens} & baseline & conformal & 1.0000 & 3.5 & 3.8 & 314.3 \\ 
-\texttt{synth\_tokens} & baseline & \texttt{no\_calib} & 1.0000 & 3.8 & 4.4 & 294.5 \\ 
-\texttt{synth\_tokens} & transformer & conformal & 0.0000 & n/a & n/a & 4652140.0 \\ 
-\texttt{synth\_tokens} & transformer & \texttt{no\_calib} & 0.0000 & n/a & n/a & 4823540.0 \\ 
-\texttt{mini\_tokens} & baseline & conformal & NA & 3.2 & 3.2 & 315.4 \\ 
-\texttt{mini\_tokens} & baseline & \texttt{no\_calib} & NA & 3.5 & 3.5 & 286.9 \\ 
-\texttt{mini\_tokens} & transformer & conformal & n/a & n/a & n/a & 1628660.0 \\ 
-\texttt{mini\_tokens} & transformer & \texttt{no\_calib} & n/a & n/a & n/a & 1448860.0 \\ 
+\texttt{synth\_tokens} & baseline & conformal & 1.0000 & 3.5 & 3.8 & 314.3 \\
+\texttt{synth\_tokens} & baseline & \texttt{no\_calib} & 1.0000 & 3.8 & 4.4 & 294.5 \\
+\texttt{synth\_tokens} & transformer & conformal & 0.0000 & n/a & n/a & 4652140.0 \\
+\texttt{synth\_tokens} & transformer & \texttt{no\_calib} & 0.0000 & n/a & n/a & 4823540.0 \\
+\texttt{mini\_tokens} & baseline & conformal & NA & 3.2 & 3.2 & 315.4 \\
+\texttt{mini\_tokens} & baseline & \texttt{no\_calib} & NA & 3.5 & 3.5 & 286.9 \\
+\texttt{mini\_tokens} & transformer & conformal & n/a & n/a & n/a & 1628660.0 \\
+\texttt{mini\_tokens} & transformer & \texttt{no\_calib} & n/a & n/a & n/a & 1448860.0 \\
 
 \end{tabular}}
 \end{table}
