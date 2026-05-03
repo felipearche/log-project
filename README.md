@@ -2,6 +2,7 @@
 
 [![CI](https://github.com/felipearche/log-project/actions/workflows/ci.yml/badge.svg?branch=master&event=push)](https://github.com/felipearche/log-project/actions/workflows/ci.yml) [![Release](https://img.shields.io/github/v/release/felipearche/log-project?include_prereleases&sort=semver)](https://github.com/felipearche/log-project/releases/latest)
 
+**Paper:** [Streaming, Drift-Aware Log Anomaly Detection with Sliding Conformal Calibration](paper/log-project-paper.pdf)
 
 ## Quickstart (Docker-first, recommended)
 
